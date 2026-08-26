@@ -1,0 +1,155 @@
+/* Bridgewater YOUniversity - site-wide styles */
+
+:root {
+  --navy: #0B2A5C;
+  --navy-dark: #081f45;
+  --gold: #C78F14;
+  --cream: #FBF3E5;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Verdana, Arial, sans-serif;
+  background: var(--cream);
+  color: #1a1a1a;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------- Banner ---------- */
+
+.banner-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Nav strip ---------- */
+
+.site-nav {
+  background: var(--navy);
+  border-top: 4px solid var(--gold);
+}
+
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.site-nav li {
+  flex: 1 1 0;
+  min-width: 140px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.site-nav li:last-child {
+  border-right: none;
+}
+
+.site-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 22px 10px;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-align: center;
+  transition: background 0.15s ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  background: var(--navy-dark);
+}
+
+.site-nav a.active {
+  background: var(--navy-dark);
+  box-shadow: inset 0 -4px 0 var(--gold);
+}
+
+.site-nav img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .site-nav li {
+    flex: 1 1 33.33%;
+    min-width: 0;
+  }
+  .site-nav a {
+    padding: 16px 6px;
+    font-size: 0.8rem;
+  }
+  .site-nav img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ---------- Page content ---------- */
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+
+main h1 {
+  color: var(--navy);
+  font-size: 2rem;
+  margin-bottom: 0.25em;
+}
+
+main .subtitle {
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  margin-bottom: 1.5em;
+}
+
+main p {
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+
+.coming-soon {
+  background: var(--white);
+  border-left: 5px solid var(--gold);
+  padding: 20px 24px;
+  border-radius: 4px;
+  margin-top: 24px;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+  background: var(--navy);
+  color: var(--cream);
+  text-align: center;
+  padding: 20px;
+  font-size: 0.85rem;
+}
+
+footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
