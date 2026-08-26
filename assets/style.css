@@ -131,6 +131,12 @@ main p {
   font-size: 1.05rem;
 }
 
+.signature {
+  font-style: italic;
+  color: var(--navy);
+  margin-top: -0.5em;
+}
+
 .coming-soon {
   background: var(--white);
   border-left: 5px solid var(--gold);

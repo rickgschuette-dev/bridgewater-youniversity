@@ -76,7 +76,7 @@ def build_committee_block(name):
     duties_html = "\n".join(f"          <li>{d}</li>" for d in duties)
     return f"""      <div class="committee-option">
         <label class="committee-label">
-          <input type="checkbox" name="committees" value="{heading.replace('&amp;', 'and')}">
+          <input type="radio" name="committee" value="{heading.replace('&amp;', 'and')}" required>
           <span class="committee-title">{heading}</span>
         </label>
         <ol class="committee-duties">
@@ -88,11 +88,13 @@ def build_committee_block(name):
 def build_forum_body():
     committee_blocks = "\n".join(build_committee_block(c) for c in COMMITTEES)
     return f"""
-        <p>Interested in helping steer Bridgewater YOUniversity? Our Framing
-        Committee is looking for volunteers. Review the committee
-        responsibilities below, check the box for any committee(s) you'd like
-        to help with, and submit the form &mdash; we'll follow up with you
-        directly.</p>
+        <p>Thank you for agreeing to be part of the Bridgewater YOU framing
+        committee to build on our successful start. Please review the
+        committee platforms on this form and submit the form with your
+        selection for the committee you would find most interesting. You can
+        be part of more than one committee, but please submit a separate form
+        for each committee you select. Thank you.</p>
+        <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
         <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="volunteer-signup">
@@ -111,7 +113,7 @@ def build_forum_body():
           </div>
 
           <fieldset class="committee-fieldset">
-            <legend>Committee(s) I'm interested in (check all that apply)</legend>
+            <legend>Select the one committee for this submission</legend>
 {committee_blocks}
           </fieldset>
 
@@ -184,7 +186,7 @@ PAGES = [
     (
         "forum.html",
         "Forum",
-        "Connect with your neighbors",
+        "Start building the connection",
         build_forum_body(),
     ),
     (
