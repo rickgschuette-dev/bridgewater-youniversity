@@ -139,6 +139,143 @@ main p {
   margin-top: 24px;
 }
 
+/* ---------- Forms ---------- */
+
+.volunteer-form {
+  margin-top: 28px;
+}
+
+.hidden-field {
+  position: absolute;
+  left: -9999px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.form-row label {
+  display: block;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9c2b3;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--white);
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="email"]:focus,
+.form-row textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+/* Name + Email side by side on wider screens, stacked on narrow ones */
+.form-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .form-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.committee-fieldset {
+  border: 1px solid #c9c2b3;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+.committee-fieldset legend {
+  font-weight: 700;
+  color: var(--navy);
+  padding: 0 8px;
+}
+
+/* Two-column layout for the five committees on wider screens so the
+   page doesn't turn into one long vertical scroll */
+.committee-fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+}
+
+.committee-fieldset legend {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .committee-fieldset {
+    grid-template-columns: 1fr;
+  }
+}
+
+.committee-option {
+  background: var(--white);
+  border: 1px solid #e6dfd0;
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.committee-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--navy);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.committee-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold);
+  flex-shrink: 0;
+}
+
+.committee-title {
+  font-size: 1.05rem;
+}
+
+.committee-duties {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.submit-button {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  padding: 12px 32px;
+  border-radius: 4px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submit-button:hover {
+  background: var(--navy-dark);
+}
+
 /* ---------- Footer ---------- */
 
 footer {

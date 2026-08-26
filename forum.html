@@ -57,7 +57,104 @@
   <h1>Forum</h1>
   <div class="subtitle">Connect with your neighbors</div>
 
-        <div class="coming-soon">This page is coming soon.</div>
+        <p>Interested in helping steer Bridgewater YOUniversity? Our Framing
+        Committee is looking for volunteers. Review the committee
+        responsibilities below, check the box for any committee(s) you'd like
+        to help with, and submit the form &mdash; we'll follow up with you
+        directly.</p>
+
+        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
+          <input type="hidden" name="form-name" value="volunteer-signup">
+          <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="volunteer-name">Full Name</label>
+              <input type="text" id="volunteer-name" name="name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="volunteer-email">Email</label>
+              <input type="email" id="volunteer-email" name="email" required>
+            </div>
+          </div>
+
+          <fieldset class="committee-fieldset">
+            <legend>Committee(s) I'm interested in (check all that apply)</legend>
+      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="Registrar">
+          <span class="committee-title">Registrar</span>
+        </label>
+        <ol class="committee-duties">
+          <li>Maintain the official credit database</li>
+          <li>Track attendance and completion</li>
+          <li>Verify credits and process degree applications</li>
+          <li>Issue official credit records and completion certificates</li>
+          <li>Maintain historical records (teachers, student lists, admin notes, etc.)</li>
+        </ol>
+      </div>
+      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="Communications and Marketing">
+          <span class="committee-title">Communications &amp; Marketing</span>
+        </label>
+        <ol class="committee-duties">
+          <li>Create and manage all external and internal messaging</li>
+          <li>Facebook posts, HOA newsletters, flyers, website content</li>
+          <li>Promote upcoming classes and recognition</li>
+          <li>Handle resident inquiries about the program</li>
+          <li>Coordinate with HOA communications channels</li>
+        </ol>
+      </div>
+      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="Curriculum and Instructor Coordination">
+          <span class="committee-title">Curriculum &amp; Instructor Coordination</span>
+        </label>
+        <ol class="committee-duties">
+          <li>Recruit and support instructors</li>
+          <li>Develop new course proposals</li>
+          <li>Assign credit values to new classes</li>
+          <li>Collect course descriptions and lesson plans</li>
+          <li>Maintain the course catalog</li>
+        </ol>
+      </div>
+      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="Operations and Logistics">
+          <span class="committee-title">Operations &amp; Logistics</span>
+        </label>
+        <ol class="committee-duties">
+          <li>Room scheduling and set up</li>
+          <li>Technology support (TV, projectors, sound)</li>
+          <li>Supplies and materials coordination</li>
+          <li>Class evaluation / feedback surveys</li>
+          <li>Coordinate with amenities staff for room set up</li>
+        </ol>
+      </div>
+      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="Events and Recognition">
+          <span class="committee-title">Events &amp; Recognition</span>
+        </label>
+        <ol class="committee-duties">
+          <li>Plans &amp; executes recognition events</li>
+          <li>Designs and produces completion certificates</li>
+          <li>Coordinates teacher receptions and student celebrations</li>
+          <li>Manage graduate lists and photo opportunities</li>
+          <li>Coordinates with Marketing &amp; Promotions</li>
+        </ol>
+      </div>
+          </fieldset>
+
+          <div class="form-row">
+            <label for="volunteer-message">Anything else you'd like us to know?</label>
+            <textarea id="volunteer-message" name="message" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="submit-button">Submit</button>
+        </form>
         
 </main>
 

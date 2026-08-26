@@ -16,6 +16,114 @@ NAV_ITEMS = [
     ("Forum", "forum.html", "speech"),
 ]
 
+# Framing Committee volunteer sign-up: committee name -> list of responsibilities
+COMMITTEES = [
+    (
+        "Registrar",
+        [
+            "Maintain the official credit database",
+            "Track attendance and completion",
+            "Verify credits and process degree applications",
+            "Issue official credit records and completion certificates",
+            "Maintain historical records (teachers, student lists, admin notes, etc.)",
+        ],
+    ),
+    (
+        "Communications &amp; Marketing",
+        [
+            "Create and manage all external and internal messaging",
+            "Facebook posts, HOA newsletters, flyers, website content",
+            "Promote upcoming classes and recognition",
+            "Handle resident inquiries about the program",
+            "Coordinate with HOA communications channels",
+        ],
+    ),
+    (
+        "Curriculum &amp; Instructor Coordination",
+        [
+            "Recruit and support instructors",
+            "Develop new course proposals",
+            "Assign credit values to new classes",
+            "Collect course descriptions and lesson plans",
+            "Maintain the course catalog",
+        ],
+    ),
+    (
+        "Operations &amp; Logistics",
+        [
+            "Room scheduling and set up",
+            "Technology support (TV, projectors, sound)",
+            "Supplies and materials coordination",
+            "Class evaluation / feedback surveys",
+            "Coordinate with amenities staff for room set up",
+        ],
+    ),
+    (
+        "Events &amp; Recognition",
+        [
+            "Plans &amp; executes recognition events",
+            "Designs and produces completion certificates",
+            "Coordinates teacher receptions and student celebrations",
+            "Manage graduate lists and photo opportunities",
+            "Coordinates with Marketing &amp; Promotions",
+        ],
+    ),
+]
+
+
+def build_committee_block(name):
+    heading, duties = name
+    duties_html = "\n".join(f"          <li>{d}</li>" for d in duties)
+    return f"""      <div class="committee-option">
+        <label class="committee-label">
+          <input type="checkbox" name="committees" value="{heading.replace('&amp;', 'and')}">
+          <span class="committee-title">{heading}</span>
+        </label>
+        <ol class="committee-duties">
+{duties_html}
+        </ol>
+      </div>"""
+
+
+def build_forum_body():
+    committee_blocks = "\n".join(build_committee_block(c) for c in COMMITTEES)
+    return f"""
+        <p>Interested in helping steer Bridgewater YOUniversity? Our Framing
+        Committee is looking for volunteers. Review the committee
+        responsibilities below, check the box for any committee(s) you'd like
+        to help with, and submit the form &mdash; we'll follow up with you
+        directly.</p>
+
+        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
+          <input type="hidden" name="form-name" value="volunteer-signup">
+          <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="volunteer-name">Full Name</label>
+              <input type="text" id="volunteer-name" name="name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="volunteer-email">Email</label>
+              <input type="email" id="volunteer-email" name="email" required>
+            </div>
+          </div>
+
+          <fieldset class="committee-fieldset">
+            <legend>Committee(s) I'm interested in (check all that apply)</legend>
+{committee_blocks}
+          </fieldset>
+
+          <div class="form-row">
+            <label for="volunteer-message">Anything else you'd like us to know?</label>
+            <textarea id="volunteer-message" name="message" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="submit-button">Submit</button>
+        </form>
+        """
+
 # Each entry: (filename, page title, subtitle, body_html)
 PAGES = [
     (
@@ -77,8 +185,19 @@ PAGES = [
         "forum.html",
         "Forum",
         "Connect with your neighbors",
+        build_forum_body(),
+    ),
+    (
+        "forum-thank-you.html",
+        "Thank You",
+        "Framing Committee volunteer sign-up",
         """
-        <div class="coming-soon">This page is coming soon.</div>
+        <div class="coming-soon">
+          <strong>Thank you for volunteering!</strong> Your committee
+          sign-up has been received. A member of the Framing Committee will
+          be in touch with you soon.
+        </div>
+        <p><a href="forum.html">&larr; Back to the Forum</a></p>
         """,
     ),
 ]
