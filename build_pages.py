@@ -34,7 +34,7 @@ COMMITTEES = [
             "Create and manage all external and internal messaging",
             "Facebook posts, HOA newsletters, flyers, website content",
             "Promote upcoming classes and recognition",
-            "Handle resident inquiries about the program",
+            "Publish calendar of class schedule and room locations",
             "Coordinate with HOA communications channels",
         ],
     ),
