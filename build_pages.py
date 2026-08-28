@@ -96,7 +96,7 @@ def build_forum_body():
         for each committee you select. Thank you.</p>
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
-        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
+        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="forum-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="volunteer-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
@@ -121,6 +121,8 @@ def build_forum_body():
             <label for="volunteer-message">Anything else you'd like us to know?</label>
             <textarea id="volunteer-message" name="message" rows="4"></textarea>
           </div>
+
+          <div data-netlify-recaptcha="true"></div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
