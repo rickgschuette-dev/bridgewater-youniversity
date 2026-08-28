@@ -113,7 +113,7 @@ def build_forum_body():
           </div>
 
           <fieldset class="committee-fieldset">
-            <legend>Select the one committee for this submission</legend>
+            <legend>Please select only one committee. Thank you.</legend>
 {committee_blocks}
           </fieldset>
 
