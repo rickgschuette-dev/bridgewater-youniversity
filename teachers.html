@@ -98,10 +98,49 @@
             <textarea id="teacher-class" name="proposed-class" rows="3" required></textarea>
           </div>
 
+          <fieldset class="format-fieldset">
+            <legend>Class Format <span aria-hidden="true">*</span> <span class="format-hint">(select all that apply)</span></legend>
+            <div class="format-options">
+              <label class="format-label">
+                <input type="checkbox" name="format-1x-seminar" value="Yes">
+                <span>1x Seminar</span>
+              </label>
+              <label class="format-label">
+                <input type="checkbox" name="format-3-week-series" value="Yes">
+                <span>3-Week Series</span>
+              </label>
+              <label class="format-label">
+                <input type="checkbox" name="format-6-week-series" value="Yes">
+                <span>6-Week Series</span>
+              </label>
+            </div>
+            <p class="field-error" id="format-error" hidden>Please select at least one class format.</p>
+          </fieldset>
+
           <div data-netlify-recaptcha="true"></div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
+
+        <script>
+        (function () {
+          var form = document.forms["teacher-signup"];
+          if (!form) return;
+          form.addEventListener("submit", function (e) {
+            var checked = form.querySelectorAll('input[name^="format-"]:checked');
+            var errorEl = document.getElementById("format-error");
+            if (checked.length === 0) {
+              e.preventDefault();
+              if (errorEl) {
+                errorEl.hidden = false;
+                errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            } else if (errorEl) {
+              errorEl.hidden = true;
+            }
+          });
+        })();
+        </script>
         
 </main>
 

@@ -4,8 +4,9 @@
  * Purpose: receives the "Outgoing webhook" notification Netlify sends every
  * time someone submits the "Interested in Teaching a Class?" form on the
  * Teachers page (https://bridgewateryou.netlify.app/teachers), appends it as
- * a new row in the "BWU Teacher Class Proposals" Google Sheet, and emails a
- * notification to the recipients listed below.
+ * a new row in the "BWU Teacher Class Proposals" Google Sheet, emails a
+ * notification to the recipients listed below, and sends a personalized
+ * acknowledgement email back to the person who submitted the form.
  *
  * This mirrors BWU_Forum_WebhookReceiver.gs (the Framing Committee sign-up
  * receiver), including its duplicate-submission protection, since that
@@ -21,8 +22,15 @@
  * Sheet URL:      https://docs.google.com/spreadsheets/d/10I3iP7nljMkt3EeF0WBb357RF8hhhKHPR7JGmzVDiv8/edit
  * Tab name:       Sheet1
  *
- * Columns written (A–H):
- *   Timestamp | First Name | Last Name | Email | Phone | Proposed Class to Teach | Raw Submission | Submission ID
+ * Columns written (A–I):
+ *   Timestamp | First Name | Last Name | Email | Phone | Proposed Class to
+ *   Teach | Raw Submission | Submission ID | Class Format
+ *
+ * "Class Format" is appended as the LAST column (rather than inserted next
+ * to "Proposed Class to Teach") on purpose: it keeps the Submission ID
+ * column position unchanged, so the duplicate-detection logic and every
+ * row already collected before this field existed are untouched. Older
+ * rows simply have a blank in this column.
  *
  * "Raw Submission" is a safety net: the complete original JSON Netlify
  * sent, so nothing is ever lost even if a parsed column comes up blank.
@@ -37,8 +45,8 @@
 
 var SHEET_ID = '10I3iP7nljMkt3EeF0WBb357RF8hhhKHPR7JGmzVDiv8';
 var SHEET_NAME = 'Sheet1';
-var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Proposed Class to Teach', 'Raw Submission', 'Submission ID'];
-var SUBMISSION_ID_COL = 8; // column H
+var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Proposed Class to Teach', 'Raw Submission', 'Submission ID', 'Class Format'];
+var SUBMISSION_ID_COL = 8; // column H — unchanged; Class Format was appended after it, as column I
 
 // Everyone who should get an email the moment a new teacher sign-up comes in.
 var NOTIFY_EMAILS = [
@@ -89,18 +97,20 @@ function doPost(e) {
         fields.phone,
         fields.proposedClass,
         rawBody,
-        submissionId
+        submissionId,
+        fields.classFormat
       ];
     } catch (err) {
       // Even if parsing fails entirely, still record the raw body so the
       // submission is never silently dropped. Timestamp falls back to "now".
-      row = [new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, ''];
+      row = [new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '', ''];
     }
 
     sheet.appendRow(row);
 
     if (fields) {
       sendNotificationEmail_(fields);
+      sendAcknowledgementEmail_(fields);
     }
 
     return ContentService
@@ -135,7 +145,8 @@ function sendNotificationEmail_(fields) {
       'Name: ' + fields.firstName + ' ' + fields.lastName + '\n' +
       'Email: ' + fields.email + '\n' +
       'Phone: ' + fields.phone + '\n' +
-      'Proposed Class to Teach: ' + fields.proposedClass + '\n\n' +
+      'Proposed Class to Teach: ' + fields.proposedClass + '\n' +
+      'Class Format: ' + (fields.classFormat || '(none selected)') + '\n\n' +
       'Full list: https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
 
     MailApp.sendEmail({
@@ -151,10 +162,43 @@ function sendNotificationEmail_(fields) {
 }
 
 /**
- * Pulls First Name / Last Name / Email / Phone / Proposed Class out of the
- * submission object, trying several field-name patterns Netlify is known
- * to use, so the script keeps working even if the exact shape differs
- * slightly from what's expected.
+ * Emails the person who submitted the form a personalized acknowledgement,
+ * confirming their proposal was received. Runs after the row has already
+ * been written, so a failure here never blocks the Sheet record or the
+ * admin notification. Silently does nothing if no email address was
+ * captured (so it never errors out on a malformed submission).
+ */
+function sendAcknowledgementEmail_(fields) {
+  if (!fields.email) return;
+
+  try {
+    var greetingName = fields.firstName || 'there';
+    var subject = 'Thanks for volunteering to teach, ' + (fields.firstName || 'neighbor') + '!';
+    var body =
+      'Hi ' + greetingName + ',\n\n' +
+      'Thank you for signing up to teach a class with Bridgewater YOU! We\'ve received your proposal:\n\n' +
+      'Proposed Class: ' + fields.proposedClass + '\n' +
+      'Format: ' + (fields.classFormat || '(none selected)') + '\n\n' +
+      'A member of our Curriculum & Instructor Coordination committee will be in touch with you soon to talk next steps.\n\n' +
+      'Thanks again for sharing your time and talent with your neighbors!\n\n' +
+      '— Bridgewater YOU';
+
+    MailApp.sendEmail({
+      to: fields.email,
+      subject: subject,
+      body: body,
+      name: 'Bridgewater YOU'
+    });
+  } catch (err) {
+    console.error('sendAcknowledgementEmail_ failed: ' + err.message);
+  }
+}
+
+/**
+ * Pulls First Name / Last Name / Email / Phone / Proposed Class / Class
+ * Format out of the submission object, trying several field-name patterns
+ * Netlify is known to use, so the script keeps working even if the exact
+ * shape differs slightly from what's expected.
  */
 function extractFields_(submission) {
   var data = submission.data || {};
@@ -183,6 +227,15 @@ function extractFields_(submission) {
     human['Proposed Class to Teach'], human['proposed class to teach']
   ]);
 
+  // Each format checkbox has its own name and is only present in the
+  // submission at all when checked, so build the list from whichever
+  // ones showed up.
+  var formats = [];
+  if (firstNonEmpty_([data['format-1x-seminar']])) formats.push('1x Seminar');
+  if (firstNonEmpty_([data['format-3-week-series']])) formats.push('3-Week Series');
+  if (firstNonEmpty_([data['format-6-week-series']])) formats.push('6-Week Series');
+  var classFormat = formats.join(', ');
+
   var createdAt = submission.created_at ? new Date(submission.created_at) : new Date();
 
   return {
@@ -191,7 +244,8 @@ function extractFields_(submission) {
     lastName: lastName,
     email: email,
     phone: phone,
-    proposedClass: proposedClass
+    proposedClass: proposedClass,
+    classFormat: classFormat
   };
 }
 
@@ -228,7 +282,9 @@ function getSheet_() {
 /**
  * Writes the header row (bolded) if it doesn't already exactly match
  * HEADERS — this safely sets up a brand-new sheet without touching any
- * data rows below it if it's ever run again later.
+ * data rows below it if it's ever run again later. Because "Class Format"
+ * was just added to HEADERS, the very next submission will automatically
+ * rewrite row 1 to add that header — no manual edit needed.
  */
 function ensureHeaders_(sheet) {
   var existing = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];

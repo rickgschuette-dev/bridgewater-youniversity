@@ -297,6 +297,98 @@ main p {
   }
 }
 
+/* Class Format checkbox group on the Teachers sign-up form. Same visual
+   language as the Forum page's committee selector, but built with real
+   checkboxes (not radios) since a teacher may offer a class in more than
+   one format. */
+.format-fieldset {
+  border: 1px solid #c9c2b3;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.format-fieldset legend {
+  font-weight: 700;
+  color: var(--navy);
+  padding: 0 8px;
+}
+
+.format-hint {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.format-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.format-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: var(--navy);
+  cursor: pointer;
+  background: var(--white);
+  border: 1px solid #e6dfd0;
+  border-radius: 6px;
+  padding: 10px 16px;
+}
+
+.format-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--navy);
+  border-radius: 5px;
+  background: var(--white);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  margin: 0;
+}
+
+.format-label input[type="checkbox"]:checked {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.format-label input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid var(--white);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.format-label input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.field-error {
+  color: #b3261e;
+  font-weight: 700;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .format-options {
+    flex-direction: column;
+  }
+}
+
 .submit-button {
   background: var(--navy);
   color: var(--white);
