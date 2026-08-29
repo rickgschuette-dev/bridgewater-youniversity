@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates every static HTML page for the Bridgewater YOUniversity site
+Generates every static HTML page for the Bridgewater YOU site
 from a single template, so the header/nav stays identical across pages.
 Run this after editing PAGES or the TEMPLATE, then commit the generated
 .html files (the .html files themselves are what gets deployed --
@@ -131,7 +131,7 @@ def build_forum_body():
 def build_teachers_body():
     return """
         <h2>Interested in Teaching a Class?</h2>
-        <p>Bridgewater YOUniversity is always looking for residents willing to
+        <p>Bridgewater YOU is always looking for residents willing to
         share their knowledge and experience with their neighbors. If you have
         a class, seminar, or skill you'd like to teach, please complete the
         form below and a member of our Curriculum &amp; Instructor
@@ -181,10 +181,10 @@ def build_teachers_body():
 PAGES = [
     (
         "index.html",
-        "Bridgewater YOUniversity",
+        "Bridgewater YOU",
         "Connecting Friends &middot; Enriching Lives",
         """
-        <p>Welcome to Bridgewater YOUniversity &mdash; our neighborhood's home for
+        <p>Welcome to Bridgewater YOU &mdash; our neighborhood's home for
         classes, events, and connection. Use the menu above to find registration,
         the class calendar, instructor information, and community news.</p>
         <div class="coming-soon">
@@ -227,7 +227,7 @@ PAGES = [
     (
         "news.html",
         "BW YOU News",
-        "The latest from Bridgewater YOUniversity",
+        "The latest from Bridgewater YOU",
         """
         <div class="coming-soon">This page is coming soon.</div>
         """,
@@ -289,13 +289,13 @@ def build_page(filename, title, subtitle, body):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{title} | Bridgewater YOUniversity</title>
+<title>{title} | Bridgewater YOU</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
 <a href="index.html">
-  <img class="banner-image" src="assets/banner-top.jpg" alt="Bridgewater YOUniversity - Connecting Friends, Enriching Lives">
+  <img class="banner-image" src="assets/banner-top.jpg" alt="Bridgewater YOU - Connecting Friends, Enriching Lives">
 </a>
 
 <nav class="site-nav" aria-label="Main navigation">
@@ -311,7 +311,7 @@ def build_page(filename, title, subtitle, body):
 </main>
 
 <footer>
-  <p>&copy; 2026 Bridgewater YOUniversity &mdash; <a href="index.html">Home</a></p>
+  <p>&copy; 2026 Bridgewater YOU &mdash; <a href="index.html">Home</a></p>
 </footer>
 
 </body>
