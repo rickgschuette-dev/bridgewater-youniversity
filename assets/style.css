@@ -376,6 +376,11 @@ main p {
   outline-offset: 2px;
 }
 
+.format-other-detail {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
 .field-error {
   color: #b3261e;
   font-weight: 700;

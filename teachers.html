@@ -113,6 +113,14 @@
                 <input type="checkbox" name="format-6-week-series" value="Yes">
                 <span>6-Week Series</span>
               </label>
+              <label class="format-label">
+                <input type="checkbox" name="format-other" id="teacher-format-other" value="Yes">
+                <span>Other</span>
+              </label>
+            </div>
+            <div class="form-row format-other-detail" id="format-other-detail" hidden>
+              <label for="teacher-format-other-text">Please specify</label>
+              <input type="text" id="teacher-format-other-text" name="format-other-detail" required>
             </div>
             <p class="field-error" id="format-error" hidden>Please select at least one class format.</p>
           </fieldset>
@@ -126,6 +134,18 @@
         (function () {
           var form = document.forms["teacher-signup"];
           if (!form) return;
+
+          var otherCheckbox = document.getElementById("teacher-format-other");
+          var otherDetail = document.getElementById("format-other-detail");
+          if (otherCheckbox && otherDetail) {
+            otherCheckbox.addEventListener("change", function () {
+              otherDetail.hidden = !otherCheckbox.checked;
+              if (otherCheckbox.checked) {
+                document.getElementById("teacher-format-other-text").focus();
+              }
+            });
+          }
+
           form.addEventListener("submit", function (e) {
             var checked = form.querySelectorAll('input[name^="format-"]:checked');
             var errorEl = document.getElementById("format-error");

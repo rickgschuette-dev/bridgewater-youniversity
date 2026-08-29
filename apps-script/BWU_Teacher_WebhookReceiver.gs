@@ -234,6 +234,10 @@ function extractFields_(submission) {
   if (firstNonEmpty_([data['format-1x-seminar']])) formats.push('1x Seminar');
   if (firstNonEmpty_([data['format-3-week-series']])) formats.push('3-Week Series');
   if (firstNonEmpty_([data['format-6-week-series']])) formats.push('6-Week Series');
+  if (firstNonEmpty_([data['format-other']])) {
+    var otherDetail = firstNonEmpty_([data['format-other-detail']]);
+    formats.push(otherDetail ? ('Other: ' + otherDetail) : 'Other');
+  }
   var classFormat = formats.join(', ');
 
   var createdAt = submission.created_at ? new Date(submission.created_at) : new Date();
