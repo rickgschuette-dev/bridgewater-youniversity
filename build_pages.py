@@ -128,6 +128,55 @@ def build_forum_body():
         </form>
         """
 
+def build_teachers_body():
+    return """
+        <h2>Interested in Teaching a Class?</h2>
+        <p>Bridgewater YOUniversity is always looking for residents willing to
+        share their knowledge and experience with their neighbors. If you have
+        a class, seminar, or skill you'd like to teach, please complete the
+        form below and a member of our Curriculum &amp; Instructor
+        Coordination committee will be in touch.</p>
+        <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
+
+        <form name="teacher-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="teachers-thank-you.html" class="volunteer-form">
+          <input type="hidden" name="form-name" value="teacher-signup">
+          <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="teacher-first-name">First Name</label>
+              <input type="text" id="teacher-first-name" name="first-name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="teacher-last-name">Last Name</label>
+              <input type="text" id="teacher-last-name" name="last-name" required>
+            </div>
+          </div>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="teacher-email">Email</label>
+              <input type="email" id="teacher-email" name="email" required>
+            </div>
+
+            <div class="form-row">
+              <label for="teacher-phone">Phone Number</label>
+              <input type="tel" id="teacher-phone" name="phone" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="teacher-class">Proposed Class to Teach</label>
+            <textarea id="teacher-class" name="proposed-class" rows="3" required></textarea>
+          </div>
+
+          <div data-netlify-recaptcha="true"></div>
+
+          <button type="submit" class="submit-button">Submit</button>
+        </form>
+        """
+
 # Each entry: (filename, page title, subtitle, body_html)
 PAGES = [
     (
@@ -173,9 +222,7 @@ PAGES = [
         "teachers.html",
         "Teachers",
         "Meet our instructors",
-        """
-        <div class="coming-soon">This page is coming soon.</div>
-        """,
+        build_teachers_body(),
     ),
     (
         "news.html",
@@ -202,6 +249,19 @@ PAGES = [
           be in touch with you soon.
         </div>
         <p><a href="forum.html">&larr; Back to the Forum</a></p>
+        """,
+    ),
+    (
+        "teachers-thank-you.html",
+        "Thank You",
+        "Teacher sign-up received",
+        """
+        <div class="coming-soon">
+          <strong>Thank you for stepping up to teach!</strong> Your class
+          proposal has been received. A member of the Curriculum &amp;
+          Instructor Coordination committee will be in touch with you soon.
+        </div>
+        <p><a href="teachers.html">&larr; Back to Teachers</a></p>
         """,
     ),
 ]
