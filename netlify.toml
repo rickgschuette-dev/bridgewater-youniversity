@@ -1,0 +1,15 @@
+# Netlify build & functions configuration for Bridgewater YOU.
+#
+# [functions] tells Netlify where the serverless "relay" functions live.
+# Those functions exist to fix a known Google Apps Script quirk: a POST to
+# an Apps Script Web App's /exec URL returns an HTTP redirect to a one-time
+# content URL rather than the real response, and Netlify's own outgoing
+# webhook feature doesn't follow that redirect correctly. See the comments
+# at the top of netlify/functions/relay-teacher.js and relay-forum.js for
+# the full explanation.
+
+[functions]
+  directory = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
