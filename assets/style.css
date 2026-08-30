@@ -394,6 +394,17 @@ main p {
   }
 }
 
+/* Lightweight "not a robot" confirmation that replaced the Google
+   reCAPTCHA widget. Purely a required checkbox -- no third-party script,
+   so no image/photo challenge can ever be shown to a registrant. */
+.human-check {
+  margin-top: 28px;
+}
+
+.human-check .format-label {
+  display: inline-flex;
+}
+
 .submit-button {
   background: var(--navy);
   color: var(--white);

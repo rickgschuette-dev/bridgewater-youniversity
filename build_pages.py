@@ -85,6 +85,29 @@ def build_committee_block(name):
       </div>"""
 
 
+# Inline script for the volunteer form. The "I am a real person" box is a
+# native `required` control, so the browser blocks submission before any
+# `submit` handler runs -- all the visitor gets is a tooltip that fades after
+# a few seconds, which reads as "the Submit button does nothing" on a form
+# this long. Listening for `invalid` lets us leave a message on the page that
+# stays put until the box is actually checked.
+VOLUNTEER_FORM_SCRIPT = """
+        <script>
+        (function () {
+          var box = document.getElementById("volunteer-human-confirm");
+          var error = document.getElementById("volunteer-human-error");
+          if (!box || !error) return;
+
+          box.addEventListener("invalid", function () {
+            error.hidden = false;
+          });
+
+          box.addEventListener("change", function () {
+            if (box.checked) error.hidden = true;
+          });
+        })();
+        </script>"""
+
 def build_forum_body():
     committee_blocks = "\n".join(build_committee_block(c) for c in COMMITTEES)
     return f"""
@@ -96,7 +119,7 @@ def build_forum_body():
         for each committee you select. Thank you.</p>
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
-        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="forum-thank-you.html" class="volunteer-form">
+        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="volunteer-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
@@ -122,10 +145,17 @@ def build_forum_body():
             <textarea id="volunteer-message" name="message" rows="4"></textarea>
           </div>
 
-          <div data-netlify-recaptcha="true"></div>
+          <div class="human-check">
+            <label class="format-label">
+              <input type="checkbox" id="volunteer-human-confirm" name="human-confirm" value="Yes" required aria-describedby="volunteer-human-error">
+              <span>I am a real person, not a robot</span>
+            </label>
+            <p class="field-error" id="volunteer-human-error" hidden>Please check the box above to confirm you are a real person, then press Submit again.</p>
+          </div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
+{VOLUNTEER_FORM_SCRIPT}
         """
 
 def build_teachers_body():
@@ -138,7 +168,7 @@ def build_teachers_body():
         Coordination committee will be in touch.</p>
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
-        <form name="teacher-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="teachers-thank-you.html" class="volunteer-form">
+        <form name="teacher-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="teachers-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="teacher-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
@@ -193,12 +223,18 @@ def build_teachers_body():
             </div>
             <div class="form-row format-other-detail" id="format-other-detail" hidden>
               <label for="teacher-format-other-text">Please specify</label>
-              <input type="text" id="teacher-format-other-text" name="format-other-detail" required>
+              <input type="text" id="teacher-format-other-text" name="format-other-detail">
             </div>
             <p class="field-error" id="format-error" hidden>Please select at least one class format.</p>
           </fieldset>
 
-          <div data-netlify-recaptcha="true"></div>
+          <div class="human-check">
+            <label class="format-label">
+              <input type="checkbox" id="teacher-human-confirm" name="human-confirm" value="Yes" required aria-describedby="teacher-human-error">
+              <span>I am a real person, not a robot</span>
+            </label>
+            <p class="field-error" id="teacher-human-error" hidden>Please check the box above to confirm you are a real person, then press Submit again.</p>
+          </div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
@@ -210,12 +246,31 @@ def build_teachers_body():
 
           var otherCheckbox = document.getElementById("teacher-format-other");
           var otherDetail = document.getElementById("format-other-detail");
-          if (otherCheckbox && otherDetail) {
+          var otherText = document.getElementById("teacher-format-other-text");
+          if (otherCheckbox && otherDetail && otherText) {
+            // "Please specify" is only required while it is on screen. A
+            // required field inside a hidden container makes the browser
+            // refuse to submit with no message anywhere, so the Submit
+            // button looks broken.
             otherCheckbox.addEventListener("change", function () {
               otherDetail.hidden = !otherCheckbox.checked;
+              otherText.required = otherCheckbox.checked;
               if (otherCheckbox.checked) {
-                document.getElementById("teacher-format-other-text").focus();
+                otherText.focus();
               }
+            });
+          }
+
+          // Same reasoning as VOLUNTEER_FORM_SCRIPT: the native tooltip for an
+          // unchecked required box fades, so leave a message on the page too.
+          var humanBox = document.getElementById("teacher-human-confirm");
+          var humanError = document.getElementById("teacher-human-error");
+          if (humanBox && humanError) {
+            humanBox.addEventListener("invalid", function () {
+              humanError.hidden = false;
+            });
+            humanBox.addEventListener("change", function () {
+              if (humanBox.checked) humanError.hidden = true;
             });
           }
 
