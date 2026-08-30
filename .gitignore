@@ -1,1 +1,4 @@
 _incoming_build.zip
+
+# Local Netlify folder
+.netlify

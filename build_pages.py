@@ -96,7 +96,7 @@ def build_forum_body():
         for each committee you select. Thank you.</p>
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
-        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="forum-thank-you.html" class="volunteer-form">
+        <form name="volunteer-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="forum-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="volunteer-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
@@ -122,7 +122,12 @@ def build_forum_body():
             <textarea id="volunteer-message" name="message" rows="4"></textarea>
           </div>
 
-          <div data-netlify-recaptcha="true"></div>
+          <div class="human-check">
+            <label class="format-label">
+              <input type="checkbox" name="human-confirm" value="Yes" required>
+              <span>I am a real person, not a robot</span>
+            </label>
+          </div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
@@ -138,7 +143,7 @@ def build_teachers_body():
         Coordination committee will be in touch.</p>
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
-        <form name="teacher-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true" action="teachers-thank-you.html" class="volunteer-form">
+        <form name="teacher-signup" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="teachers-thank-you.html" class="volunteer-form">
           <input type="hidden" name="form-name" value="teacher-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
@@ -198,7 +203,12 @@ def build_teachers_body():
             <p class="field-error" id="format-error" hidden>Please select at least one class format.</p>
           </fieldset>
 
-          <div data-netlify-recaptcha="true"></div>
+          <div class="human-check">
+            <label class="format-label">
+              <input type="checkbox" name="human-confirm" value="Yes" required>
+              <span>I am a real person, not a robot</span>
+            </label>
+          </div>
 
           <button type="submit" class="submit-button">Submit</button>
         </form>
