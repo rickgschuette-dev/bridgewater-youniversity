@@ -49,11 +49,10 @@ var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Propos
 var SUBMISSION_ID_COL = 8; // column H — unchanged; Class Format was appended after it, as column I
 
 // Everyone who should get an email the moment a new teacher sign-up comes in.
+// TEMPORARY: reduced to Rick only while testing (2026-08-29). Restore the
+// other three addresses once this round of testing is finished.
 var NOTIFY_EMAILS = [
-  'rick.g.schuette@gmail.com',
-  'pmkushner@verizon.net',
-  'aanpa1@yahoo.com',
-  'jlhelfand1@bellsouth.net'
+  'rick.g.schuette@gmail.com'
 ];
 
 /**
