@@ -130,7 +130,7 @@ def build_forum_body():
 
 def build_teachers_body():
     return """
-        <h2>Interested in Teaching a Class?</h2>
+        <h2>Interested in Leading a Class, Discussion or Activity?</h2>
         <p>Bridgewater YOU is always looking for residents willing to
         share their knowledge and experience with their neighbors. If you have
         a class, seminar, or skill you'd like to teach, please complete the
@@ -235,6 +235,10 @@ def build_teachers_body():
         })();
         </script>
         """
+
+# Pages that should NOT render the generic <h1>{title}</h1> / subtitle block
+# in build_page() -- their body supplies its own opening heading instead.
+PAGES_WITHOUT_HEADING = {"teachers.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
 PAGES = [
@@ -343,6 +347,12 @@ def build_nav(current_file):
 
 def build_page(filename, title, subtitle, body):
     nav_html = build_nav(filename)
+    if filename in PAGES_WITHOUT_HEADING:
+        heading_html = ""
+    else:
+        heading_html = f"""  <h1>{title}</h1>
+  <div class="subtitle">{subtitle}</div>
+"""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -364,9 +374,7 @@ def build_page(filename, title, subtitle, body):
 </nav>
 
 <main>
-  <h1>{title}</h1>
-  <div class="subtitle">{subtitle}</div>
-{body}
+{heading_html}{body}
 </main>
 
 <footer>
