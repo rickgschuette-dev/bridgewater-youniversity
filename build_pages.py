@@ -264,7 +264,7 @@ PAGES = [
     (
         "class-schedule.html",
         "Class Schedule",
-        "Upcoming classes and events",
+        "Class Schedule and Room Locations",
         """
         <div class="coming-soon">This page is coming soon.</div>
         """,
