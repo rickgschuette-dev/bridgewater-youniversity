@@ -9,7 +9,7 @@ this script is a build helper, not something a browser loads).
 
 NAV_ITEMS = [
     ("Registration", "registration.html", "book"),
-    ("Calendar", "calendar.html", "palette"),
+    ("Class Schedule", "class-schedule.html", "palette"),
     ("Info Updates", "info-updates.html", "music"),
     ("Teachers", "teachers.html", "coffee"),
     ("BW YOU News", "news.html", "dumbbell"),
@@ -262,8 +262,8 @@ PAGES = [
         """,
     ),
     (
-        "calendar.html",
-        "Calendar",
+        "class-schedule.html",
+        "Class Schedule",
         "Upcoming classes and events",
         """
         <div class="coming-soon">This page is coming soon.</div>
