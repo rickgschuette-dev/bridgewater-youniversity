@@ -424,3 +424,124 @@ footer a {
   color: var(--gold);
   text-decoration: none;
 }
+
+/* ---------- Class Registration picker ---------- */
+
+.class-fieldset {
+  border: 1px solid #c9c2b3;
+  border-radius: 6px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.class-fieldset legend {
+  font-weight: 700;
+  color: var(--navy);
+  padding: 0 8px;
+}
+
+#class-list-loading {
+  color: #555;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* Two categories per row on wide screens instead of one long vertical
+   list, since there's ample horizontal room on desktop; stacks to a
+   single column on narrow screens. */
+#class-categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+}
+
+@media (max-width: 700px) {
+  #class-categories {
+    grid-template-columns: 1fr;
+  }
+}
+
+.class-category {
+  margin-top: 20px;
+}
+
+.class-category-heading {
+  color: var(--navy);
+  font-size: 1.05rem;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 6px;
+  margin: 0 0 12px;
+}
+
+.class-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  cursor: pointer;
+  background: var(--white);
+  border: 1px solid #e6dfd0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+
+.class-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--navy);
+  border-radius: 5px;
+  background: var(--white);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  margin: 2px 0 0;
+}
+
+.class-option input[type="checkbox"]:checked {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.class-option input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid var(--white);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.class-option input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.class-option-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.class-title {
+  font-size: 1rem;
+}
+
+.class-detail {
+  font-weight: 400;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.class-original-title {
+  font-weight: 400;
+  font-style: italic;
+  color: #777;
+  font-size: 0.8rem;
+  margin-top: 3px;
+}

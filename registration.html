@@ -54,10 +54,230 @@
 </nav>
 
 <main>
-  <h1>Registration</h1>
-  <div class="subtitle">Sign up for classes</div>
 
-        <div class="coming-soon">This page is coming soon.</div>
+        <h2>Winter &lsquo;27 Class Registration</h2>
+        <p>Welcome to Bridgewater YOUniversity registration! Please fill in
+        your information below, then select as many classes as you'd like
+        to take this semester &mdash; one submission registers you for
+        every class you check, so there's no need to submit the form more
+        than once.</p>
+        <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
+
+        <form name="student-registration" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="registration-thank-you.html" class="volunteer-form" id="registration-form">
+          <input type="hidden" name="form-name" value="student-registration">
+          <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="reg-first-name">First Name</label>
+              <input type="text" id="reg-first-name" name="first-name" required>
+            </div>
+
+            <div class="form-row">
+              <label for="reg-last-name">Last Name</label>
+              <input type="text" id="reg-last-name" name="last-name" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="reg-address">Street Address</label>
+            <input type="text" id="reg-address" name="street-address" required>
+          </div>
+
+          <div class="form-two-col">
+            <div class="form-row">
+              <label for="reg-phone">Phone Number</label>
+              <input type="tel" id="reg-phone" name="phone" required>
+            </div>
+
+            <div class="form-row">
+              <label for="reg-email">Email</label>
+              <input type="email" id="reg-email" name="email" required>
+            </div>
+          </div>
+
+          <fieldset class="class-fieldset">
+            <legend>Select Your Classes <span aria-hidden="true">*</span> <span class="format-hint">(select all that apply)</span></legend>
+            <div id="class-list-loading">Loading the current class list&hellip;</div>
+            <p class="field-error" id="class-list-error" hidden>We couldn't load the class list just now. Please refresh this page, or contact Rick if this keeps happening.</p>
+            <div id="class-categories"></div>
+            <p class="field-error" id="class-error" hidden>Please select at least one class.</p>
+          </fieldset>
+
+          <button type="submit" class="submit-button">Submit Registration</button>
+        </form>
+
+        <script>
+        (function () {
+          var CLASSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV3GKy9tjkjrG9nH7fhyIL7Ydfu3TDVM5hhT8ppEncFE_HKYvmGbBrGnQDESKNuHzArjFiUC_LZeRl/pub?output=csv";
+
+          // Where a class title was shortened from the Teacher Proposals
+          // sheet's original wording, show that original wording in small
+          // gray text underneath the short title, so registrants still
+          // get the fuller description. Keyed on the exact CURRENT
+          // (short) class title as it appears in the Confirmed Classes
+          // sheet today.
+          var ORIGINAL_TITLES = {
+            "Emerging Quantum Science": "10,000 Foot View of the Emerging Field of Quantum Science and Technology",
+            "Surviving an Active Shooter": "How to Survive Active Shooter Incidents and Other Life Threatening Incidents",
+            "Space History and Future": "Space History, Current Programs and the Future"
+          };
+
+          var form = document.forms["student-registration"];
+          if (!form) return;
+
+          var loadingEl = document.getElementById("class-list-loading");
+          var errorEl = document.getElementById("class-list-error");
+          var categoriesEl = document.getElementById("class-categories");
+
+          fetch(CLASSES_CSV_URL)
+            .then(function (res) {
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              return res.text();
+            })
+            .then(function (text) {
+              renderClasses(parseCSV(text));
+            })
+            .catch(function (err) {
+              console.error("Failed to load class list: " + err.message);
+              loadingEl.hidden = true;
+              errorEl.hidden = false;
+            });
+
+          function renderClasses(rows) {
+            loadingEl.hidden = true;
+            if (!rows.length) {
+              errorEl.hidden = false;
+              return;
+            }
+
+            var header = rows[0].map(function (h) { return h.trim().toLowerCase(); });
+            var titleIdx = header.indexOf("class title");
+            var formatIdx = header.indexOf("format");
+            var categoryIdx = header.indexOf("category");
+            var instructorIdx = header.indexOf("instructor");
+
+            if (titleIdx === -1 || categoryIdx === -1) {
+              errorEl.hidden = false;
+              return;
+            }
+
+            var byCategory = {};
+            var categoryOrder = [];
+
+            for (var i = 1; i < rows.length; i++) {
+              var row = rows[i];
+              if (!row.length || !row[titleIdx]) continue;
+
+              var title = row[titleIdx].trim();
+              var category = (row[categoryIdx] || "").trim() || "Other";
+              var format = formatIdx > -1 ? (row[formatIdx] || "").trim() : "";
+              var instructor = instructorIdx > -1 ? (row[instructorIdx] || "").trim() : "";
+
+              if (!byCategory[category]) {
+                byCategory[category] = [];
+                categoryOrder.push(category);
+              }
+              byCategory[category].push({ title: title, format: format, instructor: instructor });
+            }
+
+            var html = "";
+            categoryOrder.forEach(function (category) {
+              html += '<div class="class-category">';
+              html += '<h3 class="class-category-heading">' + escapeHTML(category) + '</h3>';
+              byCategory[category].forEach(function (cls) {
+                var slug = slugify(cls.title);
+                var detailParts = [];
+                if (cls.format) detailParts.push(cls.format);
+                if (cls.instructor) detailParts.push(cls.instructor);
+                var detail = detailParts.length ? ' <span class="class-detail">(' + escapeHTML(detailParts.join(" — ")) + ')</span>' : "";
+                var original = ORIGINAL_TITLES[cls.title];
+                var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
+
+                html += '<label class="class-option">';
+                html += '<input type="checkbox" name="class__' + slug + '" value="' + escapeHTML(cls.title) + '">';
+                html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + originalHTML + '</span>';
+                html += '</label>';
+              });
+              html += '</div>';
+            });
+
+            categoriesEl.innerHTML = html;
+          }
+
+          form.addEventListener("submit", function (e) {
+            var checked = form.querySelectorAll('input[name^="class__"]:checked');
+            var classErrorEl = document.getElementById("class-error");
+            if (checked.length === 0) {
+              e.preventDefault();
+              if (classErrorEl) {
+                classErrorEl.hidden = false;
+                classErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+            } else if (classErrorEl) {
+              classErrorEl.hidden = true;
+            }
+          });
+
+          // Minimal CSV parser: handles quoted fields, embedded commas,
+          // and escaped double-quotes ("" inside a quoted field). Good
+          // enough for a Google Sheets "Publish to web as CSV" export.
+          function parseCSV(text) {
+            text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+            var rows = [];
+            var row = [];
+            var field = "";
+            var inQuotes = false;
+
+            for (var i = 0; i < text.length; i++) {
+              var c = text[i];
+
+              if (inQuotes) {
+                if (c === '"') {
+                  if (text[i + 1] === '"') {
+                    field += '"';
+                    i++;
+                  } else {
+                    inQuotes = false;
+                  }
+                } else {
+                  field += c;
+                }
+              } else if (c === '"') {
+                inQuotes = true;
+              } else if (c === ",") {
+                row.push(field);
+                field = "";
+              } else if (c === "\n") {
+                row.push(field);
+                rows.push(row);
+                row = [];
+                field = "";
+              } else {
+                field += c;
+              }
+            }
+            if (field.length || row.length) {
+              row.push(field);
+              rows.push(row);
+            }
+            return rows.filter(function (r) { return r.length > 1 || r[0] !== ""; });
+          }
+
+          function slugify(text) {
+            return text
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)/g, "");
+          }
+
+          function escapeHTML(text) {
+            var div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+          }
+        })();
+        </script>
         
 </main>
 
