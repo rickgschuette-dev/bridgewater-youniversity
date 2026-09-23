@@ -36,14 +36,15 @@
  *   Timestamp | First Name | Last Name | Phone | Email |
  *   Class Registered For | Raw Submission | Submission ID
  *
- * The registration form gives each class checkbox its own field name,
- * prefixed "class__" (e.g. class__beginning-bocce), with the checkbox's
- * VALUE set to the exact class title text — the same one-field-per-option
- * pattern already proven reliable by the Teacher form's Class Format
- * checkboxes. This script just collects whichever "class__*" fields show
- * up truthy in the submission; it never needs to know the class list in
- * advance, so it keeps working unchanged as classes are added or removed
- * on the live Confirmed Classes sheet.
+ * The registration form's class checkboxes are UI-only (no "name"
+ * attribute), because Netlify Forms only stores fields present in the
+ * site's static HTML at deploy time and the class list is fetched live at
+ * runtime. Instead, the page's JavaScript copies every checked class's
+ * exact title into one static, always-present hidden field named
+ * "classes" as a JSON array right before submit. This script parses that
+ * single field; it never needs to know the class list in advance, so it
+ * keeps working unchanged as classes are added or removed on the live
+ * Confirmed Classes sheet.
  *
  * "Raw Submission" is a safety net: the complete original JSON Netlify
  * sent, so nothing is ever lost even if a parsed column comes up blank.
@@ -236,22 +237,34 @@ function extractFields_(submission) {
 }
 
 /**
- * Collects every checked class from the submission. Each class checkbox on
- * the registration form is named "class__<slug>" and its VALUE is the
- * exact class title text, so this only needs to look for fields with that
- * prefix -- it never needs a hardcoded list of class names, and so it
- * automatically keeps working as classes are added or removed.
+ * Collects every checked class from the submission. The registration
+ * page's checkboxes are rendered dynamically (from a live Google Sheet)
+ * and so have no "name" attribute of their own -- Netlify Forms only
+ * stores fields present in the site's static HTML at deploy time, so a
+ * per-checkbox field name would be silently dropped. Instead, the page's
+ * JavaScript copies every checked class's exact title into one static,
+ * always-present field named "classes" as a JSON array right before
+ * submit. This just parses that field, so it keeps working unchanged as
+ * classes are added or removed.
  */
 function extractClasses_(submission) {
   var data = submission.data || {};
+  var raw = data.classes;
+  if (raw === undefined || raw === null || String(raw).trim() === '') return [];
+
   var classes = [];
-  for (var key in data) {
-    if (Object.prototype.hasOwnProperty.call(data, key) && key.indexOf('class__') === 0) {
-      var val = data[key];
-      if (val !== undefined && val !== null && String(val).trim() !== '') {
-        classes.push(String(val).trim());
+  try {
+    var parsed = JSON.parse(raw);
+    if (Object.prototype.toString.call(parsed) === '[object Array]') {
+      for (var i = 0; i < parsed.length; i++) {
+        var val = parsed[i];
+        if (val !== undefined && val !== null && String(val).trim() !== '') {
+          classes.push(String(val).trim());
+        }
       }
     }
+  } catch (err) {
+    console.error('extractClasses_ failed to parse "classes" field: ' + err.message);
   }
   return classes;
 }

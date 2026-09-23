@@ -236,13 +236,21 @@ def build_teachers_body():
 # Student Class Registration: reads the "BWU Confirmed Classes" Google
 # Sheet live (published to the web as CSV) via client-side JavaScript, so
 # adding a new confirmed class to that sheet makes it appear on this page
-# automatically -- no code change or redeploy needed. Each class renders
-# as its own uniquely-named checkbox (class__<slug>, value=<exact title>),
-# the same one-field-per-option pattern already proven reliable by the
-# Teacher form's Class Format checkboxes, grouped under its Category
-# column. The Apps Script receiver (apps-script/BWU_Registration_WebhookReceiver.gs)
-# never needs to know the class list in advance -- it just collects
-# whichever "class__*" fields show up truthy in a submission.
+# automatically -- no code change or redeploy needed. Grouped under its
+# Category column.
+#
+# IMPORTANT -- Netlify Forms only stores fields that were present in the
+# site's static HTML at the deploy-time crawl. Since classes come from a
+# live sheet, each checkbox's exact name can't be known until the page
+# loads in the browser, so individually-named "class__<slug>" checkboxes
+# (the pattern the Teacher form's Class Format checkboxes use, where the
+# option list IS known at build time) get silently dropped by Netlify.
+# Instead, the checkboxes here carry no "name" attribute at all -- they're
+# UI-only -- and a single static hidden field ("classes", always present
+# in the built HTML) is populated by JavaScript with a JSON array of the
+# checked titles right before the native form submit fires. The Apps
+# Script receiver (apps-script/BWU_Registration_WebhookReceiver.gs) reads
+# and JSON.parses that one "classes" field.
 #
 # CLASSES_CSV_URL below must stay in sync with the "BWU Confirmed Classes"
 # Sheet's own published-CSV link (File > Share > Publish to web, in that
@@ -261,6 +269,7 @@ def build_registration_body():
         <form name="student-registration" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="registration-thank-you.html" class="volunteer-form" id="registration-form">
           <input type="hidden" name="form-name" value="student-registration">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+          <input type="hidden" name="classes" id="classes-field" value="">
 
           <div class="form-two-col">
             <div class="form-row">
@@ -376,7 +385,6 @@ def build_registration_body():
               html += '<div class="class-category">';
               html += '<h3 class="class-category-heading">' + escapeHTML(category) + '</h3>';
               byCategory[category].forEach(function (cls) {
-                var slug = slugify(cls.title);
                 var detailParts = [];
                 if (cls.format) detailParts.push(cls.format);
                 if (cls.instructor) detailParts.push(cls.instructor);
@@ -385,7 +393,7 @@ def build_registration_body():
                 var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
 
                 html += '<label class="class-option">';
-                html += '<input type="checkbox" name="class__' + slug + '" value="' + escapeHTML(cls.title) + '">';
+                html += '<input type="checkbox" class="class-checkbox" value="' + escapeHTML(cls.title) + '">';
                 html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + originalHTML + '</span>';
                 html += '</label>';
               });
@@ -396,7 +404,7 @@ def build_registration_body():
           }
 
           form.addEventListener("submit", function (e) {
-            var checked = form.querySelectorAll('input[name^="class__"]:checked');
+            var checked = form.querySelectorAll('input.class-checkbox:checked');
             var classErrorEl = document.getElementById("class-error");
             if (checked.length === 0) {
               e.preventDefault();
@@ -404,9 +412,21 @@ def build_registration_body():
                 classErrorEl.hidden = false;
                 classErrorEl.scrollIntoView({ behavior: "smooth", block: "center" });
               }
-            } else if (classErrorEl) {
-              classErrorEl.hidden = true;
+              return;
             }
+            if (classErrorEl) classErrorEl.hidden = true;
+
+            // Netlify Forms only stores fields present in the site's
+            // static HTML at deploy-time crawl. The class checkboxes
+            // above are rendered dynamically at runtime, so submitting
+            // them by name would be silently dropped -- instead, copy
+            // every checked class's exact title into this one static,
+            // always-present hidden field as a JSON array right before
+            // the native form submission proceeds.
+            var selectedTitles = [];
+            checked.forEach(function (box) { selectedTitles.push(box.value); });
+            var classesField = document.getElementById("classes-field");
+            if (classesField) classesField.value = JSON.stringify(selectedTitles);
           });
 
           // Minimal CSV parser: handles quoted fields, embedded commas,
