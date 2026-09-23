@@ -32,8 +32,8 @@
  * Sheet URL:      https://docs.google.com/spreadsheets/d/1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI/edit
  * Tab name:       Sheet1
  *
- * Columns written (A-I):
- *   Timestamp | First Name | Last Name | Street Address | Phone | Email |
+ * Columns written (A-H):
+ *   Timestamp | First Name | Last Name | Phone | Email |
  *   Class Registered For | Raw Submission | Submission ID
  *
  * The registration form gives each class checkbox its own field name,
@@ -51,8 +51,8 @@
 
 var SHEET_ID = '1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI';
 var SHEET_NAME = 'Sheet1';
-var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Street Address', 'Phone', 'Email', 'Class Registered For', 'Raw Submission', 'Submission ID'];
-var SUBMISSION_ID_COL = 9; // column I — composite "<submission id>::<class title>"
+var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Registered For', 'Raw Submission', 'Submission ID'];
+var SUBMISSION_ID_COL = 8; // column H — composite "<submission id>::<class title>"
 
 // Everyone who should get an email the moment a new registration comes in.
 // TEMPORARY: Rick only while testing, matching the same starting point used
@@ -99,7 +99,6 @@ function doPost(e) {
           fields.timestamp,
           fields.firstName,
           fields.lastName,
-          fields.streetAddress,
           fields.phone,
           fields.email,
           classes[i],
@@ -109,7 +108,7 @@ function doPost(e) {
         writtenCount++;
       }
     } catch (err) {
-      sheet.appendRow([new Date(), '', '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '']);
+      sheet.appendRow([new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '']);
     }
 
     // Only email on genuinely new rows -- a Netlify retry of an already-
@@ -150,7 +149,6 @@ function sendNotificationEmail_(fields, classes) {
     var body =
       'A new class registration came in through the Registration page:\n\n' +
       'Name: ' + fields.firstName + ' ' + fields.lastName + '\n' +
-      'Address: ' + fields.streetAddress + '\n' +
       'Email: ' + fields.email + '\n' +
       'Phone: ' + fields.phone + '\n' +
       'Classes registered for:\n  - ' + classes.join('\n  - ') + '\n\n' +
@@ -199,7 +197,7 @@ function sendAcknowledgementEmail_(fields, classes) {
 }
 
 /**
- * Pulls First Name / Last Name / Street Address / Phone / Email out of the
+ * Pulls First Name / Last Name / Phone / Email out of the
  * submission object, trying several field-name patterns Netlify is known
  * to use, so the script keeps working even if the exact shape differs
  * slightly from what's expected.
@@ -218,11 +216,6 @@ function extractFields_(submission) {
     human['Last Name'], human['last name']
   ]);
 
-  var streetAddress = firstNonEmpty_([
-    data['street-address'], data.address, data['home-address'],
-    human['Street Address'], human.Address
-  ]);
-
   var email = firstNonEmpty_([
     data.email, human.Email, human.email
   ]);
@@ -237,7 +230,6 @@ function extractFields_(submission) {
     timestamp: createdAt,
     firstName: firstName,
     lastName: lastName,
-    streetAddress: streetAddress,
     phone: phone,
     email: email
   };

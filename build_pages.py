@@ -274,11 +274,6 @@ def build_registration_body():
             </div>
           </div>
 
-          <div class="form-row">
-            <label for="reg-address">Street Address</label>
-            <input type="text" id="reg-address" name="street-address" required>
-          </div>
-
           <div class="form-two-col">
             <div class="form-row">
               <label for="reg-phone">Phone Number</label>
