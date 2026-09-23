@@ -8,6 +8,7 @@ this script is a build helper, not something a browser loads).
 """
 
 NAV_ITEMS = [
+    ("Home", "index.html", "home"),
     ("Class Registration", "registration.html", "book"),
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Info Updates", "info-updates.html", "music"),
