@@ -4,11 +4,13 @@
  * Purpose: receives the "Outgoing webhook" notification Netlify sends every
  * time a resident submits the class registration form on the Registration
  * page (https://bridgewateryou.netlify.app/registration), and appends ONE
- * ROW PER CLASS the resident selected to the "BWU Student Class
- * Registration" Google Sheet — so a resident registering for 3 classes in
- * one submission produces 3 rows, with no manual splitting needed
- * afterward. It also emails a notification to the recipients listed below
- * and a personalized acknowledgement back to the resident.
+ * ROW PER CLASS the resident selected to the "BW_YOU_Winter_27_Class_
+ * Registration" Google Sheet's "Sheet1" tab — so a resident registering for
+ * 3 classes in one submission produces 3 rows, with no manual splitting
+ * needed afterward. It also emails a notification to the recipients listed
+ * below and a personalized acknowledgement back to the resident, and
+ * regenerates three live report tabs in the same Sheet after every new
+ * registration (see "LIVE REPORT TABS" below).
  *
  * This mirrors BWU_Teacher_WebhookReceiver.gs and
  * BWU_Forum_WebhookReceiver.gs, including their duplicate-submission
@@ -23,16 +25,23 @@
  * get their own row the first time through.
  *
  * NOTE: this file is a version-controlled mirror for reference. The Apps
- * Script project itself lives inside the "BWU Student Class Registration"
- * Google Sheet (Extensions > Apps Script) — that is what's actually
- * deployed and running, not this file. If you edit the deployed script,
- * copy the change back into this file too so they don't drift apart.
+ * Script project itself lives inside the "BW_YOU_Winter_27_Class_
+ * Registration" Google Sheet (Extensions > Apps Script) — that is what's
+ * actually deployed and running, not this file. If you edit the deployed
+ * script, copy the change back into this file too so they don't drift
+ * apart.
  *
  * Bound Sheet ID: 1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI
  * Sheet URL:      https://docs.google.com/spreadsheets/d/1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI/edit
- * Tab name:       Sheet1
+ * Raw data tab:   Sheet1 — IMPORTANT: this exact literal tab name must
+ *                 match a real tab in the Sheet, or the script will
+ *                 silently create a brand-new tab with this name and write
+ *                 there instead of wherever you expect (this exact bug
+ *                 happened once already — confirmed 2026-09-23 — always
+ *                 double-check the actual tab name in the Sheet's tab bar
+ *                 before assuming this constant is correct).
  *
- * Columns written (A-H):
+ * Columns written to Sheet1 (A-H):
  *   Timestamp | First Name | Last Name | Phone | Email |
  *   Class Registered For | Raw Submission | Submission ID
  *
@@ -48,12 +57,40 @@
  *
  * "Raw Submission" is a safety net: the complete original JSON Netlify
  * sent, so nothing is ever lost even if a parsed column comes up blank.
+ *
+ * LIVE REPORT TABS (added 2026-09-23):
+ * After every registration that writes at least one new row, doPost also
+ * rebuilds three additional tabs from scratch, reading straight from
+ * Sheet1, so they always reflect the current state with zero manual steps
+ * or separate schedules:
+ *   - "Unique Residents" — one row per unique resident (deduped by email,
+ *     lowercased; falls back to "name:first_last" if no email), with a
+ *     count of how many distinct classes they're registered for.
+ *   - "Class Tally" — one row per class with its current unique-registrant
+ *     count, sorted highest-demand first.
+ *   - "Class Rosters" — every class's full roster (First/Last/Phone/
+ *     Email), one gold header band per class, stacked class after class,
+ *     sorted alphabetically by class name.
+ * These three tabs are fully regenerated (cleared and rewritten) on every
+ * qualifying submission — cheap at this scale (a single community's
+ * worth of residents/classes), and it avoids any risk of stale leftover
+ * rows from a shrinking dataset. Colors match the live site's brand
+ * tokens (assets/style.css): navy #0B2A5C, gold #C78F14, cream #FBF3E5.
  */
 
 var SHEET_ID = '1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI';
 var SHEET_NAME = 'Sheet1';
 var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Registered For', 'Raw Submission', 'Submission ID'];
 var SUBMISSION_ID_COL = 8; // column H — composite "<submission id>::<class title>"
+
+var BRAND = {
+  navy: '#0B2A5C',
+  navyDark: '#081f45',
+  gold: '#C78F14',
+  cream: '#FBF3E5',
+  white: '#FFFFFF',
+  altRow: '#EEF2F7'
+};
 
 // Everyone who should get an email the moment a new registration comes in.
 // TEMPORARY: Rick only while testing, matching the same starting point used
@@ -112,10 +149,16 @@ function doPost(e) {
       sheet.appendRow([new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '']);
     }
 
-    // Only email on genuinely new rows -- a Netlify retry of an already-
-    // recorded submission writes nothing new (writtenCount stays 0), so it
-    // must not re-notify anyone a second or third time.
+    // Only email / rebuild reports on genuinely new rows -- a Netlify
+    // retry of an already-recorded submission writes nothing new
+    // (writtenCount stays 0), so it must not re-notify anyone or waste
+    // time regenerating tabs that haven't actually changed.
     if (fields && writtenCount > 0) {
+      try {
+        rebuildReportTabs_(sheet);
+      } catch (err) {
+        console.error('rebuildReportTabs_ failed: ' + err.message);
+      }
       sendNotificationEmail_(fields, classes);
       sendAcknowledgementEmail_(fields, classes);
     }
@@ -326,4 +369,236 @@ function ensureHeaders_(sheet) {
 function setupHeadersOnly() {
   var sheet = getSheet_();
   ensureHeaders_(sheet);
+}
+
+// ==========================================================================
+// LIVE REPORT TABS — "Unique Residents", "Class Tally", "Class Rosters"
+// ==========================================================================
+
+/**
+ * Rebuilds all three live report tabs from the current contents of Sheet1.
+ * Called at the end of every doPost that wrote at least one new row, so
+ * the tabs are always current with no manual step or separate schedule.
+ * Cheap full rebuild each time -- simplest way to guarantee the tabs never
+ * carry stale rows as the underlying data grows.
+ */
+function rebuildReportTabs_(sheet) {
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) return; // header row only, nothing to summarize yet
+
+  var residents = {};     // key -> { firstName, lastName, phone, email, classes: {title: true} }
+  var residentOrder = [];
+  var classes = {};       // title -> { registrants: { key: residentRecord } }
+  var classOrder = [];
+
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var firstName = String(row[1] || '').trim();
+    var lastName = String(row[2] || '').trim();
+    var phone = String(row[3] || '').trim();
+    var email = String(row[4] || '').trim();
+    var classTitle = String(row[5] || '').trim();
+
+    if (!classTitle || classTitle === '(none selected)' || classTitle.indexOf('PARSE ERROR') === 0) continue;
+
+    var key = email ? email.toLowerCase() : (firstName || lastName ? 'name:' + firstName.toLowerCase() + '_' + lastName.toLowerCase() : '');
+    if (!key) continue;
+
+    if (!residents[key]) {
+      residents[key] = { firstName: firstName, lastName: lastName, phone: phone, email: email, classes: {} };
+      residentOrder.push(key);
+    } else {
+      // A later row (a more recent submission from the same person) wins
+      // for display fields, in case they updated their info; classes
+      // accumulate across every submission instead of being overwritten.
+      residents[key].firstName = firstName || residents[key].firstName;
+      residents[key].lastName = lastName || residents[key].lastName;
+      residents[key].phone = phone || residents[key].phone;
+      residents[key].email = email || residents[key].email;
+    }
+    residents[key].classes[classTitle] = true;
+
+    if (!classes[classTitle]) {
+      classes[classTitle] = { registrants: {} };
+      classOrder.push(classTitle);
+    }
+    classes[classTitle].registrants[key] = residents[key];
+  }
+
+  writeUniqueResidentsTab_(residentOrder, residents);
+  writeClassTallyTab_(classOrder, classes);
+  writeClassRostersTab_(classOrder, classes);
+}
+
+function getOrCreateReportTab_(name) {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) sheet = ss.insertSheet(name);
+  return sheet;
+}
+
+/** Batches alternating white/light-blue row backgrounds in one call instead of one call per row. */
+function applyAlternatingRows_(sheet, startRow, numRows, numCols) {
+  var backgrounds = [];
+  for (var i = 0; i < numRows; i++) {
+    var bg = (i % 2 === 0) ? BRAND.white : BRAND.altRow;
+    var rowColors = [];
+    for (var j = 0; j < numCols; j++) rowColors.push(bg);
+    backgrounds.push(rowColors);
+  }
+  sheet.getRange(startRow, 1, numRows, numCols).setBackgrounds(backgrounds);
+}
+
+function nowFormatted_() {
+  return Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'MMMM d, yyyy h:mm a');
+}
+
+/** "Unique Residents" -- one row per resident, deduped, with their total distinct-class count. */
+function writeUniqueResidentsTab_(residentOrder, residents) {
+  var sheet = getOrCreateReportTab_('Unique Residents');
+  sheet.clear();
+
+  var numCols = 6; // First Name | Last Name | Phone | Email | Classes Registered | Notes
+  var rows = residentOrder.map(function (key) {
+    var r = residents[key];
+    return {
+      firstName: r.firstName,
+      lastName: r.lastName,
+      phone: r.phone,
+      email: r.email,
+      count: Object.keys(r.classes).length
+    };
+  });
+  rows.sort(function (a, b) {
+    return a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName);
+  });
+
+  sheet.getRange(1, 1, 1, numCols).merge()
+    .setValue('BRIDGEWATER YOUNIVERSITY — Unique Registered Residents')
+    .setBackground(BRAND.navy).setFontColor(BRAND.white).setFontWeight('bold').setFontSize(13)
+    .setHorizontalAlignment('center');
+
+  sheet.getRange(2, 1, 1, numCols).merge()
+    .setValue('Total Unique Residents: ' + rows.length + '   |   Updated: ' + nowFormatted_())
+    .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
+    .setHorizontalAlignment('center');
+
+  sheet.getRange(3, 1, 1, numCols)
+    .setValues([['First Name', 'Last Name', 'Phone', 'Email', 'Classes Registered', 'Notes']])
+    .setBackground(BRAND.cream).setFontColor(BRAND.navy).setFontWeight('bold');
+
+  if (rows.length) {
+    var values = rows.map(function (r) {
+      return [r.firstName, r.lastName, r.phone, r.email, r.count, ''];
+    });
+    sheet.getRange(4, 1, values.length, numCols).setValues(values);
+    applyAlternatingRows_(sheet, 4, values.length, numCols);
+  }
+
+  var summaryRow = 4 + rows.length;
+  sheet.getRange(summaryRow, 1, 1, numCols).merge()
+    .setValue('TOTAL UNIQUE RESIDENTS: ' + rows.length)
+    .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
+    .setHorizontalAlignment('center');
+
+  sheet.setColumnWidth(1, 130);
+  sheet.setColumnWidth(2, 140);
+  sheet.setColumnWidth(3, 120);
+  sheet.setColumnWidth(4, 220);
+  sheet.setColumnWidth(5, 140);
+  sheet.setColumnWidth(6, 240);
+  sheet.setFrozenRows(3);
+}
+
+/** "Class Tally" -- one row per class with its current unique-registrant count, highest demand first. */
+function writeClassTallyTab_(classOrder, classes) {
+  var sheet = getOrCreateReportTab_('Class Tally');
+  sheet.clear();
+
+  var numCols = 2; // Class Name | Registrants
+  var rows = classOrder.map(function (title) {
+    return { title: title, count: Object.keys(classes[title].registrants).length };
+  });
+  rows.sort(function (a, b) {
+    return b.count - a.count || a.title.localeCompare(b.title);
+  });
+
+  sheet.getRange(1, 1, 1, numCols).merge()
+    .setValue('BRIDGEWATER YOUNIVERSITY — Class Interest Tally')
+    .setBackground(BRAND.navy).setFontColor(BRAND.white).setFontWeight('bold').setFontSize(13)
+    .setHorizontalAlignment('center');
+
+  sheet.getRange(2, 1, 1, numCols).merge()
+    .setValue('Total Classes With Registrations: ' + rows.length + '   |   Updated: ' + nowFormatted_())
+    .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
+    .setHorizontalAlignment('center');
+
+  sheet.getRange(3, 1, 1, numCols)
+    .setValues([['Class Name', 'Registrants']])
+    .setBackground(BRAND.cream).setFontColor(BRAND.navy).setFontWeight('bold');
+
+  if (rows.length) {
+    var values = rows.map(function (r) { return [r.title, r.count]; });
+    sheet.getRange(4, 1, values.length, numCols).setValues(values);
+    applyAlternatingRows_(sheet, 4, values.length, numCols);
+  }
+
+  var summaryRow = 4 + rows.length;
+  sheet.getRange(summaryRow, 1, 1, numCols).merge()
+    .setValue('TOTAL CLASSES WITH REGISTRATIONS: ' + rows.length)
+    .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
+    .setHorizontalAlignment('center');
+
+  sheet.setColumnWidth(1, 380);
+  sheet.setColumnWidth(2, 140);
+  sheet.setFrozenRows(3);
+}
+
+/** "Class Rosters" -- every class's full roster, one gold header band per class, stacked alphabetically. */
+function writeClassRostersTab_(classOrder, classes) {
+  var sheet = getOrCreateReportTab_('Class Rosters');
+  sheet.clear();
+
+  var numCols = 4; // First Name | Last Name | Phone | Email
+  var titlesSorted = classOrder.slice().sort(function (a, b) { return a.localeCompare(b); });
+
+  sheet.getRange(1, 1, 1, numCols).merge()
+    .setValue('BRIDGEWATER YOUNIVERSITY — Class Rosters')
+    .setBackground(BRAND.navy).setFontColor(BRAND.white).setFontWeight('bold').setFontSize(13)
+    .setHorizontalAlignment('center');
+
+  var row = 3; // row 2 left blank as a spacer under the title
+  titlesSorted.forEach(function (title) {
+    var registrants = classes[title].registrants;
+    var people = Object.keys(registrants).map(function (k) { return registrants[k]; });
+    people.sort(function (a, b) {
+      return a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName);
+    });
+
+    sheet.getRange(row, 1, 1, numCols).merge()
+      .setValue(title + '   |   ' + people.length + ' Registered')
+      .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
+      .setHorizontalAlignment('left');
+    row++;
+
+    sheet.getRange(row, 1, 1, numCols)
+      .setValues([['First Name', 'Last Name', 'Phone', 'Email']])
+      .setBackground(BRAND.cream).setFontColor(BRAND.navy).setFontWeight('bold');
+    row++;
+
+    if (people.length) {
+      var values = people.map(function (p) { return [p.firstName, p.lastName, p.phone, p.email]; });
+      sheet.getRange(row, 1, values.length, numCols).setValues(values);
+      applyAlternatingRows_(sheet, row, values.length, numCols);
+      row += values.length;
+    }
+
+    row++; // blank spacer row between classes
+  });
+
+  sheet.setColumnWidth(1, 140);
+  sheet.setColumnWidth(2, 150);
+  sheet.setColumnWidth(3, 130);
+  sheet.setColumnWidth(4, 240);
+  sheet.setFrozenRows(1);
 }

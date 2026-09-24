@@ -599,6 +599,9 @@ PAGES = [
 def build_nav(current_file):
     items = []
     for label, href, icon in NAV_ITEMS:
+        # The Home tab is redundant on the Home page itself, so omit it there.
+        if href == "index.html" and current_file == "index.html":
+            continue
         active = " active" if href == current_file else ""
         items.append(
             f'''      <li>
