@@ -548,15 +548,27 @@ footer a {
 
 /* ---------- Class Registration: wide-desktop layout ---------- */
 /* Only on wide desktop screens (1100px and up): widen the Class
-   Registration page and show three class categories per row. Tablets and
-   phones are untouched: 2 columns from 701-1099px, 1 column at 700px and
-   below, exactly as before. Scoped to the page containing the registration
-   form so no other page is affected. */
+   Registration page and flow the categories down three columns, one
+   after another, so there are no blank gaps between rows. Category
+   headings lose their gold underline here. Tablets and phones are
+   untouched. Scoped to the page containing the registration form so no
+   other page is affected. */
 @media (min-width: 1100px) {
   main:has(#registration-form) {
     max-width: 1200px;
   }
   #class-categories {
-    grid-template-columns: 1fr 1fr 1fr;
+    display: block;
+    column-count: 3;
+    column-gap: 32px;
+  }
+  .class-category {
+    break-inside: avoid;
+    margin-top: 0;
+    margin-bottom: 26px;
+  }
+  .class-category-heading {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 }

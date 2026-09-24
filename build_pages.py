@@ -381,6 +381,9 @@ def build_registration_body():
               byCategory[category].push({ title: title, format: format, instructor: instructor });
             }
 
+            // Show categories alphabetically rather than in sheet order.
+            categoryOrder.sort(function (a, b) { return a.localeCompare(b); });
+
             var html = "";
             categoryOrder.forEach(function (category) {
               html += '<div class="class-category">';
