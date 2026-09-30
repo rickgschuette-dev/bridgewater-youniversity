@@ -158,6 +158,7 @@
             var formatIdx = header.indexOf("format");
             var categoryIdx = header.indexOf("category");
             var instructorIdx = header.indexOf("instructor");
+            var scheduleIdx = header.indexOf("day, time & room");
 
             if (titleIdx === -1 || categoryIdx === -1) {
               errorEl.hidden = false;
@@ -175,12 +176,13 @@
               var category = (row[categoryIdx] || "").trim() || "Other";
               var format = formatIdx > -1 ? (row[formatIdx] || "").trim() : "";
               var instructor = instructorIdx > -1 ? (row[instructorIdx] || "").trim() : "";
+              var schedule = scheduleIdx > -1 ? (row[scheduleIdx] || "").trim() : "";
 
               if (!byCategory[category]) {
                 byCategory[category] = [];
                 categoryOrder.push(category);
               }
-              byCategory[category].push({ title: title, format: format, instructor: instructor });
+              byCategory[category].push({ title: title, format: format, instructor: instructor, schedule: schedule });
             }
 
             // Show categories alphabetically rather than in sheet order.
@@ -197,10 +199,11 @@
                 var detail = detailParts.length ? ' <span class="class-detail">(' + escapeHTML(detailParts.join(" — ")) + ')</span>' : "";
                 var original = ORIGINAL_TITLES[cls.title];
                 var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
+                var scheduleHTML = cls.schedule ? '<div class="class-schedule">' + escapeHTML(cls.schedule) + '</div>' : "";
 
                 html += '<label class="class-option">';
                 html += '<input type="checkbox" class="class-checkbox" value="' + escapeHTML(cls.title) + '">';
-                html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + originalHTML + '</span>';
+                html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + scheduleHTML + originalHTML + '</span>';
                 html += '</label>';
               });
               html += '</div>';

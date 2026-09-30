@@ -546,6 +546,13 @@ footer a {
   margin-top: 3px;
 }
 
+.class-schedule {
+  font-weight: 400;
+  color: #555;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
 /* ---------- Class Registration: wide-desktop layout ---------- */
 /* Only on wide desktop screens (1100px and up): widen the Class
    Registration page and flow the categories down three columns, one
