@@ -666,8 +666,33 @@ footer a {
   opacity: 0.85;
 }
 
-.sched-confirm summary {
+.sched-tbd summary {
   background: #6b5a2e;
+}
+
+.sched-tbd-body {
+  padding: 4px 20px 18px;
+}
+
+.sched-tbd-body p {
+  margin: 10px 0 12px;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.sched-tbd-list {
+  margin: 0;
+  padding-left: 20px;
+  column-width: 320px;
+  column-gap: 44px;
+  column-rule: 2px solid var(--gold);
+}
+
+.sched-tbd-list li {
+  break-inside: avoid;
+  padding: 6px 0;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .sched-dates {

@@ -545,6 +545,7 @@ def _schedule_sessions():
     S = []
     # Monday
     S.append((_weekly(0, "Jan 18", "Feb 1"), (12, 0), "12:00 noon", "Crockpot Cooking For Men", "Kitchen", ""))
+    S.append((_weekly(0, "Jan 11", "Feb 15"), (13, 0), "1:00 p.m.", "Fundamentals of AI", "Cafe", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (14, 0), "2:00 p.m.", "Beginning Creative Poetry", "Library", ""))
     for title, mon, thu in nums:
         S.append((_once(0, mon), (14, 0), "2:00 p.m.", title, "Cafe", ""))
@@ -556,7 +557,7 @@ def _schedule_sessions():
     S.append((_once(0, "Jan 18"), (19, 0), "7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Cafe", ""))
     # Tuesday
     S.append((_weekly(1, "Jan 12", "Feb 16"), (10, 0), "10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Library", ""))
-    S.append((_weekly(1, "Feb 2", "Feb 16"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
+    S.append((_weekly(1, "Feb 9", "Feb 23"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
     S.append((_once(1, "Feb 2"), (11, 0), "11:00 a.m.", "Space History and Future", "Cafe", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (17, 30), "5:30 p.m.", "Holistic Medicine", "Cafe", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (19, 30), "7:30 p.m.", "Surviving an Active Shooter", "Cafe", ""))
@@ -587,8 +588,15 @@ def _schedule_sessions():
     return S
 
 
-SCHEDULE_TO_CONFIRM = [
-    ("Mondays", "Fundamentals of AI", "Time, dates and room to be confirmed"),
+# Classes in the Confirmed Classes sheet whose "Day, Time & Room" cell is blank.
+SCHEDULE_UNSCHEDULED = [
+    "Ping Pong 101",
+    "Home DIY",
+    "Self-Defense for All",
+    "I'm Dead. Now What?",
+    "Protecting Yourself From Financial Scams that Target Seniors",
+    "FAIR (Financial Awareness in Retirement)",
+    "Ecology, Geology and Early Explorers of the Grand Canyon",
 ]
 
 
@@ -643,23 +651,28 @@ def build_schedule_body():
         open_attr = " open" if i == 0 else ""
         week_html.append(
             f'''      <details class="sched-week"{open_attr}>
-        <summary><span class="sched-week-title">Week of {title}</span><span class="sched-week-count">{total} sessions</span></summary>
+        <summary><span class="sched-week-title">Week of {title}</span><span class="sched-week-count">{total} session{"" if total == 1 else "s"}</span></summary>
         <div class="sched-dates">
 {blocks_html}
         </div>
       </details>'''
         )
     weeks_html = "\n".join(week_html)
-    confirm_rows = "\n".join(
-        f'''              <li class="sched-item">
-                <span class="sched-time">{t}</span>
-                <span class="sched-info">
-                  <span class="sched-title">{_html.escape(title)}</span>
-                  <span class="sched-meta">{room}</span>
-                </span>
-              </li>'''
-        for t, title, room in SCHEDULE_TO_CONFIRM
-    )
+    tbd_html = ""
+    if SCHEDULE_UNSCHEDULED:
+        tbd_items = "\n".join(
+            f"            <li>{_html.escape(t)}</li>" for t in SCHEDULE_UNSCHEDULED
+        )
+        tbd_html = f"""      <details class="sched-week sched-tbd">
+        <summary><span class="sched-week-title">Classes Yet To Be Scheduled</span><span class="sched-week-count">{len(SCHEDULE_UNSCHEDULED)} classes</span></summary>
+        <div class="sched-tbd-body">
+          <p>The day, time and room for each of these classes will be posted here once it is scheduled.</p>
+          <ul class="sched-tbd-list">
+{tbd_items}
+          </ul>
+        </div>
+      </details>
+"""
     return f"""
   <div class="sched-page">
     <p class="sched-intro">Winter &lsquo;27 classes by calendar date, with the
@@ -670,17 +683,7 @@ def build_schedule_body():
     </div>
 
 {weeks_html}
-      <details class="sched-week sched-confirm">
-        <summary><span class="sched-week-title">Details Being Confirmed</span><span class="sched-week-count">{len(SCHEDULE_TO_CONFIRM)} class</span></summary>
-        <div class="sched-dates">
-          <div class="sched-date">
-            <ul class="sched-list">
-{confirm_rows}
-            </ul>
-          </div>
-        </div>
-      </details>
-  </div>
+{tbd_html}  </div>
 
   <script>
     (function () {{
