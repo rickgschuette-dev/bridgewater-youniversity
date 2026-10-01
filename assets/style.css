@@ -589,50 +589,100 @@ footer a {
 }
 
 /* ---------- Class Schedule page ---------- */
-/* ---------- Class Schedule page ---------- */
 
-.sched-jump {
+.sched-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 4px 0 28px;
+  margin: 4px 0 22px;
 }
 
-.sched-jump a {
-  display: inline-block;
-  min-width: 64px;
-  text-align: center;
-  padding: 10px 16px;
+.sched-controls button {
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 18px;
+  background: var(--white);
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sched-controls button:hover,
+.sched-controls button:focus {
   background: var(--navy);
   color: var(--white);
-  font-weight: 700;
-  text-decoration: none;
-  border-radius: 4px;
-  border-bottom: 3px solid var(--gold);
 }
 
-.sched-jump a:hover,
-.sched-jump a:focus {
-  background: var(--navy-dark);
-}
-
-.sched-days {
-  display: block;
-}
-
-.sched-day {
+.sched-week {
   background: var(--white);
-  border-top: 5px solid var(--navy);
   border-radius: 4px;
-  padding: 6px 20px 14px;
-  margin-bottom: 24px;
-  scroll-margin-top: 16px;
+  margin-bottom: 14px;
+  border: 1px solid #e6dcc6;
 }
 
-.sched-day h2 {
+.sched-week summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--navy);
+  color: var(--white);
+  border-bottom: 3px solid var(--gold);
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sched-week summary::-webkit-details-marker {
+  display: none;
+}
+
+.sched-week:not([open]) summary {
+  border-radius: 4px;
+}
+
+.sched-week summary::after {
+  content: "+";
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: auto;
+  padding-left: 12px;
+}
+
+.sched-week[open] summary::after {
+  content: "\2212";
+}
+
+.sched-week-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.sched-week-count {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.sched-confirm summary {
+  background: #6b5a2e;
+}
+
+.sched-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 6px 28px;
+  padding: 8px 20px 16px;
+}
+
+.sched-date h3 {
   color: var(--navy);
-  font-size: 1.4rem;
-  margin: 14px 0 8px;
+  font-size: 1.1rem;
+  margin: 14px 0 4px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--gold);
 }
 
 .sched-list {
@@ -645,8 +695,8 @@ footer a {
   display: grid;
   grid-template-columns: 8.5rem 1fr;
   gap: 4px 14px;
-  padding: 10px 0;
-  border-top: 1px solid #e6dcc6;
+  padding: 8px 0;
+  border-top: 1px solid #efe6d2;
 }
 
 .sched-item:first-child {
@@ -674,12 +724,11 @@ footer a {
   margin-top: 2px;
 }
 
-.sched-confirm {
-  border-top-color: var(--gold);
-}
-
 @media (max-width: 520px) {
   .sched-item {
+    grid-template-columns: 1fr;
+  }
+  .sched-dates {
     grid-template-columns: 1fr;
   }
 }
@@ -687,11 +736,5 @@ footer a {
 @media (min-width: 1000px) {
   main:has(.sched-page) {
     max-width: 1180px;
-  }
-  .sched-days {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 28px;
-    align-items: start;
   }
 }

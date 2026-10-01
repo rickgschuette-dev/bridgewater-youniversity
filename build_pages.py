@@ -502,61 +502,89 @@ PAGES_WITHOUT_HEADING = {"teachers.html", "registration.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
 
-SCHEDULE_DAYS = [
-    ("Monday", [
-        ("12:00 noon", "Crockpot Cooking For Men", "Jan 18 &ndash; Feb 1", "Kitchen", ""),
-        ("2:00 p.m.", "Beginning Creative Poetry", "Jan 11 &ndash; Feb 15", "Library", ""),
-        ("2:00 p.m.", "How to Read Your Lab Results", "Jan 18", "Cafe", ""),
-        ("2:00 p.m.", "Oh My Aching Hips", "Jan 25", "Cafe", ""),
-        ("2:00 p.m.", "Your Kidneys and You", "Feb 1", "Cafe", ""),
-        ("2:00 p.m.", "The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 8", "Cafe", ""),
-        ("2:00 p.m.", "Preventing Ovarian Cancer", "Feb 15", "Cafe", ""),
-        ("3:00 p.m.", "US History: The Roaring 20s to WW2", "Jan 11 &ndash; Feb 15", "Cafe", ""),
-        ("6:00 p.m.", "Emerging Quantum Science", "Jan 11", "Cafe", ""),
-        ("6:00 p.m.", "Got Flour? Let's Make Bread", "Jan 25 &ndash; Feb 8", "Kitchen", ""),
-        ("6:30 p.m.", "Fundamentals of AI", "Jan 11 &ndash; Feb 15", "Cafe", ""),
-        ("7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Jan 18", "Cafe", ""),
-    ]),
-    ("Tuesday", [
-        ("10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Jan 12 &ndash; Feb 16", "Library", ""),
-        ("11:00 a.m.", "Introduction to Environmental Disasters", "Feb 2 &ndash; Feb 16", "Cafe", ""),
-        ("11:00 a.m.", "Space History and Future", "Feb 2", "Cafe", ""),
-        ("5:30 p.m.", "Holistic Medicine", "Jan 19 &ndash; Feb 2", "Cafe", ""),
-        ("7:00 p.m.", "Introduction to Astronomy", "Jan 12 &ndash; Jan 26", "Veranda", ""),
-        ("7:00 p.m.", "Introduction to the Cosmos", "Feb 2 &ndash; Feb 16", "Veranda", ""),
-    ]),
-    ("Wednesday", [
-        ("10:00 a.m.", "Fundamentals of Western Art History", "Jan 13 &ndash; Feb 17", "Cafe", ""),
-        ("11:00 a.m.", "Comparative Religions", "Jan 13 &ndash; Feb 17", "Cafe", ""),
-        ("11:00 a.m.", "Navigating Changes in the Second Half of Life", "Jan 20 &ndash; Feb 3", "Craft Room", ""),
-        ("11:00 a.m.", "Self-Defense for All", "Jan 13 &ndash; Feb 17", "Ballroom B", ""),
-        ("12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Feb 10 &ndash; Feb 24", "Cafe", ""),
-        ("2:00 p.m.", "Firearm Safety with Range Practice", "Jan 13 &ndash; Feb 17", "Cafe, gun range", ""),
-        ("4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Jan 13 &ndash; Feb 17", "Bocce Courts", ""),
-    ]),
-    ("Thursday", [
-        ("9:00 a.m.", "Balance 2", "Jan 14 &ndash; Jan 28", "Ballroom A", ""),
-        ("10:00 a.m.", "Basic Dog Obedience Training", "Jan 14 &ndash; Feb 18", "Amphitheater", ""),
-        ("3:00 p.m.", "Learn to Knit", "Jan 21 &ndash; Feb 25", "Cafe", ""),
-        ("4:00 &ndash; 7:00 p.m.", "Beginning Watercolor", "Jan 14 &ndash; Feb 4", "Craft Room", ""),
-        ("4:00 &ndash; 7:00 p.m.", "Intermediate Watercolor", "Feb 11 &ndash; Mar 4", "Craft Room", ""),
-        ("6:00 p.m.", "How to Read Your Lab Results", "Jan 21", "Cafe", "Repeat of the Monday seminar"),
-        ("6:00 p.m.", "Oh My Aching Hips", "Jan 28", "Cafe", "Repeat of the Monday seminar"),
-        ("6:00 p.m.", "Your Kidneys and You", "Feb 4", "Cafe", "Repeat of the Monday seminar"),
-        ("6:00 p.m.", "The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 11", "Cafe", "Repeat of the Monday seminar"),
-        ("6:00 p.m.", "Preventing Ovarian Cancer", "Feb 18", "Cafe", "Repeat of the Monday seminar"),
-    ]),
-    ("Friday", [
-        ("10:00 a.m.", "Math Made Easy", "Jan 22 &ndash; Feb 12", "Craft Room", ""),
-        ("10:00 a.m.", "Introduction to Bagpipes", "Feb 19", "Aerobics Room", ""),
-    ]),
-    ("Saturday", [
-        ("9:00 a.m.", "Birds in Our Backyards", "Jan 16", "Cafe", ""),
-        ("10:00 a.m.", "Florida Fishing", "Jan 16", "Cafe", ""),
-        ("10:00 a.m.", "Learn Your Smartphone", "Feb 6 &ndash; Feb 20", "Cafe", ""),
-        ("10:00 a.m.", "Intermediate Pickleball", "Jan 16 &ndash; Feb 20", "Pickleball Courts", ""),
-    ]),
-]
+SCHEDULE_YEAR = 2027
+
+
+def _sched_date(label):
+    import datetime as _dt
+    month, day = label.split()
+    months = ["Jan", "Feb", "Mar", "Apr"]
+    return _dt.date(SCHEDULE_YEAR, months.index(month) + 1, int(day))
+
+
+def _weekly(weekday, start, end):
+    import datetime as _dt
+    d = _sched_date(start)
+    last = _sched_date(end)
+    assert d.weekday() == weekday, f"{start} is not weekday {weekday}"
+    assert last.weekday() == weekday, f"{end} is not weekday {weekday}"
+    out = []
+    while d <= last:
+        out.append(d)
+        d += _dt.timedelta(days=7)
+    return out
+
+
+def _once(weekday, label):
+    d = _sched_date(label)
+    assert d.weekday() == weekday, f"{label} is not weekday {weekday}"
+    return [d]
+
+
+# Each entry: (list of dates, (hour24, minute), time label, title, room, note)
+# Weekdays: 0=Mon 1=Tue 2=Wed 3=Thu 4=Fri 5=Sat. Every start and end date is
+# checked against its weekday when the page is built.
+def _schedule_sessions():
+    nums = [
+        ("How to Read Your Lab Results", "Jan 18", "Jan 21"),
+        ("Oh My Aching Hips", "Jan 25", "Jan 28"),
+        ("Your Kidneys and You", "Feb 1", "Feb 4"),
+        ("The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 8", "Feb 11"),
+        ("Preventing Ovarian Cancer", "Feb 15", "Feb 18"),
+    ]
+    S = []
+    # Monday
+    S.append((_weekly(0, "Jan 18", "Feb 1"), (12, 0), "12:00 noon", "Crockpot Cooking For Men", "Kitchen", ""))
+    S.append((_weekly(0, "Jan 11", "Feb 15"), (14, 0), "2:00 p.m.", "Beginning Creative Poetry", "Library", ""))
+    for title, mon, thu in nums:
+        S.append((_once(0, mon), (14, 0), "2:00 p.m.", title, "Cafe", ""))
+        S.append((_once(3, thu), (18, 0), "6:00 p.m.", title, "Cafe", "Repeat of the Monday seminar"))
+    S.append((_weekly(0, "Jan 11", "Feb 15"), (15, 0), "3:00 p.m.", "US History: The Roaring 20s to WW2", "Cafe", ""))
+    S.append((_once(0, "Jan 11"), (18, 0), "6:00 p.m.", "Emerging Quantum Science", "Cafe", ""))
+    S.append((_weekly(0, "Jan 25", "Feb 8"), (18, 0), "6:00 p.m.", "Got Flour? Let's Make Bread", "Kitchen", ""))
+    S.append((_weekly(0, "Jan 11", "Feb 15"), (18, 30), "6:30 p.m.", "Fundamentals of AI", "Cafe", ""))
+    S.append((_once(0, "Jan 18"), (19, 0), "7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Cafe", ""))
+    # Tuesday
+    S.append((_weekly(1, "Jan 12", "Feb 16"), (10, 0), "10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Library", ""))
+    S.append((_weekly(1, "Feb 2", "Feb 16"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
+    S.append((_once(1, "Feb 2"), (11, 0), "11:00 a.m.", "Space History and Future", "Cafe", ""))
+    S.append((_weekly(1, "Jan 19", "Feb 2"), (17, 30), "5:30 p.m.", "Holistic Medicine", "Cafe", ""))
+    S.append((_weekly(1, "Jan 12", "Jan 26"), (19, 0), "7:00 p.m.", "Introduction to Astronomy", "Veranda", ""))
+    S.append((_weekly(1, "Feb 2", "Feb 16"), (19, 0), "7:00 p.m.", "Introduction to the Cosmos", "Veranda", ""))
+    # Wednesday
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (10, 0), "10:00 a.m.", "Fundamentals of Western Art History", "Cafe", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Comparative Religions", "Cafe", ""))
+    S.append((_weekly(2, "Jan 20", "Feb 3"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Self-Defense for All", "Ballroom B", ""))
+    S.append((_weekly(2, "Feb 10", "Feb 24"), (12, 0), "12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Cafe", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (14, 0), "2:00 p.m.", "Firearm Safety with Range Practice", "Cafe, gun range", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Courts", ""))
+    # Thursday
+    S.append((_weekly(3, "Jan 14", "Jan 28"), (9, 0), "9:00 a.m.", "Balance 2", "Ballroom A", ""))
+    S.append((_weekly(3, "Jan 14", "Feb 18"), (10, 0), "10:00 a.m.", "Basic Dog Obedience Training", "Amphitheater", ""))
+    S.append((_weekly(3, "Jan 21", "Feb 25"), (15, 0), "3:00 p.m.", "Learn to Knit", "Cafe", ""))
+    S.append((_weekly(3, "Jan 14", "Feb 4"), (16, 0), "4:00 &ndash; 7:00 p.m.", "Beginning Watercolor", "Craft Room", ""))
+    S.append((_weekly(3, "Feb 11", "Mar 4"), (16, 0), "4:00 &ndash; 7:00 p.m.", "Intermediate Watercolor", "Craft Room", ""))
+    # Friday
+    S.append((_weekly(4, "Jan 22", "Feb 12"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
+    S.append((_once(4, "Feb 19"), (10, 0), "10:00 a.m.", "Introduction to Bagpipes", "Aerobics Room", ""))
+    # Saturday
+    S.append((_once(5, "Jan 16"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
+    S.append((_once(5, "Jan 16"), (10, 0), "10:00 a.m.", "Florida Fishing", "Cafe", ""))
+    S.append((_weekly(5, "Feb 6", "Feb 20"), (10, 0), "10:00 a.m.", "Learn Your Smartphone", "Cafe", ""))
+    S.append((_weekly(5, "Jan 16", "Feb 20"), (10, 0), "10:00 a.m.", "Intermediate Pickleball", "Pickleball Courts", ""))
+    return S
+
 
 SCHEDULE_TO_CONFIRM = [
     ("7:30 p.m.", "Surviving an Active Shooter", "Cafe"),
@@ -567,61 +595,105 @@ SCHEDULE_TO_CONFIRM = [
 
 def build_schedule_body():
     import html as _html
-    jump = "\n".join(
-        f'        <a href="#{d.lower()}">{d[:3]}</a>' for d, _ in SCHEDULE_DAYS
-    )
-    sections = []
-    for day, items in SCHEDULE_DAYS:
-        rows = []
-        for time, title, dates, room, note in items:
-            note_html = f' &middot; <em>{note}</em>' if note else ""
-            rows.append(
-                f'''            <li class="sched-item">
-              <span class="sched-time">{time}</span>
-              <span class="sched-info">
-                <span class="sched-title">{_html.escape(title)}</span>
-                <span class="sched-meta">{dates} &middot; <strong>{room}</strong>{note_html}</span>
-              </span>
-            </li>'''
-            )
-        rows_html = "\n".join(rows)
-        sections.append(
-            f'''        <section class="sched-day" id="{day.lower()}">
-          <h2>{day}</h2>
-          <ul class="sched-list">
+    import datetime as _dt
+    by_date = {}
+    for dates, key, label, title, room, note in _schedule_sessions():
+        for d in dates:
+            by_date.setdefault(d, []).append((key, label, title, room, note))
+    # Group dates into Monday-to-Sunday weeks.
+    weeks = {}
+    for d in sorted(by_date):
+        monday = d - _dt.timedelta(days=d.weekday())
+        weeks.setdefault(monday, []).append(d)
+
+    def short(d):
+        return f"{d:%B} {d.day}"
+
+    week_html = []
+    for i, (monday, days) in enumerate(sorted(weeks.items())):
+        sunday = monday + _dt.timedelta(days=6)
+        if monday.month == sunday.month:
+            title = f"{short(monday)} &ndash; {sunday.day}"
+        else:
+            title = f"{short(monday)} &ndash; {short(sunday)}"
+        total = sum(len(by_date[d]) for d in days)
+        date_blocks = []
+        for d in days:
+            rows = []
+            for key, label, ctitle, room, note in sorted(by_date[d], key=lambda r: (r[0], r[2])):
+                note_html = f' &middot; <em>{note}</em>' if note else ""
+                rows.append(
+                    f'''              <li class="sched-item">
+                <span class="sched-time">{label}</span>
+                <span class="sched-info">
+                  <span class="sched-title">{_html.escape(ctitle)}</span>
+                  <span class="sched-meta"><strong>{room}</strong>{note_html}</span>
+                </span>
+              </li>'''
+                )
+            rows_html = "\n".join(rows)
+            date_blocks.append(
+                f'''          <div class="sched-date">
+            <h3>{d:%A}, {short(d)}</h3>
+            <ul class="sched-list">
 {rows_html}
-          </ul>
-        </section>'''
+            </ul>
+          </div>'''
+            )
+        blocks_html = "\n".join(date_blocks)
+        open_attr = " open" if i == 0 else ""
+        week_html.append(
+            f'''      <details class="sched-week"{open_attr}>
+        <summary><span class="sched-week-title">Week of {title}</span><span class="sched-week-count">{total} sessions</span></summary>
+        <div class="sched-dates">
+{blocks_html}
+        </div>
+      </details>'''
         )
-    sections_html = "\n".join(sections)
+    weeks_html = "\n".join(week_html)
     confirm_rows = "\n".join(
-        f'''            <li class="sched-item">
-              <span class="sched-time">{t}</span>
-              <span class="sched-info">
-                <span class="sched-title">{_html.escape(title)}</span>
-                <span class="sched-meta">Dates to be confirmed &middot; <strong>{room}</strong></span>
-              </span>
-            </li>'''
+        f'''              <li class="sched-item">
+                <span class="sched-time">{t}</span>
+                <span class="sched-info">
+                  <span class="sched-title">{_html.escape(title)}</span>
+                  <span class="sched-meta">Dates to be confirmed &middot; <strong>{room}</strong></span>
+                </span>
+              </li>'''
         for t, title, room in SCHEDULE_TO_CONFIRM
     )
     return f"""
   <div class="sched-page">
-    <p class="sched-intro">Winter &lsquo;27 classes by day of the week, with the
-    dates and room for each. Jump to a day:</p>
-    <nav class="sched-jump" aria-label="Jump to a day">
-{jump}
-    </nav>
-
-    <div class="sched-days">
-{sections_html}
-        <section class="sched-day sched-confirm" id="to-be-confirmed">
-          <h2>Details Being Confirmed</h2>
-          <ul class="sched-list">
-{confirm_rows}
-          </ul>
-        </section>
+    <p class="sched-intro">Winter &lsquo;27 classes by calendar date, with the
+    time and room for each. Select a week to open or close it.</p>
+    <div class="sched-controls">
+      <button type="button" id="sched-expand">Open all weeks</button>
+      <button type="button" id="sched-collapse">Close all weeks</button>
     </div>
+
+{weeks_html}
+      <details class="sched-week sched-confirm">
+        <summary><span class="sched-week-title">Details Being Confirmed</span><span class="sched-week-count">{len(SCHEDULE_TO_CONFIRM)} classes</span></summary>
+        <div class="sched-dates">
+          <div class="sched-date">
+            <ul class="sched-list">
+{confirm_rows}
+            </ul>
+          </div>
+        </div>
+      </details>
   </div>
+
+  <script>
+    (function () {{
+      var weeks = document.querySelectorAll(".sched-week");
+      document.getElementById("sched-expand").addEventListener("click", function () {{
+        weeks.forEach(function (w) {{ w.open = true; }});
+      }});
+      document.getElementById("sched-collapse").addEventListener("click", function () {{
+        weeks.forEach(function (w) {{ w.open = false; }});
+      }});
+    }})();
+  </script>
 """
 
 
