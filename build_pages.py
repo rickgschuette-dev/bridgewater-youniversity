@@ -89,8 +89,8 @@ def build_committee_block(name):
 def build_forum_body():
     committee_blocks = "\n".join(build_committee_block(c) for c in COMMITTEES)
     return f"""
-        <p>Thank you for agreeing to be part of the Bridgewater YOU framing
-        committee to build on our successful start. Please review the
+        <p>Want to be part of what Bridgewater YOU is all about? Join us as
+        we start preparing for next semester. Please review the
         committee platforms on this form and submit the form with your
         selection for the committee you would find most interesting. You can
         be part of more than one committee, but please submit a separate form
