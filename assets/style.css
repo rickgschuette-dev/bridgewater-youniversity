@@ -729,6 +729,11 @@ footer a {
   margin-top: 2px;
 }
 
+.sched-meta strong {
+  color: #B3141B;
+  font-weight: 700;
+}
+
 @media (max-width: 520px) {
   .sched-item {
     grid-template-columns: 1fr;
