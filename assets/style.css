@@ -840,5 +840,15 @@ footer a {
   text-transform: uppercase;
   color: var(--navy);
   opacity: 0.75;
-  margin: 0 0 18px;
+  margin: 0 0 34px;
+}
+
+main:has(.home-ff) {
+  padding-top: 18px;
+}
+
+main:has(.home-ff) h1 {
+  font-size: 3.1rem;
+  line-height: 1.1;
+  margin-bottom: 0.2em;
 }
