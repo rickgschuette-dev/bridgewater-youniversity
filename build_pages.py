@@ -552,13 +552,14 @@ def _schedule_sessions():
     S.append((_weekly(0, "Jan 11", "Feb 15"), (15, 0), "3:00 p.m.", "US History: The Roaring 20s to WW2", "Cafe", ""))
     S.append((_once(0, "Jan 11"), (18, 0), "6:00 p.m.", "Emerging Quantum Science", "Cafe", ""))
     S.append((_weekly(0, "Jan 25", "Feb 8"), (18, 0), "6:00 p.m.", "Got Flour? Let's Make Bread", "Kitchen", ""))
-    S.append((_weekly(0, "Jan 11", "Feb 15"), (18, 30), "6:30 p.m.", "Fundamentals of AI", "Cafe", ""))
+    S.append((_once(0, "Feb 8"), (14, 0), "2:00 &ndash; 4:00 p.m.", "Valentine Cookie Decorating", "Kitchen", ""))
     S.append((_once(0, "Jan 18"), (19, 0), "7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Cafe", ""))
     # Tuesday
     S.append((_weekly(1, "Jan 12", "Feb 16"), (10, 0), "10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Library", ""))
     S.append((_weekly(1, "Feb 2", "Feb 16"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
     S.append((_once(1, "Feb 2"), (11, 0), "11:00 a.m.", "Space History and Future", "Cafe", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (17, 30), "5:30 p.m.", "Holistic Medicine", "Cafe", ""))
+    S.append((_weekly(1, "Jan 19", "Feb 2"), (19, 30), "7:30 p.m.", "Surviving an Active Shooter", "Cafe", ""))
     S.append((_weekly(1, "Jan 12", "Jan 26"), (19, 0), "7:00 p.m.", "Introduction to Astronomy", "Veranda", ""))
     S.append((_weekly(1, "Feb 2", "Feb 16"), (19, 0), "7:00 p.m.", "Introduction to the Cosmos", "Veranda", ""))
     # Wednesday
@@ -577,6 +578,7 @@ def _schedule_sessions():
     S.append((_weekly(3, "Feb 11", "Mar 4"), (16, 0), "4:00 &ndash; 7:00 p.m.", "Intermediate Watercolor", "Craft Room", ""))
     # Friday
     S.append((_weekly(4, "Jan 22", "Feb 12"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
+    S.append((_weekly(4, "Jan 15", "Jan 29"), (10, 0), "10:00 a.m.", "Fun and Easy Card Games", "Cafe", ""))
     S.append((_once(4, "Feb 19"), (10, 0), "10:00 a.m.", "Introduction to Bagpipes", "Aerobics Room", ""))
     # Saturday
     S.append((_once(5, "Jan 16"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
@@ -587,9 +589,7 @@ def _schedule_sessions():
 
 
 SCHEDULE_TO_CONFIRM = [
-    ("7:30 p.m.", "Surviving an Active Shooter", "Cafe"),
-    ("10:00 a.m.", "Fun and Easy Card Games", "Cafe"),
-    ("2:00 &ndash; 4:00 p.m.", "Valentine Cookie Decorating", "Kitchen"),
+    ("Mondays", "Fundamentals of AI", "Time, dates and room to be confirmed"),
 ]
 
 
@@ -656,7 +656,7 @@ def build_schedule_body():
                 <span class="sched-time">{t}</span>
                 <span class="sched-info">
                   <span class="sched-title">{_html.escape(title)}</span>
-                  <span class="sched-meta">Dates to be confirmed &middot; <strong>{room}</strong></span>
+                  <span class="sched-meta">{room}</span>
                 </span>
               </li>'''
         for t, title, room in SCHEDULE_TO_CONFIRM
@@ -672,7 +672,7 @@ def build_schedule_body():
 
 {weeks_html}
       <details class="sched-week sched-confirm">
-        <summary><span class="sched-week-title">Details Being Confirmed</span><span class="sched-week-count">{len(SCHEDULE_TO_CONFIRM)} classes</span></summary>
+        <summary><span class="sched-week-title">Details Being Confirmed</span><span class="sched-week-count">{len(SCHEDULE_TO_CONFIRM)} class</span></summary>
         <div class="sched-dates">
           <div class="sched-date">
             <ul class="sched-list">
