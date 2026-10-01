@@ -501,6 +501,130 @@ def build_registration_body():
 PAGES_WITHOUT_HEADING = {"teachers.html", "registration.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
+
+SCHEDULE_DAYS = [
+    ("Monday", [
+        ("12:00 noon", "Crockpot Cooking For Men", "Jan 18 &ndash; Feb 1", "Kitchen", ""),
+        ("2:00 p.m.", "Beginning Creative Poetry", "Jan 11 &ndash; Feb 15", "Library", ""),
+        ("2:00 p.m.", "How to Read Your Lab Results", "Jan 18", "Cafe", ""),
+        ("2:00 p.m.", "Oh My Aching Hips", "Jan 25", "Cafe", ""),
+        ("2:00 p.m.", "Your Kidneys and You", "Feb 1", "Cafe", ""),
+        ("2:00 p.m.", "The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 8", "Cafe", ""),
+        ("2:00 p.m.", "Preventing Ovarian Cancer", "Feb 15", "Cafe", ""),
+        ("3:00 p.m.", "US History: The Roaring 20s to WW2", "Jan 11 &ndash; Feb 15", "Cafe", ""),
+        ("6:00 p.m.", "Emerging Quantum Science", "Jan 11", "Cafe", ""),
+        ("6:00 p.m.", "Got Flour? Let's Make Bread", "Jan 25 &ndash; Feb 8", "Kitchen", ""),
+        ("6:30 p.m.", "Fundamentals of AI", "Jan 11 &ndash; Feb 15", "Cafe", ""),
+        ("7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Jan 18", "Cafe", ""),
+    ]),
+    ("Tuesday", [
+        ("10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Jan 12 &ndash; Feb 16", "Library", ""),
+        ("11:00 a.m.", "Introduction to Environmental Disasters", "Feb 2 &ndash; Feb 16", "Cafe", ""),
+        ("11:00 a.m.", "Space History and Future", "Feb 2", "Cafe", ""),
+        ("5:30 p.m.", "Holistic Medicine", "Jan 19 &ndash; Feb 2", "Cafe", ""),
+        ("7:00 p.m.", "Introduction to Astronomy", "Jan 12 &ndash; Jan 26", "Veranda", ""),
+        ("7:00 p.m.", "Introduction to the Cosmos", "Feb 2 &ndash; Feb 16", "Veranda", ""),
+    ]),
+    ("Wednesday", [
+        ("10:00 a.m.", "Fundamentals of Western Art History", "Jan 13 &ndash; Feb 17", "Cafe", ""),
+        ("11:00 a.m.", "Comparative Religions", "Jan 13 &ndash; Feb 17", "Cafe", ""),
+        ("11:00 a.m.", "Navigating Changes in the Second Half of Life", "Jan 20 &ndash; Feb 3", "Craft Room", ""),
+        ("11:00 a.m.", "Self-Defense for All", "Jan 13 &ndash; Feb 17", "Ballroom B", ""),
+        ("12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Feb 10 &ndash; Feb 24", "Cafe", ""),
+        ("2:00 p.m.", "Firearm Safety with Range Practice", "Jan 13 &ndash; Feb 17", "Cafe, gun range", ""),
+        ("4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Jan 13 &ndash; Feb 17", "Bocce Courts", ""),
+    ]),
+    ("Thursday", [
+        ("9:00 a.m.", "Balance 2", "Jan 14 &ndash; Jan 28", "Ballroom A", ""),
+        ("10:00 a.m.", "Basic Dog Obedience Training", "Jan 14 &ndash; Feb 18", "Amphitheater", ""),
+        ("3:00 p.m.", "Learn to Knit", "Jan 21 &ndash; Feb 25", "Cafe", ""),
+        ("4:00 &ndash; 7:00 p.m.", "Beginning Watercolor", "Jan 14 &ndash; Feb 4", "Craft Room", ""),
+        ("4:00 &ndash; 7:00 p.m.", "Intermediate Watercolor", "Feb 11 &ndash; Mar 4", "Craft Room", ""),
+        ("6:00 p.m.", "How to Read Your Lab Results", "Jan 21", "Cafe", "Repeat of the Monday seminar"),
+        ("6:00 p.m.", "Oh My Aching Hips", "Jan 28", "Cafe", "Repeat of the Monday seminar"),
+        ("6:00 p.m.", "Your Kidneys and You", "Feb 4", "Cafe", "Repeat of the Monday seminar"),
+        ("6:00 p.m.", "The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 11", "Cafe", "Repeat of the Monday seminar"),
+        ("6:00 p.m.", "Preventing Ovarian Cancer", "Feb 18", "Cafe", "Repeat of the Monday seminar"),
+    ]),
+    ("Friday", [
+        ("10:00 a.m.", "Math Made Easy", "Jan 22 &ndash; Feb 12", "Craft Room", ""),
+        ("10:00 a.m.", "Introduction to Bagpipes", "Feb 19", "Aerobics Room", ""),
+    ]),
+    ("Saturday", [
+        ("9:00 a.m.", "Birds in Our Backyards", "Jan 16", "Cafe", ""),
+        ("10:00 a.m.", "Florida Fishing", "Jan 16", "Cafe", ""),
+        ("10:00 a.m.", "Learn Your Smartphone", "Feb 6 &ndash; Feb 20", "Cafe", ""),
+        ("10:00 a.m.", "Intermediate Pickleball", "Jan 16 &ndash; Feb 20", "Pickleball Courts", ""),
+    ]),
+]
+
+SCHEDULE_TO_CONFIRM = [
+    ("7:30 p.m.", "Surviving an Active Shooter", "Cafe"),
+    ("10:00 a.m.", "Fun and Easy Card Games", "Cafe"),
+    ("2:00 &ndash; 4:00 p.m.", "Valentine Cookie Decorating", "Kitchen"),
+]
+
+
+def build_schedule_body():
+    import html as _html
+    jump = "\n".join(
+        f'        <a href="#{d.lower()}">{d[:3]}</a>' for d, _ in SCHEDULE_DAYS
+    )
+    sections = []
+    for day, items in SCHEDULE_DAYS:
+        rows = []
+        for time, title, dates, room, note in items:
+            note_html = f' &middot; <em>{note}</em>' if note else ""
+            rows.append(
+                f'''            <li class="sched-item">
+              <span class="sched-time">{time}</span>
+              <span class="sched-info">
+                <span class="sched-title">{_html.escape(title)}</span>
+                <span class="sched-meta">{dates} &middot; <strong>{room}</strong>{note_html}</span>
+              </span>
+            </li>'''
+            )
+        rows_html = "\n".join(rows)
+        sections.append(
+            f'''        <section class="sched-day" id="{day.lower()}">
+          <h2>{day}</h2>
+          <ul class="sched-list">
+{rows_html}
+          </ul>
+        </section>'''
+        )
+    sections_html = "\n".join(sections)
+    confirm_rows = "\n".join(
+        f'''            <li class="sched-item">
+              <span class="sched-time">{t}</span>
+              <span class="sched-info">
+                <span class="sched-title">{_html.escape(title)}</span>
+                <span class="sched-meta">Dates to be confirmed &middot; <strong>{room}</strong></span>
+              </span>
+            </li>'''
+        for t, title, room in SCHEDULE_TO_CONFIRM
+    )
+    return f"""
+  <div class="sched-page">
+    <p class="sched-intro">Winter &lsquo;27 classes by day of the week, with the
+    dates and room for each. Jump to a day:</p>
+    <nav class="sched-jump" aria-label="Jump to a day">
+{jump}
+    </nav>
+
+    <div class="sched-days">
+{sections_html}
+        <section class="sched-day sched-confirm" id="to-be-confirmed">
+          <h2>Details Being Confirmed</h2>
+          <ul class="sched-list">
+{confirm_rows}
+          </ul>
+        </section>
+    </div>
+  </div>
+"""
+
+
 PAGES = [
     (
         "index.html",
@@ -527,9 +651,7 @@ PAGES = [
         "class-schedule.html",
         "Class Schedule",
         "Class Schedule and Room Locations",
-        """
-        <div class="coming-soon">This page is coming soon.</div>
-        """,
+        build_schedule_body(),
     ),
     (
         "info-updates.html",
