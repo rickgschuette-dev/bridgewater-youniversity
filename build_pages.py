@@ -260,7 +260,7 @@ def build_teachers_body():
 def build_registration_body():
     return r"""
         <h2>Winter &lsquo;27 Class Registration</h2>
-        <p>Welcome to Bridgewater YOUniversity registration! Please fill in
+        <p>Welcome to Bridgewater YOU registration! Please fill in
         your information below, then select as many classes as you'd like
         to take this semester &mdash; one submission registers you for
         every class you check, so there's no need to submit the form more
@@ -709,11 +709,10 @@ PAGES = [
         <p class="home-ff">A Bridgewater Friends Forum Program</p>
         <div class="home-landing">
           <h2>Welcome to Bridgewater YOU</h2>
-          <p class="home-lead">Our neighborhood&rsquo;s own college: classes taught
-          by residents, for residents &mdash; with no tests, no grades, and no
-          pressure. Whether you wish to learn something new, share a lifetime of
-          expertise, or simply meet the neighbors beside you, there is a seat
-          for you.</p>
+          <p class="home-lead">Classes and conversation, taught by residents for
+          residents &mdash; with no tests, no grades, and no pressure. Whether you
+          wish to learn something new, share a lifetime of expertise, or simply
+          meet the neighbors beside you, there is a seat for you.</p>
           <p class="home-semester">Winter &lsquo;27 Semester &middot; January 11
           through early March 2027</p>
           <div class="home-buttons">
