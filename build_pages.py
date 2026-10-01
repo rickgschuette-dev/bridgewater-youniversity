@@ -318,7 +318,6 @@ def build_registration_body():
           // (short) class title as it appears in the Confirmed Classes
           // sheet today.
           var ORIGINAL_TITLES = {
-            "Space History and Future": "Space History, Current Programs and the Future"
           };
 
           var form = document.forms["student-registration"];
