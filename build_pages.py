@@ -675,6 +675,7 @@ def build_schedule_body():
 """
     return f"""
   <div class="sched-page">
+    <p class="form-note-large">All classes are scheduled for 50 minutes, unless otherwise indicated in the class registration field.</p>
     <p class="sched-intro">Winter &lsquo;27 classes by calendar date, with the
     time and room for each. Select a week to open or close it.</p>
     <div class="sched-controls">
