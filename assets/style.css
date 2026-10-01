@@ -833,7 +833,12 @@ footer a {
   margin: 0 0 12px;
 }
 
-.home-landing .home-bff {
-  font-size: 0.95rem;
-  margin: 0;
+.home-ff {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.75;
+  margin: 24px 0 -12px;
 }

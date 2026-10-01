@@ -706,8 +706,9 @@ PAGES = [
         "Bridgewater YOU",
         "Connecting Friends &middot; Enriching Lives",
         """
+        <p class="home-ff">A Bridgewater Friends Forum Program</p>
         <div class="home-landing">
-          <h2>Welcome to Bridgewater YOUniversity</h2>
+          <h2>Welcome to Bridgewater YOU</h2>
           <p class="home-lead">Our neighborhood&rsquo;s own college: classes taught
           by residents, for residents &mdash; with no tests, no grades, and no
           pressure. Whether you wish to learn something new, share a lifetime of
@@ -721,9 +722,6 @@ PAGES = [
           </div>
           <p class="home-note">All classes are scheduled for 50 minutes unless
           otherwise indicated.</p>
-          <p class="home-bff">Bridgewater YOUniversity is part of the Bridgewater
-          Friends Forum, our broader umbrella of special events and neighborly
-          gatherings.</p>
         </div>
         """,
     ),
