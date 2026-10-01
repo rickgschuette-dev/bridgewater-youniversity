@@ -498,7 +498,7 @@ def build_registration_body():
 
 # Pages that should NOT render the generic <h1>{title}</h1> / subtitle block
 # in build_page() -- their body supplies its own opening heading instead.
-PAGES_WITHOUT_HEADING = {"teachers.html", "registration.html"}
+PAGES_WITHOUT_HEADING = {"registration.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
 
@@ -748,7 +748,9 @@ PAGES = [
         "teachers.html",
         "Teachers",
         "Meet our instructors",
-        build_teachers_body(),
+        """
+        <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
+        """,
     ),
     (
         "news.html",
