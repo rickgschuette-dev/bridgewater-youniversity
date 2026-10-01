@@ -566,7 +566,6 @@ def _schedule_sessions():
     S.append((_weekly(2, "Jan 13", "Feb 17"), (10, 0), "10:00 a.m.", "Fundamentals of Western Art History", "Cafe", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Comparative Religions", "Cafe", ""))
     S.append((_weekly(2, "Jan 20", "Feb 3"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
-    S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Self-Defense for All", "Ballroom B", ""))
     S.append((_weekly(2, "Feb 10", "Feb 24"), (12, 0), "12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Cafe", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (14, 0), "2:00 p.m.", "Firearm Safety with Range Practice", "Cafe, gun range", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Courts", ""))
