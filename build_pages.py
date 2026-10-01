@@ -318,8 +318,6 @@ def build_registration_body():
           // (short) class title as it appears in the Confirmed Classes
           // sheet today.
           var ORIGINAL_TITLES = {
-            "Emerging Quantum Science": "10,000 Foot View of the Emerging Field of Quantum Science and Technology",
-            "Surviving an Active Shooter": "How to Survive Active Shooter Incidents and Other Life Threatening Incidents",
             "Space History and Future": "Space History, Current Programs and the Future"
           };
 
