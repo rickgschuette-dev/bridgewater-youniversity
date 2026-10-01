@@ -770,3 +770,70 @@ footer a {
     max-width: 1180px;
   }
 }
+
+/* ---------- Home landing box ---------- */
+
+.home-landing {
+  background: var(--white);
+  border-left: 5px solid var(--gold);
+  border-radius: 4px;
+  padding: 32px 36px;
+  margin-top: 24px;
+}
+
+.home-landing h2 {
+  margin: 0 0 14px;
+  color: var(--navy);
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+
+.home-landing .home-lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+
+.home-landing .home-semester {
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  padding: 10px 0;
+  margin: 0 0 24px;
+}
+
+.home-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.home-btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.home-btn-gold { background: var(--gold); color: var(--navy-dark); }
+.home-btn-gold:hover, .home-btn-gold:focus { background: #b07d0f; }
+.home-btn-navy { background: var(--navy); color: var(--white); }
+.home-btn-navy:hover, .home-btn-navy:focus { background: var(--navy-dark); }
+
+.home-landing .home-note {
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 12px;
+}
+
+.home-landing .home-bff {
+  font-size: 0.95rem;
+  margin: 0;
+}
