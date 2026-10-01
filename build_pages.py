@@ -706,7 +706,6 @@ PAGES = [
         "Bridgewater YOU",
         "Connecting Friends &middot; Enriching Lives",
         """
-        <p class="home-ff">A Bridgewater Friends Forum Program</p>
         <div class="home-landing">
           <h2>Welcome to Bridgewater YOU</h2>
           <p class="home-lead">Classes and conversation, taught by residents for
@@ -831,7 +830,9 @@ def build_page(filename, title, subtitle, body):
     if filename in PAGES_WITHOUT_HEADING:
         heading_html = ""
     else:
-        heading_html = f"""  <h1>{title}</h1>
+        pre = ('  <p class="home-ff">A Bridgewater Friends Forum Program</p>\n'
+               if filename == "index.html" else "")
+        heading_html = f"""{pre}  <h1>{title}</h1>
   <div class="subtitle">{subtitle}</div>
 """
     return f"""<!DOCTYPE html>
