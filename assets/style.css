@@ -671,16 +671,21 @@ footer a {
 }
 
 .sched-dates {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 6px 28px;
+  column-width: 320px;
+  column-gap: 44px;
+  column-rule: 2px solid var(--gold);
   padding: 8px 20px 16px;
+}
+
+.sched-date {
+  break-inside: avoid;
+  padding-top: 8px;
 }
 
 .sched-date h3 {
   color: var(--navy);
   font-size: 1.1rem;
-  margin: 14px 0 4px;
+  margin: 6px 0 4px;
   padding-bottom: 4px;
   border-bottom: 2px solid var(--gold);
 }
@@ -726,9 +731,6 @@ footer a {
 
 @media (max-width: 520px) {
   .sched-item {
-    grid-template-columns: 1fr;
-  }
-  .sched-dates {
     grid-template-columns: 1fr;
   }
 }
