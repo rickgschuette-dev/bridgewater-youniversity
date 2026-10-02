@@ -721,8 +721,6 @@ PAGES = [
           <div class="home-buttons home-buttons-addphone">
             <a class="home-btn home-btn-outline" href="add-to-home-screen.html">Add Bridgewater YOU to your phone</a>
           </div>
-          <p class="home-note">All classes are scheduled for 50 minutes unless
-          otherwise indicated.</p>
         </div>
         """,
     ),

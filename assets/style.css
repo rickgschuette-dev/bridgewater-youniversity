@@ -814,10 +814,12 @@ footer a {
 
 .home-btn {
   display: inline-block;
-  padding: 14px 28px;
-  border-radius: 4px;
-  font-size: 1.1rem;
+  flex: 1 1 260px;
+  padding: 24px 28px;
+  border-radius: 5px;
+  font-size: 1.4rem;
   font-weight: 700;
+  text-align: center;
   text-decoration: none;
   transition: background 0.15s ease;
 }
@@ -936,6 +938,9 @@ main:has(.home-ff) .home-landing {
   }
   .home-btn {
     display: block;
+    flex: none;
+    padding: 18px 16px;
+    font-size: 1.2rem;
     text-align: center;
   }
 }
@@ -943,13 +948,17 @@ main:has(.home-ff) .home-landing {
 /* ---------- Add to phone ---------- */
 
 .home-buttons-addphone {
-  margin-top: -6px;
+  justify-content: center;
+  margin-top: 6px;
+  margin-bottom: 0;
 }
 
 .home-btn-outline {
   background: #FBE9B7;
   color: var(--navy);
   border: 2px solid var(--navy);
+  flex: 0 1 auto;
+  font-size: 1.1rem;
   padding: 12px 26px;
   box-shadow: 4px 5px 0 rgba(11, 42, 92, 0.35), 6px 9px 14px rgba(11, 42, 92, 0.18);
   transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
