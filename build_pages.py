@@ -827,11 +827,13 @@ def build_nav(current_file):
 
 def build_page(filename, title, subtitle, body):
     nav_html = build_nav(filename)
+    post_html = ""
     if filename in PAGES_WITHOUT_HEADING:
         heading_html = ""
     else:
-        pre = ('  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
-               if filename == "index.html" else "")
+        pre = ""
+        if filename == "index.html":
+            post_html = '  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
         sub = "" if filename == "index.html" else f'  <div class="subtitle">{subtitle}</div>\n'
         heading_html = f"""{pre}  <h1>{title}</h1>
 {sub}"""
@@ -856,7 +858,7 @@ def build_page(filename, title, subtitle, body):
 </nav>
 
 <main>
-{heading_html}{body}
+{heading_html}{body}{post_html}
 </main>
 
 <footer>
