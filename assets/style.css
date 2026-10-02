@@ -871,3 +871,71 @@ main:has(.home-ff) h1 {
 main:has(.home-ff) .home-landing {
   margin-top: 0;
 }
+
+/* ---------- Mobile refinements (phones, 600px and narrower) ---------- */
+
+@media (max-width: 600px) {
+  /* Banner: crop to the center so the badge and slogan stay legible. */
+  .banner-image {
+    height: 190px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Tighter menu so content starts higher on the screen. */
+  .site-nav a {
+    padding: 10px 4px;
+    gap: 6px;
+    font-size: 0.78rem;
+  }
+  .site-nav img {
+    width: 24px;
+    height: 24px;
+  }
+
+  main {
+    padding: 28px 16px 48px;
+  }
+
+  main h1 {
+    font-size: 1.6rem;
+  }
+
+  .form-note-large {
+    font-size: 1.2rem;
+  }
+
+  /* Stacked form fields: the row margin already supplies the spacing. */
+  .form-two-col {
+    gap: 0;
+  }
+
+  /* Home page */
+  main:has(.home-ff) {
+    padding-top: 36px;
+  }
+  main:has(.home-ff) h1 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+  .home-landing {
+    padding: 22px 18px;
+  }
+  .home-landing h2 {
+    font-size: 1.5rem;
+  }
+  .home-landing .home-lead {
+    font-size: 1.05rem;
+  }
+  .home-landing .home-semester {
+    font-size: 0.9rem;
+  }
+  .home-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .home-btn {
+    display: block;
+    text-align: center;
+  }
+}
