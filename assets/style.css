@@ -209,6 +209,15 @@ main p {
   }
 }
 
+/* Join Our Admin: Full Name / Email / Phone side by side on wide screens.
+   Used together with .form-two-col, which already stacks at 600px. */
+@media (min-width: 601px) {
+  .form-three-col {
+    grid-template-columns: 1fr 1.25fr 1fr;
+    gap: 16px;
+  }
+}
+
 .committee-fieldset {
   border: 1px solid #c9c2b3;
   border-radius: 6px;

@@ -144,7 +144,7 @@ def build_forum_body():
           <input type="hidden" name="form-name" value="volunteer-signup">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
 
-          <div class="form-two-col">
+          <div class="form-two-col form-three-col">
             <div class="form-row">
               <label for="volunteer-name">Full Name</label>
               <input type="text" id="volunteer-name" name="name" required>
@@ -153,6 +153,11 @@ def build_forum_body():
             <div class="form-row">
               <label for="volunteer-email">Email</label>
               <input type="email" id="volunteer-email" name="email" required>
+            </div>
+
+            <div class="form-row">
+              <label for="volunteer-phone">Phone / Text Number</label>
+              <input type="tel" id="volunteer-phone" name="phone" autocomplete="tel" required>
             </div>
           </div>
 
