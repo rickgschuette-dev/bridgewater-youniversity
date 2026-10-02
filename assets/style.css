@@ -839,8 +839,21 @@ footer a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--navy);
+  margin: 0 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+}
+
+.home-ff span {
   opacity: 0.75;
-  margin: 0 0 34px;
+}
+
+.home-ff img {
+  height: 3em;
+  width: 3em;
+  flex: none;
+  mix-blend-mode: multiply;
 }
 
 main:has(.home-ff) {

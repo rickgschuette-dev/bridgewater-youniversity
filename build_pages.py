@@ -830,7 +830,7 @@ def build_page(filename, title, subtitle, body):
     if filename in PAGES_WITHOUT_HEADING:
         heading_html = ""
     else:
-        pre = ('  <p class="home-ff">A Bridgewater Friends Forum Program</p>\n'
+        pre = ('  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
                if filename == "index.html" else "")
         heading_html = f"""{pre}  <h1>{title}</h1>
   <div class="subtitle">{subtitle}</div>
