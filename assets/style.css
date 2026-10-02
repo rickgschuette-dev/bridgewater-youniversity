@@ -839,7 +839,7 @@ footer a {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--navy);
-  margin: 0 0 24px;
+  margin: 0 0 40px;
   display: flex;
   align-items: center;
   gap: 0.7em;
@@ -863,5 +863,9 @@ main:has(.home-ff) {
 main:has(.home-ff) h1 {
   font-size: 3.1rem;
   line-height: 1.1;
-  margin-bottom: 0.2em;
+  margin: 0 0 14px;
+}
+
+main:has(.home-ff) .home-landing {
+  margin-top: 0;
 }

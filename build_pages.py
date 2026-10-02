@@ -832,9 +832,9 @@ def build_page(filename, title, subtitle, body):
     else:
         pre = ('  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
                if filename == "index.html" else "")
+        sub = "" if filename == "index.html" else f'  <div class="subtitle">{subtitle}</div>\n'
         heading_html = f"""{pre}  <h1>{title}</h1>
-  <div class="subtitle">{subtitle}</div>
-"""
+{sub}"""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
