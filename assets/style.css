@@ -939,3 +939,64 @@ main:has(.home-ff) .home-landing {
     text-align: center;
   }
 }
+
+/* ---------- Add to phone ---------- */
+
+.home-buttons-addphone {
+  margin-top: -6px;
+}
+
+.home-btn-outline {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  padding: 12px 26px;
+}
+
+.home-btn-outline:hover,
+.home-btn-outline:focus {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.a2hs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 28px 0;
+}
+
+.a2hs-card {
+  background: var(--white);
+  border-left: 5px solid var(--gold);
+  border-radius: 4px;
+  padding: 22px 26px;
+}
+
+.a2hs-card h2 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: 1.3rem;
+}
+
+.a2hs-card .a2hs-note {
+  margin: 0 0 12px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.a2hs-card ol {
+  margin: 0;
+  padding-left: 1.3em;
+  line-height: 1.6;
+}
+
+.a2hs-card li {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 720px) {
+  .a2hs-grid {
+    grid-template-columns: 1fr;
+  }
+}

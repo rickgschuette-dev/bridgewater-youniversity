@@ -718,6 +718,9 @@ PAGES = [
             <a class="home-btn home-btn-gold" href="registration.html">Register for Classes</a>
             <a class="home-btn home-btn-navy" href="class-schedule.html">View the Class Schedule</a>
           </div>
+          <div class="home-buttons home-buttons-addphone">
+            <a class="home-btn home-btn-outline" href="add-to-home-screen.html">Add Bridgewater YOU to your phone</a>
+          </div>
           <p class="home-note">All classes are scheduled for 50 minutes unless
           otherwise indicated.</p>
         </div>
@@ -757,6 +760,41 @@ PAGES = [
         "Join our classes and events from home",
         """
         <div class="coming-soon"><strong>Live streaming coming soon.</strong></div>
+        """,
+    ),
+    (
+        "add-to-home-screen.html",
+        "Add to Your Phone",
+        "Put Bridgewater YOU one tap away",
+        """
+        <p>Add Bridgewater YOU to your phone&rsquo;s home screen and it opens
+        like an app, with no typing of a web address. Choose your phone
+        below.</p>
+        <div class="a2hs-grid">
+          <section class="a2hs-card">
+            <h2>Add to Your iPhone</h2>
+            <p class="a2hs-note">Use the Safari browser.</p>
+            <ol>
+              <li>Open Bridgewater YOU in Safari.</li>
+              <li>Tap the <strong>Share</strong> button (a square with an arrow pointing up) at the bottom of your screen.</li>
+              <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+              <li>Tap <strong>Add</strong> in the top right corner.</li>
+            </ol>
+          </section>
+          <section class="a2hs-card">
+            <h2>Add to Your Android Phone</h2>
+            <p class="a2hs-note">Use the Chrome browser.</p>
+            <ol>
+              <li>Open Bridgewater YOU in Chrome.</li>
+              <li>Tap the <strong>menu</strong> button (three dots) in the top right corner.</li>
+              <li>Tap <strong>Add to Home screen</strong> (on some phones it reads <strong>Install app</strong>).</li>
+              <li>Tap <strong>Add</strong> (or <strong>Install</strong>) to confirm.</li>
+            </ol>
+          </section>
+        </div>
+        <p class="a2hs-after">The Bridgewater YOU icon will now appear on your
+        home screen. Tap it any time to open the site.</p>
+        <p><a href="index.html">&larr; Back to Home</a></p>
         """,
     ),
     (
@@ -846,6 +884,13 @@ def build_page(filename, title, subtitle, body):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} | Bridgewater YOU</title>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0B2A5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bridgewater YOU">
 </head>
 <body>
 
