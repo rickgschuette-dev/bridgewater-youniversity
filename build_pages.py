@@ -102,6 +102,16 @@ COMMITTEES = [
             "Coordinates with Marketing &amp; Promotions",
         ],
     ),
+    (
+        "Tech &amp; Video Production",
+        [
+            "Livestream and record classes and events on the Bridgewater Live YouTube channel",
+            "Set up and test cameras, microphones, and streaming equipment",
+            "Help instructors with technology for their classes",
+            "Edit and publish class recordings and video highlights",
+            "Maintain the Watch Live page and video library with Communications &amp; Marketing",
+        ],
+    ),
 ]
 
 
