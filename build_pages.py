@@ -13,7 +13,6 @@ NAV_ITEMS = [
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Info Updates", "info-updates.html", "music"),
     ("Teachers", "teachers.html", "coffee"),
-    ("BW YOU News", "news.html", "dumbbell"),
     ("Forum", "forum.html", "speech"),
 ]
 
@@ -749,14 +748,6 @@ PAGES = [
         "Meet our instructors",
         """
         <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
-        """,
-    ),
-    (
-        "news.html",
-        "BW YOU News",
-        "The latest from Bridgewater YOU",
-        """
-        <div class="coming-soon">This page is coming soon.</div>
         """,
     ),
     (
