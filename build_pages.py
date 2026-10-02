@@ -7,6 +7,39 @@ Run this after editing PAGES or the TEMPLATE, then commit the generated
 this script is a build helper, not something a browser loads).
 """
 
+# ---------------------------------------------------------------------------
+# Watch Live page: YouTube channel setting.
+# Paste the Bridgewater Live channel's ID (24 characters, starting with "UC")
+# between the quotes below, then rebuild. While it is empty, the Watch Live
+# page shows a "coming soon" box instead of the player.
+# ---------------------------------------------------------------------------
+YOUTUBE_CHANNEL_ID = "UCsV0kfrNoQiOhHoGyDmNRlw"
+
+
+def build_watch_live_body():
+    if not YOUTUBE_CHANNEL_ID:
+        return """
+        <div class="coming-soon"><strong>Live streaming coming soon.</strong></div>
+        """
+    cid = YOUTUBE_CHANNEL_ID
+    return f"""
+        <p>Watch our classes and events live from home. When a broadcast is
+        on, it appears in the player below automatically.</p>
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/live_stream?channel={cid}"
+                  title="Bridgewater YOU live broadcast"
+                  allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen></iframe>
+        </div>
+        <p class="video-note">If the player says the video is unavailable, no
+        broadcast is on right now. Check the
+        <a href="class-schedule.html">Class Schedule</a> for upcoming sessions,
+        or <a href="https://www.youtube.com/channel/{cid}/live"
+        target="_blank" rel="noopener">open the broadcast on YouTube</a>.</p>
+        """
+
+
 NAV_ITEMS = [
     ("Home", "index.html", "home"),
     ("Class Registration", "registration.html", "book"),
@@ -756,9 +789,7 @@ PAGES = [
         "watch-live.html",
         "Watch Live",
         "Join our classes and events from home",
-        """
-        <div class="coming-soon"><strong>Live streaming coming soon.</strong></div>
-        """,
+        build_watch_live_body(),
     ),
     (
         "add-to-home-screen.html",

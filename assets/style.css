@@ -1013,3 +1013,28 @@ main:has(.home-ff) .home-landing {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- Live video player ---------- */
+
+.video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 24px 0 16px;
+  background: #000;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(11, 42, 92, 0.25);
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-note {
+  font-size: 0.95rem;
+}
