@@ -13,6 +13,7 @@ NAV_ITEMS = [
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
+    ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
 
@@ -748,6 +749,14 @@ PAGES = [
         "Meet our instructors",
         """
         <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
+        """,
+    ),
+    (
+        "watch-live.html",
+        "Watch Live",
+        "Join our classes and events from home",
+        """
+        <div class="coming-soon"><strong>Live streaming coming soon.</strong></div>
         """,
     ),
     (
