@@ -861,9 +861,11 @@ main:has(.home-ff) {
 }
 
 main:has(.home-ff) h1 {
-  font-size: 3.1rem;
-  line-height: 1.1;
-  margin: 0 0 14px;
+  font-size: 2.3rem;
+  line-height: 1.2;
+  text-align: center;
+  text-wrap: balance;
+  margin: 0 0 36px;
 }
 
 main:has(.home-ff) .home-landing {

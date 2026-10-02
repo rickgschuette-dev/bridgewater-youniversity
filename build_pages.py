@@ -835,7 +835,9 @@ def build_page(filename, title, subtitle, body):
         if filename == "index.html":
             post_html = '  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
         sub = "" if filename == "index.html" else f'  <div class="subtitle">{subtitle}</div>\n'
-        heading_html = f"""{pre}  <h1>{title}</h1>
+        h1_text = ("Designed by Bridgewater Neighbors&nbsp;- For Bridgewater Neighbors"
+                   if filename == "index.html" else title)
+        heading_html = f"""{pre}  <h1>{h1_text}</h1>
 {sub}"""
     return f"""<!DOCTYPE html>
 <html lang="en">
