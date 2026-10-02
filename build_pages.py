@@ -11,8 +11,8 @@ NAV_ITEMS = [
     ("Home", "index.html", "home"),
     ("Class Registration", "registration.html", "book"),
     ("Class Schedule", "class-schedule.html", "palette"),
-    ("Info Updates", "info-updates.html", "music"),
     ("Teachers", "teachers.html", "coffee"),
+    ("Info Updates", "info-updates.html", "music"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
 
