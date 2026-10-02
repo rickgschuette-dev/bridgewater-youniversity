@@ -13,7 +13,7 @@ NAV_ITEMS = [
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Info Updates", "info-updates.html", "music"),
     ("Teachers", "teachers.html", "coffee"),
-    ("Forum", "forum.html", "speech"),
+    ("Join Our Admin", "forum.html", "speech"),
 ]
 
 # Framing Committee volunteer sign-up: committee name -> list of responsibilities
@@ -752,7 +752,7 @@ PAGES = [
     ),
     (
         "forum.html",
-        "Forum",
+        "Join Our Admin",
         "Start building the connection",
         build_forum_body(),
     ),
@@ -766,7 +766,7 @@ PAGES = [
           sign-up has been received. A member of the Framing Committee will
           be in touch with you soon.
         </div>
-        <p><a href="forum.html">&larr; Back to the Forum</a></p>
+        <p><a href="forum.html">&larr; Back to Join Our Admin</a></p>
         """,
     ),
     (
