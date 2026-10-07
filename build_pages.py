@@ -46,7 +46,6 @@ NAV_ITEMS = [
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
-    ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
 
@@ -805,12 +804,6 @@ PAGES = [
         """
         <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
         """,
-    ),
-    (
-        "watch-live.html",
-        "Watch Live",
-        "Join our classes and events from home",
-        build_watch_live_body(),
     ),
     (
         "add-to-home-screen.html",
