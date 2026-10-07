@@ -44,7 +44,7 @@ NAV_ITEMS = [
     ("Home", "index.html", "home"),
     ("Class Registration", "registration.html", "book"),
     ("Class Schedule", "class-schedule.html", "palette"),
-    ("Teachers", "teachers.html", "coffee"),
+    ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
     ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
@@ -800,7 +800,7 @@ PAGES = [
     ),
     (
         "teachers.html",
-        "Teachers",
+        "Your Teachers",
         "Meet our instructors",
         """
         <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
