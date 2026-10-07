@@ -583,69 +583,75 @@ def _once(weekday, label):
 # Weekdays: 0=Mon 1=Tue 2=Wed 3=Thu 4=Fri 5=Sat. Every start and end date is
 # checked against its weekday when the page is built.
 def _schedule_sessions():
-    nums = [
-        ("How to Read Your Lab Results", "Jan 18", "Jan 21"),
-        ("Oh My Aching Hips", "Jan 25", "Jan 28"),
-        ("Your Kidneys and You", "Feb 1", "Feb 4"),
-        ("The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 8", "Feb 11"),
-        ("Preventing Ovarian Cancer", "Feb 15", "Feb 18"),
-    ]
+    # Reconciled 2026-10-07 to the Registration page (the "Day, Time & Room"
+    # column of the Confirmed Classes sheet). Registration is the authority:
+    # every class listed there appears here, and nothing else does.
     S = []
-    # Monday
+    # ---- Monday ----
     S.append((_weekly(0, "Jan 18", "Feb 1"), (12, 0), "12:00 noon", "Crockpot Cooking For Men", "Kitchen", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (13, 0), "1:00 p.m.", "Fundamentals of AI", "Cafe", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (14, 0), "2:00 p.m.", "Beginning Creative Poetry", "Library", ""))
-    for title, mon, thu in nums:
+    # Seminars that repeat on Thursday evening (Monday date, Thursday date).
+    for title, mon, thu in [
+        ("How to Read Your Lab Results", "Jan 18", "Jan 21"),
+        ("Your Kidneys and You", "Feb 1", "Feb 4"),
+        ("The 3 Amigos: Saving Kidneys, Hearts and Lives", "Feb 8", "Feb 11"),
+        ("Preventing Ovarian Cancer", "Feb 15", "Feb 18"),
+    ]:
         S.append((_once(0, mon), (14, 0), "2:00 p.m.", title, "Cafe", ""))
         S.append((_once(3, thu), (18, 0), "6:00 p.m.", title, "Cafe", "Repeat of the Monday seminar"))
+    # Registration lists no Thursday repeat for this seminar.
+    S.append((_once(0, "Jan 25"), (14, 0), "2:00 p.m.", "Oh, My Aching Hips", "Cafe", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (15, 0), "3:00 p.m.", "US History: The Roaring 20s to WW2", "Cafe", ""))
     S.append((_once(0, "Jan 11"), (18, 0), "6:00 p.m.", "Emerging Quantum Science", "Cafe", ""))
     S.append((_weekly(0, "Jan 25", "Feb 8"), (18, 0), "6:00 p.m.", "Got Flour? Let's Make Bread", "Kitchen", ""))
     S.append((_once(0, "Feb 8"), (14, 0), "2:00 &ndash; 4:00 p.m.", "Valentine Cookie Decorating", "Kitchen", ""))
     S.append((_once(0, "Jan 18"), (19, 0), "7:00 p.m.", "Secrets to Taking the Grandkids to Disney", "Cafe", ""))
-    # Tuesday
+    # ---- Tuesday ----
     S.append((_weekly(1, "Jan 12", "Feb 16"), (10, 0), "10:00 a.m.", "What's the Punchline: Low- and High-Class Poetry", "Library", ""))
-    S.append((_weekly(1, "Feb 9", "Feb 23"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
-    S.append((_once(1, "Feb 2"), (11, 0), "11:00 a.m.", "Space History and Future", "Cafe", ""))
+    S.append((_once(1, "Feb 2"), (11, 0), "11:00 a.m.", "Space History", "Cafe", ""))
+    S.append((_once(1, "Feb 9"), (11, 0), "11:00 a.m.", "Space Future", "Cafe", ""))
+    S.append((_once(1, "Feb 16"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
+    S.append((_weekly(1, "Jan 12", "Jan 26"), (16, 0), "4:00 p.m.", "Ping Pong 101", "Aerobics Room", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (17, 30), "5:30 p.m.", "Holistic Medicine", "Cafe", ""))
+    S.append((_weekly(1, "Feb 9", "Mar 2"), (18, 0), "6:00 p.m.", "Home DIY", "TBD", ""))
+    S.append((_once(1, "Feb 2"), (19, 0), "7:00 p.m.", "Live Visual Astronomy", "Veranda", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (19, 30), "7:30 p.m.", "Surviving an Active Shooter", "Cafe", ""))
-    S.append((_weekly(1, "Jan 12", "Jan 26"), (19, 0), "7:00 p.m.", "Introduction to Astronomy", "Veranda", ""))
-    S.append((_weekly(1, "Feb 2", "Feb 16"), (19, 0), "7:00 p.m.", "Introduction to the Cosmos", "Veranda", ""))
-    # Wednesday
+    # ---- Wednesday ----
     S.append((_weekly(2, "Jan 13", "Feb 17"), (10, 0), "10:00 a.m.", "Fundamentals of Western Art History", "Cafe", ""))
+    S.append((_weekly(2, "Feb 3", "Feb 24"), (10, 0), "10:00 a.m.", "Ecology, Geology and Early Explorers of the Grand Canyon", "Ballroom A", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Comparative Religions", "Cafe", ""))
     S.append((_weekly(2, "Jan 20", "Feb 3"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
+    S.append((_once(2, "Feb 17"), (11, 0), "11:00 a.m.", "Introduction to Bagpipes", "Ballroom A", ""))
     S.append((_weekly(2, "Feb 10", "Feb 24"), (12, 0), "12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Cafe", ""))
-    S.append((_weekly(2, "Jan 13", "Feb 17"), (14, 0), "2:00 p.m.", "Firearm Safety with Range Practice", "Cafe, gun range", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Courts", ""))
-    # Thursday
+    # ---- Thursday ----
     S.append((_weekly(3, "Jan 14", "Jan 28"), (9, 0), "9:00 a.m.", "Balance 2", "Ballroom A", ""))
     S.append((_weekly(3, "Jan 14", "Feb 18"), (10, 0), "10:00 a.m.", "Basic Dog Obedience Training", "Amphitheater", ""))
     S.append((_weekly(3, "Jan 21", "Feb 25"), (15, 0), "3:00 p.m.", "Learn to Knit", "Cafe", ""))
+    S.append((_weekly(3, "Jan 14", "Jan 21"), (16, 0), "4:00 p.m.", "Ping Pong 101", "Aerobics Room", ""))
     S.append((_weekly(3, "Jan 14", "Feb 4"), (16, 0), "4:00 &ndash; 7:00 p.m.", "Beginning Watercolor", "Craft Room", ""))
     S.append((_weekly(3, "Feb 11", "Mar 4"), (16, 0), "4:00 &ndash; 7:00 p.m.", "Intermediate Watercolor", "Craft Room", ""))
-    # Friday
-    S.append((_weekly(4, "Jan 22", "Feb 12"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
-    S.append((_weekly(4, "Jan 15", "Jan 29"), (10, 0), "10:00 a.m.", "Fun and Easy Card Games", "Cafe", ""))
-    S.append((_once(4, "Feb 19"), (10, 0), "10:00 a.m.", "Introduction to Bagpipes", "Aerobics Room", ""))
-    # Saturday
-    S.append((_once(5, "Jan 16"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
-    S.append((_once(5, "Jan 16"), (10, 0), "10:00 a.m.", "Florida Fishing", "Cafe", ""))
-    S.append((_weekly(5, "Feb 6", "Feb 20"), (10, 0), "10:00 a.m.", "Learn Your Smartphone", "Cafe", ""))
+    S.append((_once(3, "Feb 4"), (19, 0), "7:00 p.m.", "I'm Dead. Now What?", "Cafe", ""))
+    S.append((_once(3, "Feb 11"), (19, 0), "7:00 p.m.", "Protecting Yourself From Financial Scams that Target Seniors", "Cafe", ""))
+    S.append((_once(3, "Feb 18"), (19, 0), "7:00 p.m.", "FAIR (Financial Awareness in Retirement)", "Cafe", ""))
+    # ---- Friday ----
+    S.append((_weekly(4, "Jan 22", "Feb 19"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
+    # ---- Saturday ----
+    S.append((_once(5, "Jan 23"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
+    S.append((_once(5, "Jan 16"), (10, 0), "10:00 a.m.", "Introduction to Astronomy", "Cafe", ""))
+    S.append((_once(5, "Jan 23"), (10, 0), "10:00 a.m.", "Florida Fishing", "Cafe", ""))
     S.append((_weekly(5, "Jan 16", "Feb 20"), (10, 0), "10:00 a.m.", "Intermediate Pickleball", "Pickleball Courts", ""))
+    S.append((_weekly(5, "Feb 6", "Feb 13"), (10, 0), "10:00 a.m.", "Introduction to Cosmology", "Cafe", ""))
+    S.append((_weekly(5, "Feb 6", "Feb 20"), (11, 0), "11:00 a.m.", "Learn Your Smartphone", "Cafe", ""))
+    S.append((_weekly(5, "Jan 16", "Feb 20"), (11, 30), "11:30 a.m.", "Self-Defense for All", "Aerobics Room", ""))
     return S
 
 
-# Classes in the Confirmed Classes sheet whose "Day, Time & Room" cell is blank.
-SCHEDULE_UNSCHEDULED = [
-    "Ping Pong 101",
-    "Home DIY",
-    "Self-Defense for All",
-    "I'm Dead. Now What?",
-    "Protecting Yourself From Financial Scams that Target Seniors",
-    "FAIR (Financial Awareness in Retirement)",
-    "Ecology, Geology and Early Explorers of the Grand Canyon",
-]
+# Every class on the Registration page now has a day, time and room, so none
+# is left unscheduled. Add a title here only if the Confirmed Classes sheet
+# lists a class whose "Day, Time & Room" cell is blank.
+SCHEDULE_UNSCHEDULED = []
 
 
 def build_schedule_body():
