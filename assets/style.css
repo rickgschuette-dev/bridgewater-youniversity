@@ -1047,3 +1047,49 @@ main:has(.home-ff) .home-landing {
 .video-note {
   font-size: 0.95rem;
 }
+
+/* ---------- Class catalogue (Your Teachers page) ---------- */
+
+.catalogue-title {
+  color: var(--navy);
+  font-size: 1.4rem;
+  margin: 0 0 0.5em;
+}
+
+.catalogue-category {
+  margin-top: 32px;
+}
+
+.catalogue-category .class-category-heading {
+  break-after: avoid;
+}
+
+.catalogue-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .catalogue-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.catalogue-entry {
+  background: var(--white);
+  border-left: 5px solid var(--gold);
+  border-radius: 4px;
+  padding: 16px 20px;
+  break-inside: avoid;
+}
+
+.catalogue-entry p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.catalogue-entry strong {
+  color: var(--navy);
+}

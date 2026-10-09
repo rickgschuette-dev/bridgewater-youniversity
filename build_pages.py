@@ -753,6 +753,92 @@ def build_schedule_body():
 """
 
 
+# ---------------------------------------------------------------------------
+# Winter 2027 Class Catalogue (shown on teachers.html).
+# Source: Google Doc "Class Catalogue Winter 2027". Text inside **double
+# asterisks** becomes the bold class title. To change the catalogue, edit the
+# entries below and re-run:  python build_pages.py
+# ---------------------------------------------------------------------------
+CATALOGUE_INTRO = (
+    "One of the best things about Bridgewater is all the fantastic knowledge "
+    "we have to share. This catalogue offers the following free classes for "
+    "the winter session of Bridgewater YOU."
+)
+
+CATALOGUE = [
+    ("Health and Safety Classes", [
+        "Why not use the local medical expertise? Kim, after 40+ years of practice as a PA, is here to teach you **How to Read Your Lab Results** so you can sound like an expert at your next medical appointment!",
+        "Greg, retired Brevard 911 supervisor and Air Force SWAT team leader, uses his experience to show us about what to do in an **Active Shooter Emergency**.",
+        "Wendy, our fantastic volunteer yoga instructor, is leading her incredibly well-received **Balance 201** class. Even if you took the summer class, she still has more to teach you and you know how fantastic her classes are!",
+        "After 15 years of doing orthopedic surgery, Kim is dying to share her knowledge in **Oh my Aching Hips** to show you what is normal, what is not and how surgeons fix a broken hip.",
+        "Janice, retired psychology professor and certified sage-ing leader (CSL), is here to help us **Navigate Changes in the 2<sup>nd</sup> Half of Life**.",
+        "Kim has spent the last 25 years in nephrology. Did you know everyone loses kidney function as they age? Learn this and many other useful (?) facts during **Your Kidneys and You**.",
+        "We are all of the age where we remember the environment of the 1960s. Join Gary, an experienced environmental engineer and instructor, for **Introduction to Environmental Disasters**.",
+        "As the newly described cardio-kidney-metabolic disease (quite a mouthful) is found in 98% of seniors, let Kim teach you about the new guidelines. She&rsquo;ll show you what you can do to decrease your risk in **The 3 Amigos; Saving kidneys, hearts and lives**.",
+        "Heather is a retired police officer who has taught self-defense for years. Now she offers **Self-Defense for Seniors** to keep everyone safe and happy.",
+        "There are brand-new guidelines for ovarian cancer but few medical people (<em>outside of OB/GYN</em>) know them. Come to **Preventing Ovarian Cancer** and Kim will tell you how to protect yourself and your daughters/granddaughters.",
+        "Terri Barcus is a national board certified/state licensed doctor of Oriental medicine who is offering **Natural Wellness**, an approachable, acupuncture-inspired course designed to help participants reconnect with their bodies through simple, practical tools they can use every day. There will be 3 foundational areas of health: nervous-system balance and sleep, musculoskeletal tension and pain, and digestive and gut-brain wellness, using acupressure, essential oils, breathwork, gentle movement, food therapy, and natural home remedies.",
+    ]),
+    ("History and Culture Classes", [
+        "After her incredibly popular US Constitution class this summer, Phyllis, our favorite history teacher, returns with **The Roaring 20s**. We will cover the time from after WWI to Vietnam and the 1960s.",
+        "Join Rick for his first love (apologies to his wife!) for a discussion of art history, late antiquity through impressionism in **Fundamentals of Western Art History**. Whoever said an art degree would be useless in the future, didn&rsquo;t know about Bridgewater YOU.",
+        "Our erudite neighbor, Betsy, is putting her humanities and law degrees to use in **What&rsquo;s the Punchline**. Join her for a fascinating look at both high- and low-class poetry.",
+        "If ever you have been curious about religions, now is your chance to discuss Buddhism, Hinduism, Judaism, Christianity and Islam. Rick has spent years working with multiple religious and non-profits and can speak as an authority on **Comparative Religions**.",
+        "Susan is teaching **Ecology, Geology and early Explorers of the Grand Canyon** based on a book she wrote. Come hear about the early explorers in Arizona and Nevada.",
+    ]),
+    ("Finances and Computers", [
+        "Lee is thrilled to offer an Air/Space Force program on scams, online security for the &lsquo;older&rsquo; adult! Lee is a retired Air Force techie leading **CyberGenerations: Keeping Yourself Safe Online**.",
+        "For those of you without local kids to program your phones, we have Rick who spent years training others in multiple platforms. Join Rick as he walks us through **Learn Your Smartphone**.",
+        "John, a financial planner with 30 years of experience leading seminars, is offering **I&rsquo;m Dead. Now What?** For those of us who plan ahead (Me! Me!)",
+        "John, who is a financial planner of 30 years duration, is offering **Financial Scams that Target Seniors**. This one-hour class will open your eyes!",
+        "John is leading a class on **Financial Awareness in Retirement (FAIR)**. He has 30 years of experience in the topic and offering us his expertise for free!",
+    ]),
+    ("Hobbies and Interest Classes", [
+        "Sandy is a retired high school art teacher. After 40 years of teaching teens, she finds she loves teaching adults (who can blame her?!). Join her **Beginning Watercolor** class.",
+        "Sandy, our favorite art teacher, is offering **Intermediate Watercolor**. This is for her beginning students from the summer 2026 session and those who just finished the beginning watercolor class in Jan.",
+        "If you have ever wished you could knit, let Laura teach you in **Intro to Knitting**. Presently she teaches for a residential disabled group and realized she&rsquo;s really good at teaching!",
+        "Just in time for Valentine&rsquo;s Day, Pat is teaching **Cookie Decorating**. Be one of the first 10 participants to join her and surprise your Valentine (or yourself!) for the holiday.",
+        "Sue and Hal are returning with **Fun, Easy Card Games**. This was so popular during the summer, we are offering it again! Learn new games for all those winter get-togethers&hellip;",
+        "Christine, retired poetry and English teacher, is offering **Beginning Creative Poetry**. Come stretch those writing muscles!",
+        "Join Greg, fix-it man extraordinaire, who offers **Simple Home Fixes and Easy Do-It Yourself Projects** for your house. As many of your neighbors can attest, he knows of what he teaches!",
+        "If you want to be known as the greatest grandparents in the world, join Stephanie for **Secrets to Taking the Grandkids to Disney**. There are obsessive fans of Disney and then there is Stephanie. I am sure you have seen her Disney Christmas decorations&hellip; Let her tell you tricks to visiting Disney parks without losing your mind.",
+        "Grace, a fantastic home cook, is offering **Got Flour? Let&rsquo;s make Bread** to any and all. We&rsquo;ll be in the kitchen and in the evening so as to maximize the number of participants for this delicious class!",
+        "We are thrilled to offer Jackie&rsquo;s **Basic Dog Obedience** training. Jackie has trained service dogs for over 30+ years and still teaches locally. But, if you are one of the first 8 to sign up, you can get her expertise for free!",
+        "Betsy, a founding member of the culinary club, is offering **Crockpot Cooking For Men** so they do not starve to death!",
+        "We live in one of the most environmentally rich areas of the country. Rick spends much time working with the landscaping committee and studying the birds of Florida. Join him as he teaches us **Birds in Our Backyards**.",
+    ]),
+    ("Science Classes", [
+        "For those who are space junkies (aren&rsquo;t we all?!), Gary is offering **Space History**. Gary is a lifelong space enthusiast and has spent the last four years volunteering at Cape Canaveral rocket launches and working for the Space Launch Delta 45 commander on Patrick.",
+        "For something new and fascinating, Dan has worked in the quantum field for a number of years. Now he wants to (at our level!) share the information with us in **10,000 Foot View of Quantum Science**.",
+        "Join Carl, astrophysicist and astrophotographer, for a tour through the cosmos in **Introduction to the Cosmos**. This class will include a nighttime viewing from the veranda.",
+        "**Space in FL** is a look at the current space programs and newcomers&hellip; in 2027 and the near future. Join Gary, our resident space &lsquo;junkie&rsquo;, for a fascinating update of what we are seeing now.",
+        "Carl, who has spent years as an astronomer, wants you to know your astronomy and is using his vast knowledge of the topic in **Introduction to Astronomy**. This class will include a nighttime viewing from the veranda.",
+        "It&rsquo;s in the news, in our daily feeds and on every TV channel. Rick has trained (and certified!) on multiple AI platforms and now wants to teach you about **Foundation and Fundamentals of Artificial Intelligence**.",
+        "Eric has spent 30 years teaching math to teenagers (<em>and survived!</em>) and now he wants to share his knowledge with us. Come to **Math made Easy** and ask him what you want to know!",
+    ]),
+    ("Sports Classes", [
+        "Jim&rsquo;s simple 1-step target methodology has been taught in Senior Centers all across the US. **Ping Pong 101** will have you teaching your own grandchildren in no time. This is brain training with a safe physical workout in a non-intimidating environment.",
+        "Join Steve, our resident Bocce coordinator/&lsquo;boss man&rsquo; for **Beginning Bocce**. You get a chance to meet many of the local bocce players too!",
+    ]),
+]
+
+
+def build_catalogue_body():
+    import re
+    parts = [f'        <h2 class="catalogue-title">Winter 2027 Class Catalogue</h2>',
+             f'        <p>{CATALOGUE_INTRO}</p>']
+    for heading, entries in CATALOGUE:
+        parts.append('        <section class="catalogue-category">')
+        parts.append(f'          <h3 class="class-category-heading">{heading}</h3>')
+        parts.append('          <div class="catalogue-grid">')
+        for text in entries:
+            text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+            parts.append(f'            <article class="catalogue-entry"><p>{text}</p></article>')
+        parts.append('          </div>')
+        parts.append('        </section>')
+    return "\n".join(parts) + "\n"
+
+
 PAGES = [
     (
         "index.html",
@@ -801,9 +887,7 @@ PAGES = [
         "teachers.html",
         "Your Teachers",
         "Meet our instructors",
-        """
-        <div class="coming-soon"><strong>Teachers, Presenters and Facilitator profiles coming soon.</strong></div>
-        """,
+        build_catalogue_body(),
     ),
     (
         "add-to-home-screen.html",
