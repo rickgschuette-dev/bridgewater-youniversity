@@ -1061,6 +1061,9 @@ main:has(.home-ff) .home-landing {
 }
 
 .catalogue-category .class-category-heading {
+  font-size: 1.6rem;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
   break-after: avoid;
 }
 
