@@ -490,6 +490,12 @@ footer a {
   margin: 0 0 12px;
 }
 
+/* Class Registration page only: larger category headings. Scoped to the
+   registration form's #class-categories so the Teachers page keeps its size. */
+#class-categories .class-category-heading {
+  font-size: 1.5rem;
+}
+
 .class-option {
   display: flex;
   align-items: flex-start;
