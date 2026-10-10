@@ -444,7 +444,7 @@ def build_registration_body():
                 var detail = detailParts.length ? ' <span class="class-detail">(' + escapeHTML(detailParts.join(" — ")) + ')</span>' : "";
                 var original = ORIGINAL_TITLES[cls.title];
                 var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
-                var scheduleHTML = cls.schedule ? '<div class="class-schedule">' + escapeHTML(cls.schedule) + '</div>' : "";
+                var scheduleHTML = cls.schedule ? '<div class="class-schedule">' + scheduleToHTML(cls.schedule) + '</div>' : "";
 
                 html += '<label class="class-option">';
                 html += '<input type="checkbox" class="class-checkbox" value="' + escapeHTML(cls.title) + '">';
@@ -539,6 +539,17 @@ def build_registration_body():
             var div = document.createElement("div");
             div.textContent = text;
             return div.innerHTML;
+          }
+
+          // Keeps the room name together as one unit at the end of the
+          // schedule line. Everything after the last time (a.m., p.m. or
+          // noon) is treated as the room, so a room that does not fit
+          // moves down to the next line whole, e.g. "Craft Room".
+          // Text with no recognizable time is shown unchanged.
+          function scheduleToHTML(text) {
+            var m = text.match(/^([\s\S]*\d\s*(?:a\.?m\.?|p\.?m\.?|noon)\.?,?)(\s+)(\S[\s\S]*)$/i);
+            if (!m) return escapeHTML(text);
+            return escapeHTML(m[1]) + escapeHTML(m[2]) + '<span class="class-room">' + escapeHTML(m[3]) + '</span>';
           }
         })();
         </script>
