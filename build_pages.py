@@ -637,6 +637,7 @@ def _schedule_sessions():
     S.append((_once(3, "Feb 18"), (19, 0), "7:00 p.m.", "FAIR (Financial Awareness in Retirement)", "Cafe", ""))
     # ---- Friday ----
     S.append((_weekly(4, "Jan 22", "Feb 19"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
+    S.append((_weekly(4, "Jan 22", "Feb 5"), (13, 0), "1:00 &ndash; 3:00 p.m.", "Card Games You Can Learn In 5 Minutes", "Library", ""))
     # ---- Saturday ----
     S.append((_once(5, "Jan 23"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
     S.append((_once(5, "Jan 16"), (10, 0), "10:00 a.m.", "Introduction to Astronomy", "Cafe", ""))
