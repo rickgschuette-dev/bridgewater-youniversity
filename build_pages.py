@@ -919,12 +919,12 @@ PAGES = [
         <div class="a2hs-grid">
           <section class="a2hs-card">
             <h2>Add to Your iPhone</h2>
-            <p class="a2hs-note">Use the Safari browser.</p>
+            <p class="a2hs-note">Put a shortcut icon on your home screen.</p>
             <ol>
-              <li>Open Bridgewater YOU in Safari.</li>
-              <li>Tap the <strong>Share</strong> button (a square with an arrow pointing up) at the bottom of your screen.</li>
-              <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-              <li>Tap <strong>Add</strong> in the top right corner.</li>
+              <li>Use <strong>Safari</strong>, the blue compass icon, rather than another browser or app.</li>
+              <li>Tap the <strong>&bull;&bull;&bull;</strong> (More) button near the address bar, then tap <strong>Share</strong>. On older iPhones, tap the Share button instead: a box with an arrow pointing up at the bottom center of the screen.</li>
+              <li>Scroll down and tap <strong>Add to Home Screen</strong>. If you don&rsquo;t see it, tap <strong>View More</strong> first.</li>
+              <li>Tap <strong>Add</strong>.</li>
             </ol>
           </section>
           <section class="a2hs-card">
