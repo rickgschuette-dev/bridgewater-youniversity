@@ -1107,3 +1107,22 @@ main:has(.home-ff) .home-landing {
 .catalogue-entry strong {
   color: var(--navy);
 }
+
+/* ---------- Home page: red "Add to your phone" link at the top ---------- */
+
+.home-screen-links {
+  margin: 0 0 24px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.home-screen-links a {
+  display: inline-block;
+  color: #ffffff;
+  background: #a8423c;
+  font-weight: 600;
+  text-decoration: underline;
+  border: 2px solid #8a332e;
+  border-radius: 8px;
+  padding: 10px 16px;
+}

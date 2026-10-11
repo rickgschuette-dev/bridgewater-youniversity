@@ -873,9 +873,6 @@ PAGES = [
             <a class="home-btn home-btn-gold" href="registration.html">Register for Classes</a>
             <a class="home-btn home-btn-navy" href="class-schedule.html">View the Class Schedule</a>
           </div>
-          <div class="home-buttons home-buttons-addphone">
-            <a class="home-btn home-btn-outline" href="add-to-home-screen.html">Add Bridgewater YOU to your phone</a>
-          </div>
         </div>
         """,
     ),
@@ -1020,6 +1017,7 @@ def build_page(filename, title, subtitle, body):
     else:
         pre = ""
         if filename == "index.html":
+            pre = '  <p class="home-screen-links"><a href="add-to-home-screen.html">Add Bridgewater YOU to your phone</a></p>\n'
             post_html = '  <p class="home-ff"><img src="assets/friends-forum-logo.png" alt="" aria-hidden="true"><span>A Bridgewater Friends Forum Program</span></p>\n'
         sub = "" if filename == "index.html" else f'  <div class="subtitle">{subtitle}</div>\n'
         h1_text = ("Designed by Bridgewater Neighbors&nbsp;- For Bridgewater Neighbors"
