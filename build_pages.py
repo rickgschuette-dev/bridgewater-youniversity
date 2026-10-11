@@ -797,7 +797,7 @@ CATALOGUE = [
     ]),
     ("History and Culture Classes", [
         "After her incredibly popular US Constitution class this summer, Phyllis, our favorite history teacher, returns with **The Roaring 20s**. We will cover the time from after WWI to Vietnam and the 1960s.",
-        "Join Rick for his first love (apologies to his wife!) for a discussion of art history, late antiquity through impressionism in **Fundamentals of Western Art History**. Whoever said an art degree would be useless in the future, didn&rsquo;t know about Bridgewater YOU.",
+        "What makes a work of art a masterpiece? Connecting with Western art history enriches our lives by uncovering the traditions, values, and ideas that built our modern world. Exploring these timeless masterworks trains our eyes to see with greater clarity, helping us find deeper meaning and connection in our everyday visual landscape.",
         "Our erudite neighbor, Betsy, is putting her humanities and law degrees to use in **What&rsquo;s the Punchline**. Join her for a fascinating look at both high- and low-class poetry.",
         "If ever you have been curious about religions, now is your chance to discuss Buddhism, Hinduism, Judaism, Christianity and Islam. Rick has spent years working with multiple religious and non-profits and can speak as an authority on **Comparative Religions**.",
         "Susan is teaching **Ecology, Geology and early Explorers of the Grand Canyon** based on a book she wrote. Come hear about the early explorers in Arizona and Nevada.",
