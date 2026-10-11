@@ -1111,7 +1111,7 @@ main:has(.home-ff) .home-landing {
 /* ---------- Home page: red "Add to your phone" link at the top ---------- */
 
 .home-screen-links {
-  margin: 0 0 24px;
+  margin: 0 0 44px;
   font-size: 15px;
   text-align: center;
 }
