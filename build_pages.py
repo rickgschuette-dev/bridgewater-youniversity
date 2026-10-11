@@ -835,6 +835,7 @@ CATALOGUE = [
     ("Sports Classes", [
         "Jim&rsquo;s simple 1-step target methodology has been taught in Senior Centers all across the US. **Ping Pong 101** will have you teaching your own grandchildren in no time. This is brain training with a safe physical workout in a non-intimidating environment.",
         "Join Steve, our resident Bocce coordinator/&lsquo;boss man&rsquo; for **Beginning Bocce**. You get a chance to meet many of the local bocce players too!",
+        "Are you into pickleball but want to get better? Heather Betz&rsquo; **Intermediate Pickleball** series isn&rsquo;t for beginners. Learn stronger shots, better tactics and new ways you can take your game to the next level.",
     ]),
 ]
 
