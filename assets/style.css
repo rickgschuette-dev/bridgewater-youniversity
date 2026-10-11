@@ -1126,3 +1126,44 @@ main:has(.home-ff) .home-landing {
   border-radius: 8px;
   padding: 10px 16px;
 }
+
+/* ---------- Android "Add to Phone" install button ---------- */
+
+.install-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--cream);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 0 0 16px;
+}
+
+.install-banner[hidden] {
+  display: none;
+}
+
+.install-banner-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.install-banner-btn {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.install-banner-btn:hover,
+.install-banner-btn:focus {
+  background: var(--navy-dark);
+}

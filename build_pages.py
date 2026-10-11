@@ -929,6 +929,10 @@ PAGES = [
           </section>
           <section class="a2hs-card">
             <h2>Add to Your Android Phone</h2>
+            <div id="install-banner" class="install-banner" hidden>
+              <p class="install-banner-text">Puts a Bridgewater YOU icon on your home screen, just like an app.</p>
+              <button type="button" id="install-banner-btn" class="install-banner-btn">Add to Phone</button>
+            </div>
             <p class="a2hs-note">Use the Chrome browser.</p>
             <ol>
               <li>Open Bridgewater YOU in Chrome.</li>
@@ -941,6 +945,7 @@ PAGES = [
         <p class="a2hs-after">The Bridgewater YOU icon will now appear on your
         home screen. Tap it any time to open the site.</p>
         <p><a href="index.html">&larr; Back to Home</a></p>
+        <script src="assets/install-prompt.js"></script>
         """,
     ),
     (
