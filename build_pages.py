@@ -861,6 +861,33 @@ def build_catalogue_body():
     return "\n".join(parts) + "\n"
 
 
+# The Winter Semester '27 tiles: shown on the hub page and inside the Home page welcome box.
+HUB_TILES = """
+        <ul class="hub-grid">
+          <li><a class="hub-tile" href="registration.html">
+            <img src="assets/icons/book.png" alt="" aria-hidden="true">
+            <span class="hub-title">Register for Classes</span>
+            <span class="hub-text">Sign up for classes and seminars.</span></a></li>
+          <li><a class="hub-tile" href="class-schedule.html">
+            <img src="assets/icons/palette.png" alt="" aria-hidden="true">
+            <span class="hub-title">Class Schedule</span>
+            <span class="hub-text">Dates, times and rooms.</span></a></li>
+          <li><a class="hub-tile" href="class-discussion.html">
+            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
+            <span class="hub-title">Class Discussion</span>
+            <span class="hub-text">Updates from your teacher, and conversation with classmates.</span></a></li>
+          <li><a class="hub-tile" href="seminar-discussion.html">
+            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
+            <span class="hub-title">Seminar Discussion</span>
+            <span class="hub-text">Updates from seminar leaders, and conversation with attendees.</span></a></li>
+          <li><a class="hub-tile" href="teachers.html">
+            <img src="assets/icons/coffee.png" alt="" aria-hidden="true">
+            <span class="hub-title">Your Teachers</span>
+            <span class="hub-text">Meet the instructors and browse the Winter 2027 class catalogue.</span></a></li>
+        </ul>
+"""
+
+
 PAGES = [
     (
         "index.html",
@@ -875,10 +902,7 @@ PAGES = [
           meet the neighbors beside you, there is a seat for you.</p>
           <p class="home-semester">Winter &lsquo;27 Semester &middot; January 11
           through early March 2027</p>
-          <div class="home-buttons">
-            <a class="home-btn home-btn-gold" href="registration.html">Register for Classes</a>
-            <a class="home-btn home-btn-navy" href="class-schedule.html">View the Class Schedule</a>
-          </div>
+          """ + HUB_TILES + """
         </div>
         """,
     ),
@@ -904,30 +928,7 @@ PAGES = [
         "winter-semester.html",
         "Winter Semester &rsquo;27",
         "January 11 through early March 2027",
-        """
-        <ul class="hub-grid">
-          <li><a class="hub-tile" href="registration.html">
-            <img src="assets/icons/book.png" alt="" aria-hidden="true">
-            <span class="hub-title">Register for Classes</span>
-            <span class="hub-text">Sign up for classes and seminars.</span></a></li>
-          <li><a class="hub-tile" href="class-schedule.html">
-            <img src="assets/icons/palette.png" alt="" aria-hidden="true">
-            <span class="hub-title">Class Schedule</span>
-            <span class="hub-text">Dates, times and rooms.</span></a></li>
-          <li><a class="hub-tile" href="class-discussion.html">
-            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
-            <span class="hub-title">Class Discussion</span>
-            <span class="hub-text">Updates from your teacher, and conversation with classmates.</span></a></li>
-          <li><a class="hub-tile" href="seminar-discussion.html">
-            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
-            <span class="hub-title">Seminar Discussion</span>
-            <span class="hub-text">Updates from seminar leaders, and conversation with attendees.</span></a></li>
-          <li><a class="hub-tile" href="teachers.html">
-            <img src="assets/icons/coffee.png" alt="" aria-hidden="true">
-            <span class="hub-title">Your Teachers</span>
-            <span class="hub-text">Meet the instructors and browse the Winter 2027 class catalogue.</span></a></li>
-        </ul>
-        """,
+        HUB_TILES,
     ),
     (
         "class-discussion.html",
@@ -1071,6 +1072,8 @@ ABS_PAGES = {"class-discussion-teacher.html", "seminar-discussion-leader.html"}
 
 # Extra tags for the <head> of specific pages (the Class Discussion pages load their own style and script).
 PAGE_EXTRA_HEAD = {
+    "index.html": """<link rel="stylesheet" href="assets/hub.css">
+""",
     "winter-semester.html": """<link rel="stylesheet" href="assets/hub.css">
 """,
     "class-discussion.html": """<meta name="robots" content="noindex">

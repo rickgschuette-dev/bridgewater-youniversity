@@ -8,7 +8,11 @@
 .hub-tile:hover, .hub-tile:focus-visible { border-color: var(--gold); box-shadow: 0 3px 12px rgba(11, 42, 92, .15); }
 .hub-tile img { width: 44px; height: 44px; object-fit: contain; background: var(--navy); border-radius: 8px; padding: 7px; }
 .hub-title { font-size: 1.3rem; font-weight: 700; line-height: 1.25; color: var(--navy); }
-.hub-text { font-size: 1rem; line-height: 1.45; color: #5a6577; }
+.hub-text { font-size: 1.1rem; line-height: 1.45; color: #5a6577; }
 /* an odd last tile keeps the same size as the others and sits centered on its own row */
 .hub-grid li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 9px); }
 @media (max-width: 640px) { .hub-grid { grid-template-columns: 1fr; } .hub-grid li:last-child:nth-child(odd) { width: 100%; } }
+
+/* inside the Home page welcome box the tiles sit on cream so they stand out from the white box */
+.home-landing .hub-grid { margin-top: 0; }
+.home-landing .hub-tile { background: var(--cream); }
