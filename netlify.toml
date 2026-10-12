@@ -21,3 +21,10 @@
   from = "/class-discussion/*"
   to = "/class-discussion-teacher.html"
   status = 200
+
+# Seminar Discussion: any address like /seminar-discussion/john-doe shows the seminar leader page template.
+# Same idea as the Class Discussion rule above; /seminar-discussion on its own is the landing page (seminar-discussion.html).
+[[redirects]]
+  from = "/seminar-discussion/*"
+  to = "/seminar-discussion-leader.html"
+  status = 200

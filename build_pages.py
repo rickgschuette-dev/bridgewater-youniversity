@@ -47,6 +47,7 @@ NAV_ITEMS = [
     ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
     ("Class Discussion", "class-discussion.html", "discussion"),
+    ("Seminar Discussion", "seminar-discussion.html", "discussion"),
     ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
@@ -558,7 +559,7 @@ def build_registration_body():
 
 # Pages that should NOT render the generic <h1>{title}</h1> / subtitle block
 # in build_page() -- their body supplies its own opening heading instead.
-PAGES_WITHOUT_HEADING = {"registration.html", "class-discussion-teacher.html"}
+PAGES_WITHOUT_HEADING = {"registration.html", "class-discussion-teacher.html", "seminar-discussion-leader.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
 
@@ -914,6 +915,23 @@ PAGES = [
         """,
     ),
     (
+        "seminar-discussion.html",
+        "Seminar Discussion",
+        "Seminar leader updates and attendee conversation",
+        """
+        <p class="cd-lede">Choose your seminar leader to read seminar updates and join the discussion.</p>
+        <div id="cd-app" data-page="index" data-kind="seminar"><p class="cd-status" role="status">Loading seminar leaders&hellip;</p></div>
+        """,
+    ),
+    (
+        "seminar-discussion-leader.html",
+        "Seminar Discussion",
+        "",
+        """
+        <div id="cd-app" data-page="teacher" data-kind="seminar"><p class="cd-status" role="status">Loading&hellip;</p></div>
+        """,
+    ),
+    (
         "info-updates.html",
         "Info Updates",
         "Announcements and news",
@@ -1017,7 +1035,7 @@ PAGES = [
 
 # Pages that are served from a nested address (for example /class-discussion/betsy-marvin)
 # must use links that start with "/" so their menu, banner and styles still load.
-ABS_PAGES = {"class-discussion-teacher.html"}
+ABS_PAGES = {"class-discussion-teacher.html", "seminar-discussion-leader.html"}
 
 # Extra tags for the <head> of specific pages (the Class Discussion pages load their own style and script).
 PAGE_EXTRA_HEAD = {
@@ -1027,12 +1045,20 @@ PAGE_EXTRA_HEAD = {
     "class-discussion-teacher.html": """<meta name="robots" content="noindex">
 <link rel="stylesheet" href="/assets/class-discussion.css">
 """,
+    "seminar-discussion.html": """<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/class-discussion.css">
+""",
+    "seminar-discussion-leader.html": """<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/assets/class-discussion.css">
+""",
 }
 
 # Extra markup placed just before </body> on specific pages.
 PAGE_EXTRA_FOOT = {
     "class-discussion.html": '<script src="assets/class-discussion.js"></script>\n',
     "class-discussion-teacher.html": '<script src="/assets/class-discussion.js"></script>\n',
+    "seminar-discussion.html": '<script src="assets/class-discussion.js"></script>\n',
+    "seminar-discussion-leader.html": '<script src="/assets/class-discussion.js"></script>\n',
 }
 
 
@@ -1042,7 +1068,7 @@ def build_nav(current_file, P=""):
         # The Home tab is redundant on the Home page itself, so omit it there.
         if href == "index.html" and current_file == "index.html":
             continue
-        active = " active" if (href == current_file or (href == "class-discussion.html" and current_file == "class-discussion-teacher.html")) else ""
+        active = " active" if (href == current_file or (href == "class-discussion.html" and current_file == "class-discussion-teacher.html") or (href == "seminar-discussion.html" and current_file == "seminar-discussion-leader.html")) else ""
         items.append(
             f'''      <li>
         <a class="nav-link{active}" href="{P}{href}">

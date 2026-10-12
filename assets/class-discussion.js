@@ -1,21 +1,35 @@
-/* Bridgewater YOU - Class Discussion (teacher updates + classmate discussion).
+/* Bridgewater YOU - Class Discussion and Seminar Discussion (teacher updates + classmate discussion).
+ * One script serves both. A page marked data-kind="seminar" reads the three seminar tabs instead of the
+ * three class tabs (same column headings), and uses seminar wording. Everything else is identical.
  * Reads three published Google Sheet tabs (CSV) in the visitor's browser:
  *   Teacher Index     : one row per class (teacher, class, format, category, schedule, form links)
  *   Public Notes      : teacher updates (Posted, Teacher, Class, Title, Update) - no passcode column
  *   Public Discussion : student messages (Posted, Class, Name, Message); messages hidden in the sheet are already removed
- * Nothing here is secret. To change a data source, edit the three URLs below.
+ * Nothing here is secret. To change a data source, edit the URLs below (class tabs, then seminar tabs).
  * Posted text is always inserted as plain text (never as HTML), so it cannot change the page.
  */
 (function () {
   'use strict';
 
   var BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRNHz_BHmBirYR9yELC-KnIHbwslG4YC1_7ZgKIf0WIi9lFDlsxqDlrSQkQSm950mwM2ozb50V-E3K6/pub';
-  var INDEX_URL = BASE + '?gid=2033242745&single=true&output=csv';
-  var NOTES_URL = BASE + '?gid=14847692&single=true&output=csv';
-  var DISC_URL = BASE + '?gid=802831052&single=true&output=csv';
+  var appEl = document.getElementById('cd-app');
+  var SEM = !!appEl && appEl.getAttribute('data-kind') === 'seminar';
+  var GIDS = SEM
+    ? { index: '1130850226', notes: '763731280', disc: '701980731' }
+    : { index: '2033242745', notes: '14847692', disc: '802831052' };
+  var INDEX_URL = BASE + '?gid=' + GIDS.index + '&single=true&output=csv';
+  var NOTES_URL = BASE + '?gid=' + GIDS.notes + '&single=true&output=csv';
+  var DISC_URL = BASE + '?gid=' + GIDS.disc + '&single=true&output=csv';
   var FILES_API = '/api/class-files';
   var DISC_SHOW = 25; // newest messages shown before "Show earlier messages"
-  var HOME = '/class-discussion';
+  var HOME = SEM ? '/seminar-discussion' : '/class-discussion';
+  // wording that differs between the two sections
+  var WHO = SEM ? 'Seminar leader' : 'Teacher';
+  var WHO_LIST = SEM ? 'seminar leaders' : 'teachers';
+  var WHAT = SEM ? 'seminar' : 'class';
+  var WHATS = SEM ? 'seminars' : 'classes';
+  var SECTION = SEM ? 'Seminar Discussion' : 'Class Discussion';
+  var SLUG_PREFIX = SEM ? 'sem-' : ''; // keeps seminar files apart from class files in storage
 
   // ---------- helpers ----------
   function parseCSV(text) {
@@ -107,11 +121,11 @@
   // ---------- landing page ----------
   function renderIndex(root) {
     root.textContent = '';
-    root.appendChild(status('Loading teachers…'));
+    root.appendChild(status('Loading ' + WHO_LIST + '…'));
     getCSV(INDEX_URL).then(function (index) {
       root.textContent = '';
       var teachers = groupTeachers(index);
-      if (!teachers.length) { root.appendChild(status('No classes are listed yet. Please check back soon.')); return; }
+      if (!teachers.length) { root.appendChild(status('No ' + WHATS + ' are listed yet. Please check back soon.')); return; }
       var ul = el('ul', { 'class': 'cd-grid' });
       teachers.forEach(function (t) {
         var kids = [el('b', { text: t.name })];
@@ -121,7 +135,7 @@
       root.appendChild(ul);
     }).catch(function () {
       root.textContent = '';
-      root.appendChild(status('The teacher list could not be loaded. Please refresh the page in a moment.'));
+      root.appendChild(status('The list of ' + WHO_LIST + ' could not be loaded. Please refresh the page in a moment.'));
     });
   }
 
@@ -190,7 +204,7 @@
   // ---------- class files (PDF / Word) ----------
   var FILE_MAX = 4 * 1024 * 1024;
 
-  function classSlug(name) { return slugify(name).slice(0, 80); }
+  function classSlug(name) { return (SLUG_PREFIX + slugify(name)).slice(0, 80); }
 
   function fmtSize(n) {
     if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
@@ -228,7 +242,7 @@
       sec.hidden = !files.length;
       files.forEach(function (f) {
         var status = el('span', { 'class': 'cd-rm-msg', role: 'status' });
-        var pass = el('input', { type: 'text', 'class': 'cd-input', autocomplete: 'off', 'aria-label': 'Teacher passcode', placeholder: 'Teacher passcode' });
+        var pass = el('input', { type: 'text', 'class': 'cd-input', autocomplete: 'off', 'aria-label': WHO + ' passcode', placeholder: WHO + ' passcode' });
         var go = el('button', { type: 'button', 'class': 'cd-btn', text: 'Remove file' });
         var no = el('button', { type: 'button', 'class': 'cd-link', text: 'Cancel' });
         var rm = el('div', { 'class': 'cd-rm', hidden: 'hidden' }, [pass, go, no, status]);
@@ -258,8 +272,8 @@
     var send = el('button', { type: 'button', 'class': 'cd-btn', text: 'Send file' });
     var status = el('p', { 'class': 'cd-upmsg', role: 'status' });
     var body = el('div', { 'class': 'cd-box-body' }, [
-      el('p', { 'class': 'cd-hint', text: 'Choose a PDF or Word file (4 MB or smaller), type the teacher passcode, then click Send file. Please do not include student names, phone numbers or email addresses.' }),
-      el('div', { 'class': 'cd-field' }, [el('label', { 'for': 'cdp-' + slug, text: 'Teacher passcode' }), pass]),
+      el('p', { 'class': 'cd-hint', text: 'Choose a PDF or Word file (4 MB or smaller), type the ' + WHO.toLowerCase() + ' passcode, then click Send file. Please do not include student names, phone numbers or email addresses.' }),
+      el('div', { 'class': 'cd-field' }, [el('label', { 'for': 'cdp-' + slug, text: WHO + ' passcode' }), pass]),
       el('div', { 'class': 'cd-field' }, [el('label', { 'for': 'cdf-' + slug, text: 'File' }), file]),
       send, status
     ]);
@@ -282,7 +296,7 @@
         }
       });
     });
-    return el('details', { 'class': 'cd-box' }, [el('summary', { text: 'Teacher: add a file' }), body]);
+    return el('details', { 'class': 'cd-box' }, [el('summary', { text: WHO + ': add a file' }), body]);
   }
 
   function formURL(u) { return /^https:\/\/docs\.google\.com\/forms\//.test(u || '') ? u : ''; }
@@ -321,15 +335,15 @@
         root.appendChild(el('h1', { text: 'We could not find that page' }));
         root.appendChild(el('p', null, [
           document.createTextNode('Please check the address, or '),
-          el('a', { href: HOME, text: 'choose a teacher from the list' }),
+          el('a', { href: HOME, text: 'choose from the list' }),
           document.createTextNode('.')
         ]));
         return;
       }
-      document.title = t.name + ' | Class Discussion | Bridgewater YOU';
-      root.appendChild(el('a', { 'class': 'cd-back', href: HOME, text: '← All teachers' }));
+      document.title = t.name + ' | ' + SECTION + ' | Bridgewater YOU';
+      root.appendChild(el('a', { 'class': 'cd-back', href: HOME, text: '← All ' + WHO_LIST }));
       root.appendChild(el('h1', { text: t.name }));
-      root.appendChild(el('div', { 'class': 'subtitle', text: t.classes.length === 1 ? '1 class this semester' : t.classes.length + ' classes this semester' }));
+      root.appendChild(el('div', { 'class': 'subtitle', text: t.classes.length === 1 ? '1 ' + WHAT + ' this semester' : t.classes.length + ' ' + WHATS + ' this semester' }));
 
       var boxes = [], dboxes = [];
       t.classes.forEach(function (c) {
@@ -338,12 +352,12 @@
         meta.appendChild(document.createTextNode([c.Format, c.Schedule].filter(Boolean).join(' · ')));
 
         var url = formURL(c['Update form link']);
-        var det = url ? formBox('Teacher: post an update',
-          'Enter the teacher passcode, then your update. Click directly on the line beneath each question to type. Please do not include student names, phone numbers or email addresses.',
+        var det = url ? formBox(WHO + ': post an update',
+          'Enter the ' + WHO.toLowerCase() + ' passcode, then your update. Click directly on the line beneath each question to type. Please do not include student names, phone numbers or email addresses.',
           url, 'Post an update for ' + c.Class, '', '') : null;
 
         var dUrl = formURL(c['Discussion form link']);
-        var dDet = dUrl ? formBox('Students: join the discussion', '', dUrl, 'Join the discussion for ' + c.Class, 'cd-disc',
+        var dDet = dUrl ? formBox((SEM ? 'Attendees' : 'Students') + ': join the discussion', '', dUrl, 'Join the discussion for ' + c.Class, 'cd-disc',
           ' New messages can take a few minutes to appear below.') : null;
         if (dDet) dDet.className = 'cd-box cd-join';
 
@@ -390,7 +404,7 @@
     });
   }
 
-  var root = document.getElementById('cd-app');
+  var root = appEl;
   if (!root) return;
   if (root.getAttribute('data-page') === 'index') renderIndex(root);
   else renderTeacher(root);
