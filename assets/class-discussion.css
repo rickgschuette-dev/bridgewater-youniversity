@@ -1,0 +1,73 @@
+/* Bridgewater YOU - Class Discussion pages. Every class here starts with "cd-" so it cannot affect other pages.
+   Colours come from the site's own variables (--navy, --gold, --cream, --white, --navy-dark). */
+.cd-lede { margin: 0 0 24px; color: #5a6577; }
+.cd-back { display: inline-block; margin-bottom: 4px; font-size: .95rem; color: var(--navy); }
+.cd-back:hover { color: var(--gold); }
+
+/* teacher list */
+.cd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding: 0; margin: 0; list-style: none; }
+.cd-card {
+  display: block; height: 100%; padding: 16px 18px; background: var(--white);
+  border: 1px solid #e6d9bf; border-left: 5px solid var(--gold); border-radius: 4px;
+  text-decoration: none; color: #1b2430;
+}
+.cd-card:hover, .cd-card:focus-visible { border-color: var(--gold); box-shadow: 0 2px 10px rgba(11, 42, 92, .12); }
+.cd-card b { display: block; font-size: 1.15rem; line-height: 1.3; color: var(--navy); margin-bottom: 4px; }
+.cd-card small { display: block; color: #5a6577; font-size: .92rem; line-height: 1.4; }
+.cd-card small + small { margin-top: 2px; }
+
+/* class section */
+.cd-class {
+  background: var(--white); border: 1px solid #e6d9bf; border-top: 5px solid var(--navy);
+  border-radius: 6px; padding: 20px 22px; margin: 0 0 22px;
+}
+.cd-class h2 { margin: 0; color: var(--navy); font-size: 1.4rem; line-height: 1.3; }
+.cd-meta { margin: 4px 0 0; color: #5a6577; font-size: .95rem; }
+.cd-chip {
+  display: inline-block; background: #f3e3bd; color: var(--navy-dark);
+  border-radius: 999px; padding: 1px 10px; font-size: .85rem; font-weight: 600; margin-right: 8px;
+}
+
+/* collapsible boxes */
+.cd-box { margin: 18px 0 6px; border: 1px solid #e6d9bf; border-radius: 6px; background: var(--cream); }
+.cd-box > summary {
+  cursor: pointer; list-style: none; padding: 12px 16px; font-weight: 700; color: var(--navy);
+  display: flex; align-items: center; justify-content: space-between; border-radius: 6px;
+}
+.cd-box > summary::-webkit-details-marker { display: none; }
+.cd-box > summary::after { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--gold); }
+.cd-box[open] > summary::after { content: "\2212"; }
+.cd-box > summary:hover { background: #f3e3bd; }
+.cd-box-body { padding: 4px 16px 16px; }
+.cd-hint { margin: 0 0 10px; color: #5a6577; font-size: .92rem; }
+.cd-box-body iframe { width: 100%; height: 1260px; border: 0; background: var(--white); border-radius: 6px; }
+.cd-box-body.cd-disc iframe { height: 780px; }
+.cd-fallback { font-size: .92rem; margin: 8px 0 0; }
+.cd-join { margin-top: 4px; margin-bottom: 14px; }
+
+/* headings and lists */
+.cd-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 20px 0 8px; }
+.cd-head h3 { margin: 0; font-size: 1.05rem; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; color: #5a6577; }
+.cd-disc-head { margin-top: 28px; padding-top: 18px; border-top: 1px solid #e6d9bf; }
+button.cd-link {
+  background: none; border: 0; padding: 4px 0; font: inherit; font-size: .92rem; color: var(--navy);
+  text-decoration: underline; cursor: pointer;
+}
+button.cd-link:hover { color: var(--gold); }
+.cd-note { border-left: 4px solid var(--gold); padding: 6px 0 6px 14px; margin: 0 0 16px; }
+.cd-note h4 { margin: 0; font-size: 1.1rem; color: #1b2430; }
+.cd-note time { display: block; font-size: .88rem; color: #5a6577; margin-bottom: 4px; }
+.cd-note p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cd-msg { background: var(--cream); border-radius: 6px; padding: 10px 14px; margin: 0 0 10px; }
+.cd-msg-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.cd-msg-head b { color: var(--navy); }
+.cd-msg time { font-size: .85rem; color: #5a6577; }
+.cd-msg p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cd-empty { color: #5a6577; margin: 0; font-style: italic; }
+.cd-status { padding: 14px 16px; border-radius: 6px; background: #f3e3bd; color: var(--navy-dark); margin: 0 0 20px; }
+
+@media (max-width: 600px) {
+  .cd-class { padding: 16px; }
+  .cd-box-body iframe { height: 1400px; }
+  .cd-box-body.cd-disc iframe { height: 900px; }
+}

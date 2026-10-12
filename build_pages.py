@@ -46,6 +46,7 @@ NAV_ITEMS = [
     ("Class Schedule", "class-schedule.html", "palette"),
     ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
+    ("Class Discussion", "class-discussion.html", "discussion"),
     ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
@@ -557,7 +558,7 @@ def build_registration_body():
 
 # Pages that should NOT render the generic <h1>{title}</h1> / subtitle block
 # in build_page() -- their body supplies its own opening heading instead.
-PAGES_WITHOUT_HEADING = {"registration.html"}
+PAGES_WITHOUT_HEADING = {"registration.html", "class-discussion-teacher.html"}
 
 # Each entry: (filename, page title, subtitle, body_html)
 
@@ -896,6 +897,23 @@ PAGES = [
         build_schedule_body(),
     ),
     (
+        "class-discussion.html",
+        "Class Discussion",
+        "Teacher updates and classmate conversation",
+        """
+        <p class="cd-lede">Choose your teacher to read class updates and join the discussion.</p>
+        <div id="cd-app" data-page="index"><p class="cd-status" role="status">Loading teachers&hellip;</p></div>
+        """,
+    ),
+    (
+        "class-discussion-teacher.html",
+        "Class Discussion",
+        "",
+        """
+        <div id="cd-app" data-page="teacher"><p class="cd-status" role="status">Loading&hellip;</p></div>
+        """,
+    ),
+    (
         "info-updates.html",
         "Info Updates",
         "Announcements and news",
@@ -997,17 +1015,38 @@ PAGES = [
 ]
 
 
-def build_nav(current_file):
+# Pages that are served from a nested address (for example /class-discussion/betsy-marvin)
+# must use links that start with "/" so their menu, banner and styles still load.
+ABS_PAGES = {"class-discussion-teacher.html"}
+
+# Extra tags for the <head> of specific pages (the Class Discussion pages load their own style and script).
+PAGE_EXTRA_HEAD = {
+    "class-discussion.html": """<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/class-discussion.css">
+""",
+    "class-discussion-teacher.html": """<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/assets/class-discussion.css">
+""",
+}
+
+# Extra markup placed just before </body> on specific pages.
+PAGE_EXTRA_FOOT = {
+    "class-discussion.html": '<script src="assets/class-discussion.js"></script>\n',
+    "class-discussion-teacher.html": '<script src="/assets/class-discussion.js"></script>\n',
+}
+
+
+def build_nav(current_file, P=""):
     items = []
     for label, href, icon in NAV_ITEMS:
         # The Home tab is redundant on the Home page itself, so omit it there.
         if href == "index.html" and current_file == "index.html":
             continue
-        active = " active" if href == current_file else ""
+        active = " active" if (href == current_file or (href == "class-discussion.html" and current_file == "class-discussion-teacher.html")) else ""
         items.append(
             f'''      <li>
-        <a class="nav-link{active}" href="{href}">
-          <img src="assets/icons/{icon}.png" alt="" aria-hidden="true">
+        <a class="nav-link{active}" href="{P}{href}">
+          <img src="{P}assets/icons/{icon}.png" alt="" aria-hidden="true">
           <span>{label}</span>
         </a>
       </li>'''
@@ -1016,7 +1055,10 @@ def build_nav(current_file):
 
 
 def build_page(filename, title, subtitle, body):
-    nav_html = build_nav(filename)
+    P = "/" if filename in ABS_PAGES else ""
+    nav_html = build_nav(filename, P)
+    extra_head = PAGE_EXTRA_HEAD.get(filename, "")
+    extra_foot = PAGE_EXTRA_FOOT.get(filename, "")
     post_html = ""
     if filename in PAGES_WITHOUT_HEADING:
         heading_html = ""
@@ -1036,19 +1078,19 @@ def build_page(filename, title, subtitle, body):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} | Bridgewater YOU</title>
-<link rel="stylesheet" href="assets/style.css">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="{P}assets/style.css">
+<link rel="manifest" href="{P}manifest.json">
+<link rel="apple-touch-icon" href="{P}assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0B2A5C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bridgewater YOU">
-</head>
+{extra_head}</head>
 <body>
 
-<a href="index.html">
-  <img class="banner-image" src="assets/banner-top.jpg" alt="Bridgewater YOU - Connecting Friends, Enriching Lives">
+<a href="{P}index.html">
+  <img class="banner-image" src="{P}assets/banner-top.jpg" alt="Bridgewater YOU - Connecting Friends, Enriching Lives">
 </a>
 
 <nav class="site-nav" aria-label="Main navigation">
@@ -1062,10 +1104,10 @@ def build_page(filename, title, subtitle, body):
 </main>
 
 <footer>
-  <p>&copy; 2026 Bridgewater YOU &mdash; <a href="index.html">Home</a></p>
+  <p>&copy; 2026 Bridgewater YOU &mdash; <a href="{P}index.html">Home</a></p>
 </footer>
 
-</body>
+{extra_foot}</body>
 </html>
 """
 

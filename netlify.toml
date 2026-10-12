@@ -13,3 +13,11 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Class Discussion: any address like /class-discussion/betsy-marvin shows the teacher page template.
+# The page itself reads the teacher's name from the address. Real files always win over this rule, so
+# no other page is affected, and /class-discussion on its own is the landing page (class-discussion.html).
+[[redirects]]
+  from = "/class-discussion/*"
+  to = "/class-discussion-teacher.html"
+  status = 200
