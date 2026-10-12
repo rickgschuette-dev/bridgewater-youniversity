@@ -914,10 +914,6 @@ PAGES = [
             <img src="assets/icons/palette.png" alt="" aria-hidden="true">
             <span class="hub-title">Class Schedule</span>
             <span class="hub-text">Dates, times and rooms.</span></a></li>
-          <li><a class="hub-tile" href="teachers.html">
-            <img src="assets/icons/coffee.png" alt="" aria-hidden="true">
-            <span class="hub-title">Your Teachers</span>
-            <span class="hub-text">Meet the instructors and browse the Winter 2027 class catalogue.</span></a></li>
           <li><a class="hub-tile" href="class-discussion.html">
             <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
             <span class="hub-title">Class Discussion</span>
@@ -926,6 +922,10 @@ PAGES = [
             <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
             <span class="hub-title">Seminar Discussion</span>
             <span class="hub-text">Updates from seminar leaders, and conversation with attendees.</span></a></li>
+          <li><a class="hub-tile" href="teachers.html">
+            <img src="assets/icons/coffee.png" alt="" aria-hidden="true">
+            <span class="hub-title">Your Teachers</span>
+            <span class="hub-text">Meet the instructors and browse the Winter 2027 class catalogue.</span></a></li>
         </ul>
         """,
     ),
