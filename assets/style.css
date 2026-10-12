@@ -17,6 +17,7 @@ body {
   font-family: "Segoe UI", Verdana, Arial, sans-serif;
   background: var(--cream);
   color: #1a1a1a;
+  font-size: 1.125rem;
 }
 
 a {
@@ -66,7 +67,7 @@ a {
   text-decoration: none;
   color: var(--white);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   letter-spacing: 0.03em;
   text-align: center;
   transition: background 0.15s ease;
@@ -95,7 +96,7 @@ a {
   }
   .site-nav a {
     padding: 16px 6px;
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
   .site-nav img {
     width: 28px;
@@ -122,7 +123,7 @@ main .subtitle {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   margin-bottom: 1.5em;
 }
 
@@ -302,7 +303,7 @@ main p {
 .committee-duties {
   margin: 0;
   padding-left: 22px;
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   line-height: 1.5;
   color: #333;
   white-space: nowrap;
@@ -333,7 +334,7 @@ main p {
 
 .format-hint {
   font-weight: 400;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   color: #555;
 }
 
@@ -434,7 +435,7 @@ footer {
   color: var(--cream);
   text-align: center;
   padding: 20px;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
 }
 
 footer a {
@@ -558,21 +559,21 @@ footer a {
 .class-detail {
   font-weight: 400;
   color: #555;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
 }
 
 .class-original-title {
   font-weight: 400;
   font-style: italic;
   color: #777;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   margin-top: 3px;
 }
 
 .class-schedule {
   font-weight: 400;
   color: #555;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   white-space: pre-wrap;
 }
 
@@ -682,7 +683,7 @@ footer a {
 }
 
 .sched-week-count {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   opacity: 0.85;
 }
 
@@ -697,7 +698,7 @@ footer a {
 .sched-tbd-body p {
   margin: 10px 0 12px;
   color: #555;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 }
 
 .sched-tbd-list {
@@ -770,7 +771,7 @@ footer a {
 .sched-meta {
   display: block;
   color: #555;
-  font-size: 0.92rem;
+  font-size: 1.1rem;
   margin-top: 2px;
 }
 
@@ -856,7 +857,7 @@ footer a {
 }
 
 .home-ff {
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -908,7 +909,7 @@ main:has(.home-ff) .home-landing {
   .site-nav a {
     padding: 10px 4px;
     gap: 6px;
-    font-size: 0.78rem;
+    font-size: 1rem;
   }
   .site-nav img {
     width: 24px;
@@ -950,7 +951,7 @@ main:has(.home-ff) .home-landing {
     font-size: 1.05rem;
   }
   .home-landing .home-semester {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
   .home-buttons {
     flex-direction: column;
@@ -1056,7 +1057,7 @@ main:has(.home-ff) .home-landing {
 }
 
 .video-note {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
 }
 
 /* ---------- Class catalogue (Your Teachers page) ---------- */
@@ -1112,7 +1113,7 @@ main:has(.home-ff) .home-landing {
 
 .home-screen-links {
   margin: 0 0 44px;
-  font-size: 15px;
+  font-size: 1.1rem;
   text-align: center;
 }
 
