@@ -343,7 +343,7 @@
         return;
       }
       document.title = t.name + ' | ' + SECTION + ' | Bridgewater YOU';
-      root.appendChild(el('a', { 'class': 'cd-back', href: HOME, text: '← All ' + WHO_LIST }));
+      root.appendChild(el('a', { 'class': 'cd-back', href: HOME, text: '← Back to all ' + WHO_LIST + ' page' }));
       root.appendChild(el('h1', { text: t.name }));
       root.appendChild(el('div', { 'class': 'subtitle', text: t.classes.length === 1 ? '1 ' + WHAT + ' this semester' : t.classes.length + ' ' + WHATS + ' this semester' }));
 
