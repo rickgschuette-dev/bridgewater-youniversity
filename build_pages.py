@@ -43,7 +43,6 @@ def build_watch_live_body():
 NAV_ITEMS = [
     ("Home", "index.html", "home"),
     ("Winter Semester &rsquo;27", "winter-semester.html", "book"),
-    ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
     ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
@@ -51,7 +50,7 @@ NAV_ITEMS = [
 
 # Every page that belongs to the Winter Semester '27 section lights up the "Winter Semester '27" menu button.
 WINTER_PAGES = {
-    "winter-semester.html", "registration.html", "registration-thank-you.html", "class-schedule.html",
+    "winter-semester.html", "registration.html", "registration-thank-you.html", "class-schedule.html", "teachers.html",
     "class-discussion.html", "class-discussion-teacher.html",
     "seminar-discussion.html", "seminar-discussion-leader.html",
 }
@@ -915,6 +914,10 @@ PAGES = [
             <img src="assets/icons/palette.png" alt="" aria-hidden="true">
             <span class="hub-title">Class Schedule</span>
             <span class="hub-text">Dates, times and rooms.</span></a></li>
+          <li><a class="hub-tile" href="teachers.html">
+            <img src="assets/icons/coffee.png" alt="" aria-hidden="true">
+            <span class="hub-title">Your Teachers</span>
+            <span class="hub-text">Meet the instructors and browse the Winter 2027 class catalogue.</span></a></li>
           <li><a class="hub-tile" href="class-discussion.html">
             <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
             <span class="hub-title">Class Discussion</span>
