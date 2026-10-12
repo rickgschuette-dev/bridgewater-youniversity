@@ -75,3 +75,21 @@ button.cd-link:hover { color: var(--gold); }
 /* collapsible older discussion */
 .cd-older { margin-top: 4px; }
 .cd-older > .cd-box-body { padding-top: 12px; }
+
+/* class files (PDF / Word) */
+.cd-filesec[hidden], .cd-rm[hidden] { display: none; }
+.cd-file { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 10px 14px; margin: 0 0 8px; background: var(--cream); border-radius: 6px; }
+.cd-file > a { font-weight: 600; overflow-wrap: anywhere; }
+.cd-file-meta { color: #5a6577; font-size: .88rem; }
+.cd-rm-open { margin-left: auto; font-size: .9rem; }
+.cd-rm { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding-top: 6px; }
+.cd-rm-msg { color: #8a2d1b; font-size: .92rem; }
+.cd-field { margin: 0 0 12px; }
+.cd-field label { display: block; font-weight: 600; margin-bottom: 4px; color: var(--navy); }
+.cd-input { width: 100%; max-width: 420px; box-sizing: border-box; font: inherit; font-size: 1rem; padding: 10px 12px; border: 1px solid #c9b98f; border-radius: 6px; background: var(--white); }
+.cd-rm .cd-input { width: auto; max-width: 220px; }
+.cd-btn { font: inherit; font-weight: 600; font-size: 1rem; padding: 10px 20px; border: 0; border-radius: 6px; background: var(--navy); color: var(--white); cursor: pointer; }
+.cd-btn:hover { background: var(--gold); color: var(--navy-dark); }
+.cd-btn[disabled] { opacity: .6; cursor: default; }
+.cd-upmsg { margin: 10px 0 0; color: #8a2d1b; min-height: 1.2em; }
+.cd-upmsg.cd-upok { color: #1e6b3a; }

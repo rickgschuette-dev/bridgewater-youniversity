@@ -1,0 +1,9 @@
+{
+  "name": "bridgewater-youniversity",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Bridgewater YOU website. The only dependency is Netlify's file-storage library, used by netlify/functions/class-files.mjs for class file uploads.",
+  "dependencies": {
+    "@netlify/blobs": "10.7.13"
+  }
+}

@@ -13,6 +13,7 @@
   var INDEX_URL = BASE + '?gid=2033242745&single=true&output=csv';
   var NOTES_URL = BASE + '?gid=14847692&single=true&output=csv';
   var DISC_URL = BASE + '?gid=802831052&single=true&output=csv';
+  var FILES_API = '/api/class-files';
   var DISC_SHOW = 25; // newest messages shown before "Show earlier messages"
   var HOME = '/class-discussion';
 
@@ -185,6 +186,105 @@
     box.appendChild(det);
   }
 
+
+  // ---------- class files (PDF / Word) ----------
+  var FILE_MAX = 4 * 1024 * 1024;
+
+  function classSlug(name) { return slugify(name).slice(0, 80); }
+
+  function fmtSize(n) {
+    if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
+    return Math.max(1, Math.round(n / 1024)) + ' KB';
+  }
+
+  function fmtIso(s) {
+    var d = new Date(s);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function postFiles(fields) {
+    var fd = new FormData();
+    Object.keys(fields).forEach(function (k) { fd.append(k, fields[k]); });
+    return fetch(FILES_API, { method: 'POST', body: fd }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, body: j }; }, function () { return { ok: false, body: { error: 'Something went wrong. Please try again.' } }; });
+    }, function () { return { ok: false, body: { error: 'Could not reach the server. Please check your connection and try again.' } }; });
+  }
+
+  // The "Files" list for one class. Hidden until the class has at least one file.
+  function filesSection(slug) {
+    var list = el('div', { 'class': 'cd-files' });
+    var sec = el('div', { 'class': 'cd-filesec', hidden: 'hidden' }, [
+      el('div', { 'class': 'cd-head' }, [el('h3', { text: 'Files' })]),
+      list
+    ]);
+    function load() {
+      return fetch(FILES_API + '?class=' + encodeURIComponent(slug)).then(function (r) { return r.json(); }).then(function (j) {
+        draw(j.files || []);
+      }, function () { /* leave the list as it was */ });
+    }
+    function draw(files) {
+      list.textContent = '';
+      sec.hidden = !files.length;
+      files.forEach(function (f) {
+        var status = el('span', { 'class': 'cd-rm-msg', role: 'status' });
+        var pass = el('input', { type: 'text', 'class': 'cd-input', autocomplete: 'off', 'aria-label': 'Teacher passcode', placeholder: 'Teacher passcode' });
+        var go = el('button', { type: 'button', 'class': 'cd-btn', text: 'Remove file' });
+        var no = el('button', { type: 'button', 'class': 'cd-link', text: 'Cancel' });
+        var rm = el('div', { 'class': 'cd-rm', hidden: 'hidden' }, [pass, go, no, status]);
+        var open = el('button', { type: 'button', 'class': 'cd-link cd-rm-open', text: 'Remove' });
+        open.addEventListener('click', function () { rm.hidden = false; open.hidden = true; pass.focus(); });
+        no.addEventListener('click', function () { rm.hidden = true; open.hidden = false; status.textContent = ''; pass.value = ''; });
+        go.addEventListener('click', function () {
+          status.textContent = 'Removing…';
+          postFiles({ action: 'remove', passcode: pass.value, 'class': slug, id: f.id }).then(function (res) {
+            if (res.ok) load(); else status.textContent = res.body.error || 'Could not remove the file.';
+          });
+        });
+        list.appendChild(el('div', { 'class': 'cd-file' }, [
+          el('a', { href: f.url, target: '_blank', rel: 'noopener', text: f.name }),
+          el('span', { 'class': 'cd-file-meta', text: [f.type, fmtSize(f.size), fmtIso(f.uploaded)].filter(Boolean).join(' · ') }),
+          open, rm
+        ]));
+      });
+    }
+    return { node: sec, reload: load };
+  }
+
+  // The teacher's "add a file" box.
+  function fileBox(slug, cls, onAdded) {
+    var pass = el('input', { type: 'text', id: 'cdp-' + slug, 'class': 'cd-input', autocomplete: 'off' });
+    var file = el('input', { type: 'file', id: 'cdf-' + slug, 'class': 'cd-input', accept: '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    var send = el('button', { type: 'button', 'class': 'cd-btn', text: 'Send file' });
+    var status = el('p', { 'class': 'cd-upmsg', role: 'status' });
+    var body = el('div', { 'class': 'cd-box-body' }, [
+      el('p', { 'class': 'cd-hint', text: 'Choose a PDF or Word file (4 MB or smaller), type the teacher passcode, then click Send file. Please do not include student names, phone numbers or email addresses.' }),
+      el('div', { 'class': 'cd-field' }, [el('label', { 'for': 'cdp-' + slug, text: 'Teacher passcode' }), pass]),
+      el('div', { 'class': 'cd-field' }, [el('label', { 'for': 'cdf-' + slug, text: 'File' }), file]),
+      send, status
+    ]);
+    send.addEventListener('click', function () {
+      status.className = 'cd-upmsg';
+      var f = file.files && file.files[0];
+      if (!f) { status.textContent = 'Please choose a file first.'; return; }
+      if (f.size > FILE_MAX) { status.textContent = 'That file is too large. The limit is 4 MB. Please choose a smaller file.'; return; }
+      if (!/\.(pdf|docx?)$/i.test(f.name)) { status.textContent = 'Only PDF and Word files (.pdf, .doc, .docx) can be added.'; return; }
+      send.disabled = true; status.textContent = 'Sending…';
+      postFiles({ action: 'upload', passcode: pass.value, 'class': slug, file: f }).then(function (res) {
+        send.disabled = false;
+        if (res.ok) {
+          status.className = 'cd-upmsg cd-upok';
+          status.textContent = 'Your file has been added.';
+          file.value = '';
+          onAdded();
+        } else {
+          status.textContent = res.body.error || 'The file could not be added.';
+        }
+      });
+    });
+    return el('details', { 'class': 'cd-box' }, [el('summary', { text: 'Teacher: add a file' }), body]);
+  }
+
   function formURL(u) { return /^https:\/\/docs\.google\.com\/forms\//.test(u || '') ? u : ''; }
 
   // a collapsible box that loads its Google form only when first opened
@@ -251,10 +351,14 @@
         var dbox = el('div');
         var refresh = el('button', { 'class': 'cd-link', type: 'button', text: 'Refresh updates' });
         var dRefresh = el('button', { 'class': 'cd-link', type: 'button', text: 'Refresh discussion' });
+        var slug = classSlug(c.Class);
+        var files = filesSection(slug);
+        var fBox = fileBox(slug, c.Class, files.reload);
         var sec = el('section', { 'class': 'cd-class', 'aria-label': c.Class }, [
-          el('h2', { text: c.Class }), meta, det,
+          el('h2', { text: c.Class }), meta, det, fBox,
           el('div', { 'class': 'cd-head' }, [el('h3', { text: 'Updates' }), refresh]),
           box,
+          files.node,
           el('div', { 'class': 'cd-head cd-disc-head' }, [el('h3', { text: 'Discussion' }), dRefresh]),
           dDet,
           dbox
@@ -262,6 +366,7 @@
         boxes.push({ box: box, cls: c.Class, btn: refresh });
         dboxes.push({ box: dbox, cls: c.Class, btn: dRefresh });
         fillNotes(box, notesFor(notes.rows, c.Class), notes.ok);
+        files.reload();
         fillDiscussion(dbox, notesFor(disc.rows, c.Class), disc.ok, DISC_SHOW);
         refresh.addEventListener('click', function () {
           boxes.forEach(function (b) { b.btn.textContent = 'Refreshing…'; });
