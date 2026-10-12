@@ -151,23 +151,38 @@
     });
   }
 
+  function msgNode(m) {
+    var p = el('p');
+    addText(p, m.Message);
+    return el('div', { 'class': 'cd-msg' }, [
+      el('div', { 'class': 'cd-msg-head' }, [el('b', { text: m.Name || 'Student' }), el('time', { text: fmtDate(m.Posted) })]),
+      p
+    ]);
+  }
+
+  // The newest message is always shown; older ones sit inside a collapsible "See full discussion" box.
   function fillDiscussion(box, list, ok, limit) {
+    var prev = box.querySelector('details');
+    var wasOpen = !!(prev && prev.open);
     box.textContent = '';
     if (!ok) { box.appendChild(el('p', { 'class': 'cd-empty', text: 'Discussion could not be loaded just now. Please refresh the page in a moment.' })); return; }
     if (!list.length) { box.appendChild(el('p', { 'class': 'cd-empty', text: 'No messages yet. Be the first to say hello.' })); return; }
-    list.slice(0, limit).forEach(function (m) {
-      var p = el('p');
-      addText(p, m.Message);
-      box.appendChild(el('div', { 'class': 'cd-msg' }, [
-        el('div', { 'class': 'cd-msg-head' }, [el('b', { text: m.Name || 'Student' }), el('time', { text: fmtDate(m.Posted) })]),
-        p
-      ]));
-    });
+    box.appendChild(msgNode(list[0]));
+    if (list.length < 2) return;
+    var older = list.length - 1;
+    var body = el('div', { 'class': 'cd-box-body' });
+    list.slice(1, Math.max(limit, 2)).forEach(function (m) { body.appendChild(msgNode(m)); });
     if (list.length > limit) {
       var more = el('button', { 'class': 'cd-link', type: 'button', text: 'Show earlier messages (' + (list.length - limit) + ')' });
       more.addEventListener('click', function () { fillDiscussion(box, list, ok, limit + DISC_SHOW); });
-      box.appendChild(more);
+      body.appendChild(more);
     }
+    var det = el('details', { 'class': 'cd-box cd-older' }, [
+      el('summary', { text: 'See full discussion (' + older + (older === 1 ? ' earlier message)' : ' earlier messages)') }),
+      body
+    ]);
+    if (wasOpen) det.open = true;
+    box.appendChild(det);
   }
 
   function formURL(u) { return /^https:\/\/docs\.google\.com\/forms\//.test(u || '') ? u : ''; }

@@ -71,3 +71,7 @@ button.cd-link:hover { color: var(--gold); }
   .cd-box-body iframe { height: 1400px; }
   .cd-box-body.cd-disc iframe { height: 900px; }
 }
+
+/* collapsible older discussion */
+.cd-older { margin-top: 4px; }
+.cd-older > .cd-box-body { padding-top: 12px; }
