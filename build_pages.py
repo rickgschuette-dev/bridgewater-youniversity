@@ -869,7 +869,7 @@ HUB_TILES = """
             <span class="hub-title">Register for Classes</span>
             <span class="hub-text">Sign up for classes and seminars.</span></a></li>
           <li><a class="hub-tile" href="class-schedule.html">
-            <img src="assets/icons/palette.png" alt="" aria-hidden="true">
+            <img src="assets/icons/calendar.png" alt="" aria-hidden="true">
             <span class="hub-title">Class Schedule</span>
             <span class="hub-text">Dates, times and rooms.</span></a></li>
           <li><a class="hub-tile" href="class-discussion.html">
