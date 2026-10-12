@@ -42,15 +42,19 @@ def build_watch_live_body():
 
 NAV_ITEMS = [
     ("Home", "index.html", "home"),
-    ("Class Registration", "registration.html", "book"),
-    ("Class Schedule", "class-schedule.html", "palette"),
+    ("Winter Semester &rsquo;27", "winter-semester.html", "book"),
     ("Your Teachers", "teachers.html", "coffee"),
     ("Info Updates", "info-updates.html", "music"),
-    ("Class Discussion", "class-discussion.html", "discussion"),
-    ("Seminar Discussion", "seminar-discussion.html", "discussion"),
     ("Watch Live", "watch-live.html", "video"),
     ("Join Our Admin", "forum.html", "speech"),
 ]
+
+# Every page that belongs to the Winter Semester '27 section lights up the "Winter Semester '27" menu button.
+WINTER_PAGES = {
+    "winter-semester.html", "registration.html", "registration-thank-you.html", "class-schedule.html",
+    "class-discussion.html", "class-discussion-teacher.html",
+    "seminar-discussion.html", "seminar-discussion-leader.html",
+}
 
 # Framing Committee volunteer sign-up: committee name -> list of responsibilities
 COMMITTEES = [
@@ -898,6 +902,31 @@ PAGES = [
         build_schedule_body(),
     ),
     (
+        "winter-semester.html",
+        "Winter Semester &rsquo;27",
+        "January 11 through early March 2027",
+        """
+        <ul class="hub-grid">
+          <li><a class="hub-tile" href="registration.html">
+            <img src="assets/icons/book.png" alt="" aria-hidden="true">
+            <span class="hub-title">Register for Classes</span>
+            <span class="hub-text">Sign up for classes and seminars.</span></a></li>
+          <li><a class="hub-tile" href="class-schedule.html">
+            <img src="assets/icons/palette.png" alt="" aria-hidden="true">
+            <span class="hub-title">Class Schedule</span>
+            <span class="hub-text">Dates, times and rooms.</span></a></li>
+          <li><a class="hub-tile" href="class-discussion.html">
+            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
+            <span class="hub-title">Class Discussion</span>
+            <span class="hub-text">Updates from your teacher, and conversation with classmates.</span></a></li>
+          <li><a class="hub-tile" href="seminar-discussion.html">
+            <img src="assets/icons/discussion.png" alt="" aria-hidden="true">
+            <span class="hub-title">Seminar Discussion</span>
+            <span class="hub-text">Updates from seminar leaders, and conversation with attendees.</span></a></li>
+        </ul>
+        """,
+    ),
+    (
         "class-discussion.html",
         "Class Discussion",
         "Teacher updates and classmate conversation",
@@ -1039,6 +1068,8 @@ ABS_PAGES = {"class-discussion-teacher.html", "seminar-discussion-leader.html"}
 
 # Extra tags for the <head> of specific pages (the Class Discussion pages load their own style and script).
 PAGE_EXTRA_HEAD = {
+    "winter-semester.html": """<link rel="stylesheet" href="assets/hub.css">
+""",
     "class-discussion.html": """<meta name="robots" content="noindex">
 <link rel="stylesheet" href="assets/class-discussion.css">
 """,
@@ -1068,7 +1099,7 @@ def build_nav(current_file, P=""):
         # The Home tab is redundant on the Home page itself, so omit it there.
         if href == "index.html" and current_file == "index.html":
             continue
-        active = " active" if (href == current_file or (href == "class-discussion.html" and current_file == "class-discussion-teacher.html") or (href == "seminar-discussion.html" and current_file == "seminar-discussion-leader.html")) else ""
+        active = " active" if (href == current_file or (href == "winter-semester.html" and current_file in WINTER_PAGES)) else ""
         items.append(
             f'''      <li>
         <a class="nav-link{active}" href="{P}{href}">

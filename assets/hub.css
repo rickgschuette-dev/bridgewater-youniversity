@@ -1,0 +1,12 @@
+/* Winter Semester '27 hub page: four large tiles in two columns (one column on a phone). */
+.hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; padding: 0; margin: 8px 0 0; list-style: none; }
+.hub-tile {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; height: 100%;
+  padding: 22px 24px; background: var(--white); text-decoration: none; color: #1b2430;
+  border: 1px solid #e6d9bf; border-left: 6px solid var(--gold); border-radius: 6px;
+}
+.hub-tile:hover, .hub-tile:focus-visible { border-color: var(--gold); box-shadow: 0 3px 12px rgba(11, 42, 92, .15); }
+.hub-tile img { width: 44px; height: 44px; object-fit: contain; background: var(--navy); border-radius: 8px; padding: 7px; }
+.hub-title { font-size: 1.3rem; font-weight: 700; line-height: 1.25; color: var(--navy); }
+.hub-text { font-size: 1rem; line-height: 1.45; color: #5a6577; }
+@media (max-width: 640px) { .hub-grid { grid-template-columns: 1fr; } }
