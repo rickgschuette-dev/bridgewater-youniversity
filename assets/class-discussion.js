@@ -308,6 +308,8 @@
     var det = el('details', { 'class': 'cd-box' }, [el('summary', { text: summaryText }), body]);
     det.addEventListener('toggle', function () {
       if (det.open && !body.querySelector('iframe') && url) {
+        // Google's thank-you screen cannot hold a button, so the way back sits just above the form
+        body.appendChild(el('p', { 'class': 'cd-backwrap' }, [el('a', { 'class': 'cd-backbtn', href: '/winter-semester.html', text: 'Back to Winter Semester ’27' })]));
         body.appendChild(el('iframe', { src: url, title: frameTitle, loading: 'lazy' }));
         var kids = [el('a', { href: url.replace(/&embedded=true/, ''), target: '_blank', rel: 'noopener', text: 'Form not showing? Open it in its own page.' })];
         if (afterNote) kids.push(document.createTextNode(afterNote));
