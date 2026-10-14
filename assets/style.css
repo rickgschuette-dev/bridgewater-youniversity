@@ -1168,3 +1168,88 @@ main:has(.home-ff) .home-landing {
 .install-banner-btn:focus {
   background: var(--navy-dark);
 }
+
+/* ---------- Print: full class schedule (one week per page) ---------- */
+
+@page {
+  margin: 0.4in;
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12pt;
+  }
+
+  .banner-image,
+  .site-nav,
+  footer,
+  .sched-controls,
+  .sched-intro {
+    display: none;
+  }
+
+  .sched-week {
+    border: none;
+    margin: 0;
+    break-after: page;
+  }
+
+  .sched-week:last-child {
+    break-after: auto;
+  }
+
+  .sched-week summary {
+    background: none;
+    color: #000;
+    border-bottom: 2px solid #000;
+    border-radius: 0;
+    padding: 0 0 6px;
+  }
+
+  .sched-week summary::after,
+  .sched-week[open] summary::after {
+    content: none;
+  }
+
+  .sched-dates {
+    column-width: 2.1in;
+    column-gap: 0.3in;
+    column-rule: 1px solid #000;
+    padding: 6px 0 0;
+  }
+
+  .sched-date h3 {
+    color: #000;
+    border-bottom-color: #000;
+    font-size: 12pt;
+  }
+
+  .sched-item {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 2px 0;
+    line-height: 1.2;
+  }
+
+  .sched-date {
+    padding-top: 2px;
+  }
+
+  .sched-date h3 {
+    margin: 2px 0 2px;
+  }
+
+  .sched-meta {
+    font-size: 12pt;
+    margin-top: 0;
+  }
+
+  .sched-item,
+  .sched-meta,
+  .sched-meta strong,
+  .sched-time {
+    color: #000;
+  }
+}

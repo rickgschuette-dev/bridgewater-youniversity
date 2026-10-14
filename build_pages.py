@@ -755,6 +755,7 @@ def build_schedule_body():
     <div class="sched-controls">
       <button type="button" id="sched-expand">Open all weeks</button>
       <button type="button" id="sched-collapse">Close all weeks</button>
+      <button type="button" id="sched-print">Print all weeks</button>
     </div>
 
 {weeks_html}
@@ -768,6 +769,19 @@ def build_schedule_body():
       }});
       document.getElementById("sched-collapse").addEventListener("click", function () {{
         weeks.forEach(function (w) {{ w.open = false; }});
+      }});
+      // Printing: open every week first, then put each week back the way
+      // it was. This also covers Ctrl+P / the browser's own Print command.
+      var wasOpen = [];
+      window.addEventListener("beforeprint", function () {{
+        wasOpen = [];
+        weeks.forEach(function (w) {{ wasOpen.push(w.open); w.open = true; }});
+      }});
+      window.addEventListener("afterprint", function () {{
+        weeks.forEach(function (w, i) {{ w.open = wasOpen[i] === true; }});
+      }});
+      document.getElementById("sched-print").addEventListener("click", function () {{
+        window.print();
       }});
     }})();
   </script>
