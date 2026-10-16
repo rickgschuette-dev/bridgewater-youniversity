@@ -546,15 +546,39 @@ def build_registration_body():
             return div.innerHTML;
           }
 
-          // Keeps the room name together as one unit at the end of the
-          // schedule line. Everything after the last time (a.m., p.m. or
-          // noon) is treated as the room, so a room that does not fit
-          // moves down to the next line whole, e.g. "Craft Room".
-          // Text with no recognizable time is shown unchanged.
+          // Lays out the "Day, Time & Room" text on separate lines so no
+          // line gets crowded. Text before the first clock time is the
+          // days and dates; the last am/pm/noon marks the end of the times;
+          // everything after that is the room, kept together as one unit.
+          //   One clock time:  days, dates and the time stay on one line,
+          //                    and the room drops to the next line.
+          //   Several times (a range such as 5:00 - 8:00 pm, or a repeat
+          //   session): days and dates stay on the first line; the times
+          //   and the room drop to the next line together.
+          // Text with no recognizable time or room is shown unchanged.
           function scheduleToHTML(text) {
-            var m = text.match(/^([\s\S]*\d\s*(?:a\.?m\.?|p\.?m\.?|noon)\.?,?)(\s+)(\S[\s\S]*)$/i);
+            var m = text.match(/^([\s\S]*(?:\d\s*(?:a\.?m\.?|p\.?m\.?|noon)|\bnoon)\.?,?)(\s+)(\S[\s\S]*)$/i);
             if (!m) return escapeHTML(text);
-            return escapeHTML(m[1]) + escapeHTML(m[2]) + '<span class="class-room">' + escapeHTML(m[3]) + '</span>';
+            var head = m[1];
+            var room = '<span class="class-room">' + escapeHTML(m[3].replace(/\s+$/, "")) + '</span>';
+            var timeRe = /\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?|noon)?|\d{1,2}\s*(?:a\.?m\.?|p\.?m\.?|noon)|\bnoon\b/gi;
+            var count = 0;
+            var first = -1;
+            var t;
+            while ((t = timeRe.exec(head)) !== null) {
+              if (first === -1) first = t.index;
+              count++;
+            }
+            if (count === 0) return escapeHTML(text);
+            function trimEnd(str) { return str.replace(/[\s,]+$/, ""); }
+            var days = head.slice(0, first);
+            var times = head.slice(first);
+            if (count === 1) {
+              var dayText = days.replace(/\s+$/, "");
+              return escapeHTML(dayText + (dayText ? " " : "") + trimEnd(times)) + "\n" + room;
+            }
+            var dayLine = trimEnd(days);
+            return (dayLine ? escapeHTML(dayLine) + "\n" : "") + escapeHTML(trimEnd(times) + ", ") + room;
           }
         })();
         </script>
