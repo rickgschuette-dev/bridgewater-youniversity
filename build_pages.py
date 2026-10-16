@@ -445,7 +445,9 @@ def build_registration_body():
               byCategory[category].forEach(function (cls) {
                 var detailParts = [];
                 if (cls.format) detailParts.push(cls.format);
-                if (cls.instructor) detailParts.push(cls.instructor);
+                // A single instructor name is kept on one line (non-breaking spaces);
+                // several names are left alone so they can still wrap between names.
+                if (cls.instructor) detailParts.push(/\s(?:and|&)\s|[,\/;]/i.test(cls.instructor) ? cls.instructor : cls.instructor.replace(/\s+/g, "\u00a0"));
                 var detail = detailParts.length ? ' <span class="class-detail">(' + escapeHTML(detailParts.join(" — ")) + ')</span>' : "";
                 var original = ORIGINAL_TITLES[cls.title];
                 var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
