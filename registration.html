@@ -301,11 +301,22 @@
           //   and the room drop to the next line together.
           // Text with no recognizable time or room is shown unchanged.
           function scheduleToHTML(text) {
+            // One clock time, or a range such as 5:00 - 8:00 pm, is always
+            // kept together on one line: the spaces inside it become
+            // non-breaking spaces, so "a.m." / "pm" can never be separated
+            // from the number it belongs to.
+            var T = "\\d{1,2}:\\d{2}(?:\\s*(?:a\\.?m\\.?|p\\.?m\\.?|noon))?|\\d{1,2}\\s*(?:a\\.?m\\.?|p\\.?m\\.?|noon)|\\bnoon\\b";
+            var timeRe = new RegExp(T, "gi");
+            var rangeRe = new RegExp("(?:" + T + ")(?:\\s*[-\\u2013\\u2014]\\s*(?:" + T + "))?", "gi");
+            function keepTimes(str) {
+              return str.replace(rangeRe, function (x) { return x.replace(/[ \t]+/g, " "); });
+            }
+            function trimEnd(str) { return str.replace(/[\s,]+$/, ""); }
+
             var m = text.match(/^([\s\S]*(?:\d\s*(?:a\.?m\.?|p\.?m\.?|noon)|\bnoon)\.?,?)(\s+)(\S[\s\S]*)$/i);
-            if (!m) return escapeHTML(text);
+            if (!m) return escapeHTML(keepTimes(text));
             var head = m[1];
             var room = '<span class="class-room">' + escapeHTML(m[3].replace(/\s+$/, "")) + '</span>';
-            var timeRe = /\d{1,2}:\d{2}\s*(?:a\.?m\.?|p\.?m\.?|noon)?|\d{1,2}\s*(?:a\.?m\.?|p\.?m\.?|noon)|\bnoon\b/gi;
             var count = 0;
             var first = -1;
             var t;
@@ -314,15 +325,14 @@
               count++;
             }
             if (count === 0) return escapeHTML(text);
-            function trimEnd(str) { return str.replace(/[\s,]+$/, ""); }
             var days = head.slice(0, first);
             var times = head.slice(first);
             if (count === 1) {
               var dayText = days.replace(/\s+$/, "");
-              return escapeHTML(dayText + (dayText ? " " : "") + trimEnd(times)) + "\n" + room;
+              return escapeHTML(keepTimes(dayText + (dayText ? " " : "") + trimEnd(times))) + "\n" + room;
             }
             var dayLine = trimEnd(days);
-            return (dayLine ? escapeHTML(dayLine) + "\n" : "") + escapeHTML(trimEnd(times) + ", ") + room;
+            return (dayLine ? escapeHTML(dayLine) + "\n" : "") + escapeHTML(keepTimes(trimEnd(times) + ", ")) + room;
           }
         })();
         </script>
