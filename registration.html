@@ -297,7 +297,9 @@
           // days and dates; the last am/pm/noon marks the end of the times;
           // everything after that is the room, kept together as one unit.
           //   One clock time:  days, dates and the time stay on one line,
-          //                    and the room drops to the next line.
+          //                    and the room follows on that same line when
+          //                    it fits; if not, the whole room name drops
+          //                    to the next line as one unit.
           //   Several times (a range such as 5:00 - 8:00 pm, or a repeat
           //   session): days and dates stay on the first line; the times
           //   and the room drop to the next line together.
@@ -331,7 +333,7 @@
             var times = head.slice(first);
             if (count === 1) {
               var dayText = days.replace(/\s+$/, "");
-              return escapeHTML(keepTimes(dayText + (dayText ? " " : "") + trimEnd(times))) + "\n" + room;
+              return escapeHTML(keepTimes(dayText + (dayText ? " " : "") + trimEnd(times))) + " " + room;
             }
             var dayLine = trimEnd(days);
             return (dayLine ? escapeHTML(dayLine) + "\n" : "") + escapeHTML(keepTimes(trimEnd(times) + ", ")) + room;
