@@ -110,6 +110,14 @@
         (function () {
           var CLASSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV3GKy9tjkjrG9nH7fhyIL7Ydfu3TDVM5hhT8ppEncFE_HKYvmGbBrGnQDESKNuHzArjFiUC_LZeRl/pub?output=csv";
 
+          // Read-only seat-count feed (a Google Apps Script web app attached to
+          // the "BWU Winter 27 Registrants" sheet; its code is saved in
+          // apps-script/BWU_SeatCount_Feed_v2.gs). It returns only how many
+          // people are registered per class, never names or contact details.
+          // If it cannot be reached, no seat line is shown and registration
+          // works exactly as before.
+          var SEATS_FEED_URL = "https://script.google.com/macros/s/AKfycbwQShVAid4YAyItJd7sQNJyuw4bU5R7WIQI_hZk7_wR-xW_iyfi-snlqicxLFKOUc3_/exec";
+
           // Where a class title was shortened from the Teacher Proposals
           // sheet's original wording, show that original wording in small
           // gray text underneath the short title, so registrants still
@@ -153,6 +161,10 @@
             var categoryIdx = header.indexOf("category");
             var instructorIdx = header.indexOf("instructor");
             var scheduleIdx = header.indexOf("day, time & room");
+            // Optional column F of the sheet: "Maximum Students" (any header
+            // starting with "max"). Blank means no limit and no seat line.
+            var maxIdx = -1;
+            header.forEach(function (h, k) { if (maxIdx === -1 && /^max/.test(h)) maxIdx = k; });
 
             if (titleIdx === -1 || categoryIdx === -1) {
               errorEl.hidden = false;
@@ -171,12 +183,14 @@
               var format = formatIdx > -1 ? (row[formatIdx] || "").trim() : "";
               var instructor = instructorIdx > -1 ? (row[instructorIdx] || "").trim() : "";
               var schedule = scheduleIdx > -1 ? (row[scheduleIdx] || "").trim() : "";
+              var maxRaw = maxIdx > -1 ? (row[maxIdx] || "").trim() : "";
+              var maxSeats = (/^\d+$/.test(maxRaw) && parseInt(maxRaw, 10) > 0) ? parseInt(maxRaw, 10) : null;
 
               if (!byCategory[category]) {
                 byCategory[category] = [];
                 categoryOrder.push(category);
               }
-              byCategory[category].push({ title: title, format: format, instructor: instructor, schedule: schedule });
+              byCategory[category].push({ title: title, format: format, instructor: instructor, schedule: schedule, max: maxSeats });
             }
 
             // Show categories alphabetically rather than in sheet order.
@@ -196,16 +210,19 @@
                 var original = ORIGINAL_TITLES[cls.title];
                 var originalHTML = original ? '<div class="class-original-title">' + escapeHTML(original) + '</div>' : "";
                 var scheduleHTML = cls.schedule ? '<div class="class-schedule">' + scheduleToHTML(cls.schedule) + '</div>' : "";
+                // Hidden until the seat counts arrive; only classes with a maximum get one.
+                var seatsHTML = cls.max !== null ? '<div class="class-seats" data-key="' + escapeHTML(normTitle(cls.title)) + '" data-max="' + cls.max + '" hidden></div>' : "";
 
                 html += '<label class="class-option">';
                 html += '<input type="checkbox" class="class-checkbox" value="' + escapeHTML(cls.title) + '">';
-                html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + scheduleHTML + originalHTML + '</span>';
+                html += '<span class="class-option-text"><span class="class-title">' + escapeHTML(cls.title) + '</span>' + detail + scheduleHTML + originalHTML + seatsHTML + '</span>';
                 html += '</label>';
               });
               html += '</div>';
             });
 
             categoriesEl.innerHTML = html;
+            loadSeats();
           }
 
           form.addEventListener("submit", function (e) {
@@ -277,6 +294,50 @@
               rows.push(row);
             }
             return rows.filter(function (r) { return r.length > 1 || r[0] !== ""; });
+          }
+
+          // Same matching rule as the seat-count feed: capitals and punctuation are ignored.
+          function normTitle(text) {
+            return String(text).toLowerCase().replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
+          }
+
+          // Shows "Seats Remaining = n" (or "Class Full") at the bottom of each
+          // class box that has a maximum in the sheet. Any failure leaves the
+          // page exactly as it was: no seat line and every checkbox usable.
+          function loadSeats() {
+            var boxes = categoriesEl.querySelectorAll(".class-seats");
+            if (!boxes.length || !window.fetch) return;
+            var controller = window.AbortController ? new AbortController() : null;
+            var timer = setTimeout(function () { if (controller) controller.abort(); }, 8000);
+            fetch(SEATS_FEED_URL, controller ? { signal: controller.signal } : {})
+              .then(function (res) {
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return res.json();
+              })
+              .then(function (data) {
+                clearTimeout(timer);
+                if (!data || data.ok !== true || !data.counts) throw new Error("feed not ok");
+                Array.prototype.forEach.call(boxes, function (el) {
+                  var max = parseInt(el.getAttribute("data-max"), 10);
+                  var taken = data.counts[el.getAttribute("data-key")] || 0;
+                  var left = max - taken;
+                  var label = el.closest("label");
+                  var box = label ? label.querySelector("input.class-checkbox") : null;
+                  if (left <= 0) {
+                    el.textContent = "Class Full";
+                    el.className = "class-seats class-seats-full";
+                    if (box) { box.checked = false; box.disabled = true; }
+                    if (label) label.classList.add("class-option-full");
+                  } else {
+                    el.textContent = "Seats Remaining = " + left;
+                  }
+                  el.hidden = false;
+                });
+              })
+              .catch(function (err) {
+                clearTimeout(timer);
+                console.error("Seat counts unavailable: " + err.message);
+              });
           }
 
           function slugify(text) {

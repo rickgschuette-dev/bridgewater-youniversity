@@ -577,6 +577,30 @@ footer a {
   white-space: pre-wrap;
 }
 
+/* Seats line at the bottom of a class box; shown only when the sheet gives a maximum. */
+.class-seats {
+  color: #C00000;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+/* A full class: its checkbox is disabled and the rest of the box is dimmed. */
+.class-option-full {
+  cursor: not-allowed;
+}
+
+.class-option-full .class-title,
+.class-option-full .class-detail,
+.class-option-full .class-schedule {
+  opacity: 0.6;
+}
+
+.class-option-full input[type="checkbox"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /* Room name at the end of the schedule line: never split across lines. */
 .class-room {
   white-space: pre;
