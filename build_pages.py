@@ -678,7 +678,7 @@ def _schedule_sessions():
     S.append((_weekly(2, "Jan 20", "Feb 3"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
     S.append((_once(2, "Feb 17"), (11, 0), "11:00 a.m.", "Introduction to Bagpipes", "Ballroom A", ""))
     S.append((_weekly(2, "Feb 10", "Feb 24"), (12, 0), "12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Cafe", ""))
-    S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Courts", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Cts", ""))
     # Beginning Spanish: Registration lists "3- or 6-week series", Jan 13 - Jan 27 or Feb 17.
     S.append((_weekly(2, "Jan 13", "Jan 27"), (18, 0), "6:00 p.m.", "Beginning Spanish", "Craft Room", ""))
     S.append((_weekly(2, "Feb 3", "Feb 17"), (18, 0), "6:00 p.m.", "Beginning Spanish", "Craft Room", "6-week series only"))
@@ -699,7 +699,7 @@ def _schedule_sessions():
     S.append((_once(5, "Jan 23"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
     S.append((_once(5, "Jan 16"), (10, 0), "10:00 a.m.", "Introduction to Astronomy", "Cafe", ""))
     S.append((_once(5, "Jan 23"), (10, 0), "10:00 a.m.", "Florida Fishing", "Cafe", ""))
-    S.append((_weekly(5, "Jan 16", "Feb 20"), (10, 0), "10:00 a.m.", "Intermediate Pickleball", "Pickleball Courts", ""))
+    S.append((_weekly(5, "Jan 16", "Feb 20"), (10, 0), "10:00 a.m.", "Intermediate Pickleball", "Pickleball Cts", ""))
     S.append((_weekly(5, "Feb 6", "Feb 13"), (10, 0), "10:00 a.m.", "Introduction to Cosmology", "Cafe", ""))
     S.append((_weekly(5, "Feb 6", "Feb 20"), (11, 0), "11:00 a.m.", "Learn Your Smartphone", "Cafe", ""))
     S.append((_weekly(5, "Jan 16", "Feb 20"), (11, 30), "11:30 a.m.", "Self-Defense for All", "Aerobics Room", ""))
