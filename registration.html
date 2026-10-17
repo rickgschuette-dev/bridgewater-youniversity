@@ -305,6 +305,9 @@
           //   and the room drop to the next line together.
           // Text with no recognizable time or room is shown unchanged.
           function scheduleToHTML(text) {
+            // Court abbreviations are always shown as "Cts" (Bocce Cts, Pickleball Cts),
+            // whether the sheet says Cts, cts, Courts or courts.
+            text = text.replace(/\b(?:courts|cts)\b/gi, "Cts");
             // One clock time, or a range such as 5:00 - 8:00 pm, is always
             // kept together on one line: the spaces inside it become
             // non-breaking spaces, so "a.m." / "pm" can never be separated
