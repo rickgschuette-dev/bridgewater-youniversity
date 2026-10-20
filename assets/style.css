@@ -1277,3 +1277,44 @@ main:has(.home-ff) .home-landing {
     color: #000;
   }
 }
+
+/* ---------- Registration not yet open ---------- */
+
+.registration-notice {
+  background: var(--navy);
+  color: var(--white);
+  border-left: 8px solid var(--gold);
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin: 0 0 28px;
+  font-size: 1.4rem;
+  line-height: 1.35;
+}
+
+.registration-notice strong {
+  display: block;
+  font-size: 1.5rem;
+}
+
+.registration-notice span {
+  display: block;
+  margin-top: 4px;
+  color: #F3D48A;
+  font-weight: 600;
+}
+
+.registration-lock {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.submit-button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+.submit-button:disabled:hover {
+  background: #6b7280;
+}

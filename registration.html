@@ -56,6 +56,11 @@
 
 <main>
 
+
+        <div class="registration-notice" role="status">
+          <strong>Registration Opens During Our Meet the Teachers Open House</strong>
+          <span>Event in Ballroom, 6:30 - 8:00 pm, Oct. 29th</span>
+        </div>
         <h2>Winter &lsquo;27 Class Registration</h2>
         <p>Welcome to Bridgewater YOU registration! Please fill in
         your information below, then select as many classes as you'd like
@@ -65,6 +70,7 @@
         <p class="signature">&mdash; Rick Schuette, Admin Coordinator</p>
 
         <form name="student-registration" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="registration-thank-you.html" class="volunteer-form" id="registration-form">
+          <fieldset class="registration-lock" disabled>
           <input type="hidden" name="form-name" value="student-registration">
           <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
           <input type="hidden" name="classes" id="classes-field" value="">
@@ -103,7 +109,8 @@
             <p class="field-error" id="class-error" hidden>Please select at least one class.</p>
           </fieldset>
 
-          <button type="submit" class="submit-button">Submit Registration</button>
+          <button type="submit" class="submit-button" disabled>Registration Opens Oct. 29th</button>
+          </fieldset>
         </form>
 
         <script>
@@ -226,6 +233,9 @@
           }
 
           form.addEventListener("submit", function (e) {
+            // Registration is not open yet: never let the form be sent.
+            e.preventDefault();
+            return;
             var checked = form.querySelectorAll('input.class-checkbox:checked');
             var classErrorEl = document.getElementById("class-error");
             if (checked.length === 0) {

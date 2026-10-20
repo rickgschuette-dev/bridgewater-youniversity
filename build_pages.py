@@ -310,8 +310,56 @@ def build_teachers_body():
 # Sheet's own published-CSV link (File > Share > Publish to web, in that
 # Sheet) -- it only changes if that sheet is ever unpublished/republished
 # under a new link.
+# ---------------------------------------------------------------------------
+# Registration switch.
+# While REGISTRATION_OPEN is False, the Registration page can be viewed (class
+# list, days, times, rooms and seats all show) but nobody can register: a
+# notice sits at the top, every field/checkbox and the Submit button are
+# disabled, and the form's submit is cancelled in the page script.
+# On Oct. 29 (Meet the Teachers Open House), change False to True, run this
+# script, and publish. Nothing else needs to change.
+# ---------------------------------------------------------------------------
+REGISTRATION_OPEN = False
+
+REGISTRATION_NOTICE = """
+        <div class="registration-notice" role="status">
+          <strong>Registration Opens During Our Meet the Teachers Open House</strong>
+          <span>Event in Ballroom, 6:30 - 8:00 pm, Oct. 29th</span>
+        </div>
+"""
+
+
+def _apply_registration_gate(body):
+    if REGISTRATION_OPEN:
+        return body
+
+    def swap(old, new):
+        nonlocal body
+        assert body.count(old) == 1, old
+        body = body.replace(old, new)
+
+    swap("""        <h2>Winter &lsquo;27 Class Registration</h2>""",
+         REGISTRATION_NOTICE + """        <h2>Winter &lsquo;27 Class Registration</h2>""")
+    swap("""id="registration-form">
+""", """id="registration-form">
+          <fieldset class="registration-lock" disabled>
+""")
+    swap("""<button type="submit" class="submit-button">Submit Registration</button>
+        </form>""",
+         """<button type="submit" class="submit-button" disabled>Registration Opens Oct. 29th</button>
+          </fieldset>
+        </form>""")
+    swap("""form.addEventListener("submit", function (e) {
+""", """form.addEventListener("submit", function (e) {
+            // Registration is not open yet: never let the form be sent.
+            e.preventDefault();
+            return;
+""")
+    return body
+
+
 def build_registration_body():
-    return r"""
+    body = r"""
         <h2>Winter &lsquo;27 Class Registration</h2>
         <p>Welcome to Bridgewater YOU registration! Please fill in
         your information below, then select as many classes as you'd like
@@ -661,6 +709,7 @@ def build_registration_body():
         })();
         </script>
         """
+    return _apply_registration_gate(body)
 
 # Pages that should NOT render the generic <h1>{title}</h1> / subtitle block
 # in build_page() -- their body supplies its own opening heading instead.
