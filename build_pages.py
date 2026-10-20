@@ -327,7 +327,7 @@ REGISTRATION_NOTICE = """
           <div class="reg-text">
             <span class="reg-eyebrow">Save the Date!</span>
             <strong>Registration Opens During Our Meet the Teachers Open House</strong>
-            <span class="reg-detail">Event in Ballroom, 6:30 - 8:00 pm<span class="sr-only">, Oct. 29th</span></span>
+            <span class="reg-detail">Ballroom, 6:30 - 8:00 pm<span class="sr-only">, Oct. 29th</span></span>
           </div>
         </div>
 """
