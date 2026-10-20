@@ -1281,26 +1281,99 @@ main:has(.home-ff) .home-landing {
 /* ---------- Registration not yet open ---------- */
 
 .registration-notice {
-  background: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: linear-gradient(135deg, #C8102E 0%, #9B0B22 100%);
   color: var(--white);
-  border-left: 8px solid var(--gold);
-  border-radius: 6px;
-  padding: 18px 22px;
+  border-bottom: 6px solid var(--gold);
+  border-radius: 10px;
+  padding: 20px 26px;
   margin: 0 0 28px;
-  font-size: 1.4rem;
-  line-height: 1.35;
+  box-shadow: 0 6px 16px rgba(155, 11, 34, 0.35);
+}
+
+.reg-date {
+  flex: 0 0 auto;
+  width: 92px;
+  background: var(--white);
+  border-radius: 10px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.reg-month {
+  display: block;
+  background: var(--gold);
+  color: var(--white);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 0;
+}
+
+.reg-day {
+  display: block;
+  color: #C8102E;
+  font-weight: 900;
+  font-size: 3rem;
+  line-height: 1.1;
+  padding: 2px 0 6px;
+}
+
+.reg-eyebrow {
+  display: block;
+  color: #FFE08A;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 
 .registration-notice strong {
   display: block;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.registration-notice span {
+.reg-detail {
   display: block;
-  margin-top: 4px;
-  color: #F3D48A;
+  margin-top: 6px;
+  font-size: 1.35rem;
   font-weight: 600;
+  color: #FFE08A;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .registration-notice {
+    gap: 14px;
+    padding: 16px;
+  }
+  .reg-date {
+    width: 68px;
+  }
+  .reg-day {
+    font-size: 2.2rem;
+  }
+  .registration-notice strong {
+    font-size: 1.3rem;
+  }
+  .reg-detail {
+    font-size: 1.1rem;
+  }
 }
 
 .registration-lock {

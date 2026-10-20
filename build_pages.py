@@ -323,8 +323,12 @@ REGISTRATION_OPEN = False
 
 REGISTRATION_NOTICE = """
         <div class="registration-notice" role="status">
-          <strong>Registration Opens During Our Meet the Teachers Open House</strong>
-          <span>Event in Ballroom, 6:30 - 8:00 pm, Oct. 29th</span>
+          <div class="reg-date" aria-hidden="true"><span class="reg-month">Oct</span><span class="reg-day">29</span></div>
+          <div class="reg-text">
+            <span class="reg-eyebrow">Save the Date!</span>
+            <strong>Registration Opens During Our Meet the Teachers Open House</strong>
+            <span class="reg-detail">Event in Ballroom, 6:30 - 8:00 pm<span class="sr-only">, Oct. 29th</span></span>
+          </div>
         </div>
 """
 
