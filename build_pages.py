@@ -319,7 +319,7 @@ def build_teachers_body():
 # On Oct. 29 (Meet the Teachers Open House), change False to True, run this
 # script, and publish. Nothing else needs to change.
 # ---------------------------------------------------------------------------
-REGISTRATION_OPEN = False
+REGISTRATION_OPEN = True
 
 REGISTRATION_NOTICE = """
         <div class="registration-notice" role="status">
