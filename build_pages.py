@@ -790,7 +790,7 @@ def _schedule_sessions():
     S.append((_once(1, "Feb 2"), (19, 0), "7:00 p.m.", "Live Visual Astronomy", "Veranda", ""))
     S.append((_weekly(1, "Feb 9", "Feb 23"), (19, 30), "7:30 p.m.", "Surviving an Active Shooter", "Cafe", ""))
     # ---- Wednesday ----
-    S.append((_weekly(2, "Jan 13", "Feb 17"), (10, 0), "10:00 a.m.", "Fundamentals of Western Art History", "Cafe", ""))
+    S.append((_weekly(2, "Jan 13", "Feb 17"), (10, 0), "10:00 a.m.", "Fundamentals of Art History", "Cafe", ""))
     S.append((_weekly(2, "Feb 3", "Feb 24"), (10, 0), "10:00 a.m.", "Ecology, Geology and Early Explorers of the Grand Canyon", "Ballroom A", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Comparative Religions", "Cafe", ""))
     S.append((_weekly(2, "Jan 20", "Feb 3"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
