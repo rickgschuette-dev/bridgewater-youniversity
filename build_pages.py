@@ -973,7 +973,7 @@ CATALOGUE = [
     ("History and Culture Classes", [
         "After her incredibly popular US Constitution class this summer, Phyllis, our favorite history teacher, returns with **The Roaring 20s**. We will cover the time from after WWI to Vietnam and the 1960s.",
         "What makes a work of art a masterpiece? In **Fundamentals of Western Art History**, we will connect with the artists and works that enrich our lives everyday and help us see with greater clarity. Join us as we uncover 1500 years of traditions, values, and ideas that built our modern world.",
-        "A love of words and English language keeps Betsy interested in poetry. Each week we will concentrate on a few short poems by a different famous author and a couple of verses just for laughs.",
+        "**What&rsquo;s the Punchline: Low- and High-Class Poetry** &mdash; A love of words and English language keeps Betsy interested in poetry. Each week we will concentrate on a few short poems by a different famous author and a couple of verses just for laughs.",
         "If ever you have been curious about religions, now is your chance to discuss Buddhism, Hinduism, Judaism, Christianity and Islam. Rick has spent years working with multiple religious and non-profits and can speak as an authority on **Comparative Religions**.",
         "Susan is teaching **Ecology, Geology and early Explorers of the Grand Canyon** based on a book she wrote. Come hear about the early explorers in Arizona and Nevada.",
     ]),
@@ -995,7 +995,7 @@ CATALOGUE = [
         "If you want to be known as the greatest grandparents in the world, join Stephanie for **Secrets to Taking the Grandkids to Disney**. There are obsessive fans of Disney and then there is Stephanie. I am sure you have seen her Disney Christmas decorations&hellip; Let her tell you tricks to visiting Disney parks without losing your mind.",
         "Grace, a fantastic home cook, is offering **Got Flour? Let&rsquo;s make Bread** to any and all. We&rsquo;ll be in the kitchen and in the evening so as to maximize the number of participants for this delicious class!",
         "We are thrilled to offer Jackie&rsquo;s **Basic Dog Obedience** training. Jackie has trained service dogs for over 30+ years and still teaches locally. But, if you are one of the first 8 to sign up, you can get her expertise for free!",
-        "On Mondays, repeating Betsy's popular class from the summer session with new recipes geared toward a masculine appetite for good food and good fun.",
+        "**Crockpot Cooking For Men** &mdash; On Mondays, repeating Betsy's popular class from the summer session with new recipes geared toward a masculine appetite for good food and good fun.",
         "We live in one of the most environmentally rich areas of the country. Rick spends much time working with the landscaping committee and studying the birds of Florida. Join him as he teaches us **Birds in Our Backyards**.",
     ]),
     ("Science Classes", [
