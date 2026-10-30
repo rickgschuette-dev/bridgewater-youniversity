@@ -972,7 +972,7 @@ CATALOGUE = [
     ]),
     ("History and Culture Classes", [
         "After her incredibly popular US Constitution class this summer, Phyllis, our favorite history teacher, returns with **The Roaring 20s**. We will cover the time from after WWI to Vietnam and the 1960s.",
-        "What makes a work of art a masterpiece? In **Fundamentals of Western Art History**, we will connect with the artists and works that enrich our lives everyday and help us see with greater clarity. Join us as we uncover 1500 years of traditions, values, and ideas that built our modern world.",
+        "What makes a work of art a masterpiece? In **Fundamentals of Art History**, we will connect with the artists and works that enrich our lives everyday and help us see with greater clarity. Join us as we uncover 1500 years of traditions, values, and ideas that built our modern world.",
         "**What&rsquo;s the Punchline: Low- and High-Class Poetry** &mdash; A love of words and English language keeps Betsy interested in poetry. Each week we will concentrate on a few short poems by a different famous author and a couple of verses just for laughs.",
         "If ever you have been curious about religions, now is your chance to discuss Buddhism, Hinduism, Judaism, Christianity and Islam. Rick has spent years working with multiple religious and non-profits and can speak as an authority on **Comparative Religions**.",
         "Susan is teaching **Ecology, Geology and early Explorers of the Grand Canyon** based on a book she wrote. Come hear about the early explorers in Arizona and Nevada.",
