@@ -301,9 +301,11 @@
             return String(text).toLowerCase().replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
           }
 
-          // Shows "Seats Remaining = n" (or "Class Full") at the bottom of each
-          // class box that has a maximum in the sheet. Any failure leaves the
-          // page exactly as it was: no seat line and every checkbox usable.
+          // Shows "Class Full" at the bottom of a class box only when the
+          // registrations counted have reached the maximum in the sheet (and
+          // disables that checkbox). No seat count is shown for open classes.
+          // Any failure leaves the page exactly as it was: no seat line and
+          // every checkbox usable.
           function loadSeats() {
             var boxes = categoriesEl.querySelectorAll(".class-seats");
             if (!boxes.length || !window.fetch) return;
@@ -328,10 +330,9 @@
                     el.className = "class-seats class-seats-full";
                     if (box) { box.checked = false; box.disabled = true; }
                     if (label) label.classList.add("class-option-full");
-                  } else {
-                    el.textContent = "Seats Remaining = " + left;
+                    el.hidden = false;
                   }
-                  el.hidden = false;
+                  // Otherwise the line stays hidden: seats still open are not shown.
                 });
               })
               .catch(function (err) {
