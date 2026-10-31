@@ -3,85 +3,35 @@
  *
  * Purpose: receives the "Outgoing webhook" notification Netlify sends every
  * time a resident submits the class registration form on the Registration
- * page (https://bridgewateryou.netlify.app/registration), and appends ONE
+ * page (https://www.bridgewateryou.net/registration), and appends ONE
  * ROW PER CLASS the resident selected to the "BW_YOU_Winter_27_Class_
  * Registration" Google Sheet's "Sheet1" tab — so a resident registering for
  * 3 classes in one submission produces 3 rows, with no manual splitting
- * needed afterward. It also emails a notification to the recipients listed
- * below and a personalized acknowledgement back to the resident, and
- * regenerates three live report tabs in the same Sheet after every new
- * registration (see "LIVE REPORT TABS" below).
- *
- * This mirrors BWU_Teacher_WebhookReceiver.gs and
- * BWU_Forum_WebhookReceiver.gs, including their duplicate-submission
- * protection, since that pattern has been running successfully in
- * production since 2026-08-27. Because Netlify is known to call this kind
- * of webhook 2-3 times for the SAME real submission, and this script can
- * legitimately write several rows for one submission (one per class), the
- * dedupe key stored in the Submission ID column is a COMPOSITE of
- * "<Netlify submission id>::<class title>" — not the bare submission ID —
- * so a retry correctly skips all of that submission's rows (already
- * written) while still allowing a resident's separate real classes to each
- * get their own row the first time through.
- *
- * NOTE: this file is a version-controlled mirror for reference. The Apps
- * Script project itself lives inside the "BW_YOU_Winter_27_Class_
- * Registration" Google Sheet (Extensions > Apps Script) — that is what's
- * actually deployed and running, not this file. If you edit the deployed
- * script, copy the change back into this file too so they don't drift
- * apart.
+ * needed afterward. It also:
+ *   1. Emails a notification to the recipients listed below and a
+ *      personalized acknowledgement back to the resident,
+ *   2. Regenerates three live report tabs in the same Sheet after every new
+ *      registration ("Unique Residents", "Class Tally", "Class Rosters"), and
+ *   3. Checks "Rick's BW Contacts" (1k7R-JalUzER7z8TEn52a6k264cHjXXo1Mic-YoDtyXI)
+ *      and automatically appends the registrant (with the "(BW Resident)"
+ *      suffix, formatted phone number, and email) if their phone number is
+ *      not already on the list.
  *
  * Bound Sheet ID: 1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI
  * Sheet URL:      https://docs.google.com/spreadsheets/d/1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI/edit
- * Raw data tab:   Sheet1 — IMPORTANT: this exact literal tab name must
- *                 match a real tab in the Sheet, or the script will
- *                 silently create a brand-new tab with this name and write
- *                 there instead of wherever you expect (this exact bug
- *                 happened once already — confirmed 2026-09-23 — always
- *                 double-check the actual tab name in the Sheet's tab bar
- *                 before assuming this constant is correct).
+ * Raw data tab:   Sheet1
  *
- * Columns written to Sheet1 (A-H):
- *   Timestamp | First Name | Last Name | Phone | Email |
- *   Class Registered For | Raw Submission | Submission ID
- *
- * The registration form's class checkboxes are UI-only (no "name"
- * attribute), because Netlify Forms only stores fields present in the
- * site's static HTML at deploy time and the class list is fetched live at
- * runtime. Instead, the page's JavaScript copies every checked class's
- * exact title into one static, always-present hidden field named
- * "classes" as a JSON array right before submit. This script parses that
- * single field; it never needs to know the class list in advance, so it
- * keeps working unchanged as classes are added or removed on the live
- * Confirmed Classes sheet.
- *
- * "Raw Submission" is a safety net: the complete original JSON Netlify
- * sent, so nothing is ever lost even if a parsed column comes up blank.
- *
- * LIVE REPORT TABS (added 2026-09-23):
- * After every registration that writes at least one new row, doPost also
- * rebuilds three additional tabs from scratch, reading straight from
- * Sheet1, so they always reflect the current state with zero manual steps
- * or separate schedules:
- *   - "Unique Residents" — one row per unique resident (deduped by email,
- *     lowercased; falls back to "name:first_last" if no email), with a
- *     count of how many distinct classes they're registered for.
- *   - "Class Tally" — one row per class with its current unique-registrant
- *     count, sorted highest-demand first.
- *   - "Class Rosters" — every class's full roster (First/Last/Phone/
- *     Email), one gold header band per class, stacked class after class,
- *     sorted alphabetically by class name.
- * These three tabs are fully regenerated (cleared and rewritten) on every
- * qualifying submission — cheap at this scale (a single community's
- * worth of residents/classes), and it avoids any risk of stale leftover
- * rows from a shrinking dataset. Colors match the live site's brand
- * tokens (assets/style.css): navy #0B2A5C, gold #C78F14, cream #FBF3E5.
+ * Rick's BW Contacts Sheet ID: 1k7R-JalUzER7z8TEn52a6k264cHjXXo1Mic-YoDtyXI
+ * Rick's BW Contacts Tab Name: BW Residents
  */
 
 var SHEET_ID = '1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI';
 var SHEET_NAME = 'Sheet1';
 var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Registered For', 'Raw Submission', 'Submission ID'];
 var SUBMISSION_ID_COL = 8; // column H — composite "<submission id>::<class title>"
+
+var BW_CONTACTS_SHEET_ID = '1k7R-JalUzER7z8TEn52a6k264cHjXXo1Mic-YoDtyXI';
+var BW_CONTACTS_TAB_NAME = 'BW Residents';
 
 var BRAND = {
   navy: '#0B2A5C',
@@ -92,9 +42,6 @@ var BRAND = {
   altRow: '#EEF2F7'
 };
 
-// Everyone who should get an email the moment a new registration comes in.
-// TEMPORARY: Rick only while testing, matching the same starting point used
-// for the Teacher receiver. Add more addresses here once testing is done.
 var NOTIFY_EMAILS = [
   'rick.g.schuette@gmail.com'
 ];
@@ -149,15 +96,17 @@ function doPost(e) {
       sheet.appendRow([new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '']);
     }
 
-    // Only email / rebuild reports on genuinely new rows -- a Netlify
-    // retry of an already-recorded submission writes nothing new
-    // (writtenCount stays 0), so it must not re-notify anyone or waste
-    // time regenerating tabs that haven't actually changed.
+    // Only email / rebuild reports / sync contacts on genuinely new rows.
     if (fields && writtenCount > 0) {
       try {
         rebuildReportTabs_(sheet);
       } catch (err) {
         console.error('rebuildReportTabs_ failed: ' + err.message);
+      }
+      try {
+        syncToRicksBWContacts_(fields);
+      } catch (err) {
+        console.error('syncToRicksBWContacts_ failed: ' + err.message);
       }
       sendNotificationEmail_(fields, classes);
       sendAcknowledgementEmail_(fields, classes);
@@ -180,6 +129,138 @@ function doGet(e) {
   return ContentService
     .createTextOutput('BWU Student Class Registration webhook receiver is running.')
     .setMimeType(ContentService.MimeType.TEXT);
+}
+
+// ==========================================================================
+// AUTOMATIC SYNC TO "Rick's BW Contacts" GOOGLE SHEET
+// ==========================================================================
+
+/**
+ * Normalizes a phone string to a 10-digit US number for duplicate checking.
+ */
+function normalizePhone10_(phone) {
+  var digits = String(phone || '').replace(/\D+/g, '');
+  if (digits.length === 11 && digits.charAt(0) === '1') {
+    digits = digits.substring(1);
+  }
+  return digits;
+}
+
+/**
+ * Formats a 10-digit phone number as (XXX) XXX-XXXX.
+ */
+function formatPhoneDisplay_(phone) {
+  var digits = normalizePhone10_(phone);
+  if (digits.length === 10) {
+    return '(' + digits.substring(0, 3) + ') ' + digits.substring(3, 6) + '-' + digits.substring(6);
+  }
+  return String(phone || '').trim();
+}
+
+/**
+ * Title-cases a name nicely if entered in ALL CAPS or all lowercase.
+ */
+function cleanNameCase_(name) {
+  var s = String(name || '').trim();
+  if (!s) return '';
+  if (s === s.toUpperCase() || s === s.toLowerCase()) {
+    return s.toLowerCase().replace(/\b([a-z])/g, function (_, c) { return c.toUpperCase(); });
+  }
+  return s;
+}
+
+/**
+ * Checks "Rick's BW Contacts" (tab "BW Residents") to see if the registrant's
+ * phone number (or exact First + Last Name + Email) is already listed. If not,
+ * appends the new neighbor with "(BW Resident)" and sorts the sheet
+ * alphabetically by Last Name (column C) then First Name (column B).
+ */
+function syncToRicksBWContacts_(fields) {
+  if (!fields) return false;
+  var firstName = cleanNameCase_(fields.firstName);
+  var lastName = cleanNameCase_(fields.lastName);
+  var rawPhone = String(fields.phone || '').trim();
+  var email = String(fields.email || '').trim().toLowerCase();
+  var normPhone = normalizePhone10_(rawPhone);
+
+  if (!firstName && !lastName && !normPhone) return false;
+
+  // Skip Rick's own test entries
+  if (lastName.toLowerCase() === 'schuette' && (firstName.toLowerCase() === 'rick' || firstName.toLowerCase() === 'richard')) {
+    return false;
+  }
+
+  var contactsSS = SpreadsheetApp.openById(BW_CONTACTS_SHEET_ID);
+  var contactsSheet = contactsSS.getSheetByName(BW_CONTACTS_TAB_NAME);
+  if (!contactsSheet) {
+    contactsSheet = contactsSS.insertSheet(BW_CONTACTS_TAB_NAME);
+    contactsSheet.appendRow(['Contact Name in Phone', 'First Name', 'Last Name', 'Text / Mobile Number', 'Email Address', 'Contact Group / Label']);
+    contactsSheet.setFrozenRows(1);
+  }
+
+  var data = contactsSheet.getDataRange().getValues();
+  var fullCleanName = (firstName + ' ' + lastName).trim().toLowerCase();
+
+  for (var i = 1; i < data.length; i++) {
+    var rowFirst = String(data[i][1] || '').trim().toLowerCase();
+    var rowLast = String(data[i][2] || '').trim().toLowerCase();
+    var rowPhone = normalizePhone10_(data[i][3]);
+    var rowName = (rowFirst + ' ' + rowLast).trim();
+
+    // If the same 10-digit phone number and same first name already exist, skip
+    if (normPhone && rowPhone === normPhone) {
+      if (!rowFirst || !firstName || rowFirst === firstName.toLowerCase()) {
+        return false;
+      }
+    }
+    // Or if the exact same First + Last name already exists with the same phone or blank phone, skip
+    if (fullCleanName && rowName === fullCleanName && (!normPhone || !rowPhone || rowPhone === normPhone)) {
+      return false;
+    }
+  }
+
+  var contactDisplayName = (firstName + ' ' + lastName).trim() + ' (BW Resident)';
+  var formattedPhone = formatPhoneDisplay_(rawPhone);
+
+  contactsSheet.appendRow([
+    contactDisplayName,
+    firstName,
+    lastName,
+    formattedPhone,
+    email,
+    'BWU Winter 27 Registration'
+  ]);
+
+  // Keep rows sorted alphabetically by Last Name (col 3), then First Name (col 2)
+  var lastRow = contactsSheet.getLastRow();
+  if (lastRow > 2) {
+    contactsSheet.getRange(2, 1, lastRow - 1, 6).sort([
+      { column: 3, ascending: true },
+      { column: 2, ascending: true }
+    ]);
+  }
+  return true;
+}
+
+/**
+ * Optional manual helper: run this from the Apps Script editor toolbar to
+ * scan all existing rows in Sheet1 and add any missing registrants to
+ * "Rick's BW Contacts".
+ */
+function backfillRicksBWContacts() {
+  var sheet = getSheet_();
+  var data = sheet.getDataRange().getValues();
+  var added = 0;
+  for (var i = 1; i < data.length; i++) {
+    var wasAdded = syncToRicksBWContacts_({
+      firstName: data[i][1],
+      lastName: data[i][2],
+      phone: data[i][3],
+      email: data[i][4]
+    });
+    if (wasAdded) added++;
+  }
+  Logger.log('Backfill complete. New neighbors added to Rick\'s BW Contacts: ' + added);
 }
 
 /**
@@ -210,10 +291,7 @@ function sendNotificationEmail_(fields, classes) {
 
 /**
  * Emails the resident who submitted the form a personalized acknowledgement
- * listing every class they registered for. Runs after the rows have
- * already been written, so a failure here never blocks the Sheet record or
- * the admin notification. Silently does nothing if no email address was
- * captured.
+ * listing every class they registered for.
  */
 function sendAcknowledgementEmail_(fields, classes) {
   if (!fields.email) return;
@@ -241,10 +319,7 @@ function sendAcknowledgementEmail_(fields, classes) {
 }
 
 /**
- * Pulls First Name / Last Name / Phone / Email out of the
- * submission object, trying several field-name patterns Netlify is known
- * to use, so the script keeps working even if the exact shape differs
- * slightly from what's expected.
+ * Pulls First Name / Last Name / Phone / Email out of the submission object.
  */
 function extractFields_(submission) {
   var data = submission.data || {};
@@ -280,15 +355,7 @@ function extractFields_(submission) {
 }
 
 /**
- * Collects every checked class from the submission. The registration
- * page's checkboxes are rendered dynamically (from a live Google Sheet)
- * and so have no "name" attribute of their own -- Netlify Forms only
- * stores fields present in the site's static HTML at deploy time, so a
- * per-checkbox field name would be silently dropped. Instead, the page's
- * JavaScript copies every checked class's exact title into one static,
- * always-present field named "classes" as a JSON array right before
- * submit. This just parses that field, so it keeps working unchanged as
- * classes are added or removed.
+ * Collects every checked class from the submission's hidden "classes" JSON array.
  */
 function extractClasses_(submission) {
   var data = submission.data || {};
@@ -343,9 +410,7 @@ function getSheet_() {
 }
 
 /**
- * Writes the header row (bolded) if it doesn't already exactly match
- * HEADERS -- safely sets up a brand-new sheet without touching any data
- * rows below it if it's ever run again later.
+ * Writes the header row (bolded) if it doesn't already exactly match HEADERS.
  */
 function ensureHeaders_(sheet) {
   var existing = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
@@ -360,12 +425,6 @@ function ensureHeaders_(sheet) {
   sheet.setFrozenRows(1);
 }
 
-/**
- * Run this once manually from the Apps Script editor (select
- * setupHeadersOnly from the function dropdown, click Run) if you want the
- * header row set up before testing, without waiting for a real submission.
- * Safe to run more than once.
- */
 function setupHeadersOnly() {
   var sheet = getSheet_();
   ensureHeaders_(sheet);
@@ -375,20 +434,13 @@ function setupHeadersOnly() {
 // LIVE REPORT TABS — "Unique Residents", "Class Tally", "Class Rosters"
 // ==========================================================================
 
-/**
- * Rebuilds all three live report tabs from the current contents of Sheet1.
- * Called at the end of every doPost that wrote at least one new row, so
- * the tabs are always current with no manual step or separate schedule.
- * Cheap full rebuild each time -- simplest way to guarantee the tabs never
- * carry stale rows as the underlying data grows.
- */
 function rebuildReportTabs_(sheet) {
   var data = sheet.getDataRange().getValues();
-  if (data.length < 2) return; // header row only, nothing to summarize yet
+  if (data.length < 2) return;
 
-  var residents = {};     // key -> { firstName, lastName, phone, email, classes: {title: true} }
+  var residents = {};
   var residentOrder = [];
-  var classes = {};       // title -> { registrants: { key: residentRecord } }
+  var classes = {};
   var classOrder = [];
 
   for (var i = 1; i < data.length; i++) {
@@ -408,9 +460,6 @@ function rebuildReportTabs_(sheet) {
       residents[key] = { firstName: firstName, lastName: lastName, phone: phone, email: email, classes: {} };
       residentOrder.push(key);
     } else {
-      // A later row (a more recent submission from the same person) wins
-      // for display fields, in case they updated their info; classes
-      // accumulate across every submission instead of being overwritten.
       residents[key].firstName = firstName || residents[key].firstName;
       residents[key].lastName = lastName || residents[key].lastName;
       residents[key].phone = phone || residents[key].phone;
@@ -437,7 +486,6 @@ function getOrCreateReportTab_(name) {
   return sheet;
 }
 
-/** Batches alternating white/light-blue row backgrounds in one call instead of one call per row. */
 function applyAlternatingRows_(sheet, startRow, numRows, numCols) {
   var backgrounds = [];
   for (var i = 0; i < numRows; i++) {
@@ -453,12 +501,11 @@ function nowFormatted_() {
   return Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'MMMM d, yyyy h:mm a');
 }
 
-/** "Unique Residents" -- one row per resident, deduped, with their total distinct-class count. */
 function writeUniqueResidentsTab_(residentOrder, residents) {
   var sheet = getOrCreateReportTab_('Unique Residents');
   sheet.clear();
 
-  var numCols = 6; // First Name | Last Name | Phone | Email | Classes Registered | Notes
+  var numCols = 6;
   var rows = residentOrder.map(function (key) {
     var r = residents[key];
     return {
@@ -510,12 +557,11 @@ function writeUniqueResidentsTab_(residentOrder, residents) {
   sheet.setFrozenRows(3);
 }
 
-/** "Class Tally" -- one row per class with its current unique-registrant count, highest demand first. */
 function writeClassTallyTab_(classOrder, classes) {
   var sheet = getOrCreateReportTab_('Class Tally');
   sheet.clear();
 
-  var numCols = 2; // Class Name | Registrants
+  var numCols = 2;
   var rows = classOrder.map(function (title) {
     return { title: title, count: Object.keys(classes[title].registrants).length };
   });
@@ -554,12 +600,11 @@ function writeClassTallyTab_(classOrder, classes) {
   sheet.setFrozenRows(3);
 }
 
-/** "Class Rosters" -- every class's full roster, one gold header band per class, stacked alphabetically. */
 function writeClassRostersTab_(classOrder, classes) {
   var sheet = getOrCreateReportTab_('Class Rosters');
   sheet.clear();
 
-  var numCols = 4; // First Name | Last Name | Phone | Email
+  var numCols = 4;
   var titlesSorted = classOrder.slice().sort(function (a, b) { return a.localeCompare(b); });
 
   sheet.getRange(1, 1, 1, numCols).merge()
@@ -567,7 +612,7 @@ function writeClassRostersTab_(classOrder, classes) {
     .setBackground(BRAND.navy).setFontColor(BRAND.white).setFontWeight('bold').setFontSize(13)
     .setHorizontalAlignment('center');
 
-  var row = 3; // row 2 left blank as a spacer under the title
+  var row = 3;
   titlesSorted.forEach(function (title) {
     var registrants = classes[title].registrants;
     var people = Object.keys(registrants).map(function (k) { return registrants[k]; });
@@ -593,7 +638,7 @@ function writeClassRostersTab_(classOrder, classes) {
       row += values.length;
     }
 
-    row++; // blank spacer row between classes
+    row++;
   });
 
   sheet.setColumnWidth(1, 140);
