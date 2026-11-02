@@ -371,6 +371,18 @@ function setupHeadersOnly() {
   ensureHeaders_(sheet);
 }
 
+/**
+ * Run this by hand from the Apps Script editor (select rebuildReportTabsNow
+ * from the function dropdown, click Run) after correcting existing rows in
+ * Sheet1 -- for example fixing a class title -- so the three report tabs
+ * ("Unique Residents", "Class Tally", "Class Rosters") refresh right away
+ * instead of waiting for the next new registration. It only reads Sheet1 and
+ * rewrites those three report tabs; it never changes Sheet1 and sends no email.
+ */
+function rebuildReportTabsNow() {
+  rebuildReportTabs_(getSheet_());
+}
+
 // ==========================================================================
 // LIVE REPORT TABS — "Unique Residents", "Class Tally", "Class Rosters"
 // ==========================================================================
