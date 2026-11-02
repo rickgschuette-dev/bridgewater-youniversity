@@ -83,6 +83,22 @@ var SHEET_NAME = 'Sheet1';
 var HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Registered For', 'Raw Submission', 'Submission ID'];
 var SUBMISSION_ID_COL = 8; // column H — composite "<submission id>::<class title>"
 
+/**
+ * WAITING LIST (added 2026-11-02)
+ *
+ * When a class is full, the Registration page lets a resident tick
+ * "Class Full. Join Waiting List". The page copies those exact class titles
+ * into a second static hidden field named "waitlist" (a JSON array, same
+ * format as the "classes" field). Each waiting-list class is written as ONE
+ * ROW on the tab named below, with the same eight columns as Sheet1 except
+ * that column F is "Class Waitlisted For". Waiting-list rows are NEVER
+ * written to Sheet1, so the seat-count feed (which reads only Sheet1) never
+ * counts them as enrolled. The tab is created automatically if missing; run
+ * setupWaitlistTabOnly once to create it ahead of time.
+ */
+var WAITLIST_SHEET_NAME = 'Waiting List';
+var WAITLIST_HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Waitlisted For', 'Raw Submission', 'Submission ID'];
+
 var BRAND = {
   navy: '#0B2A5C',
   navyDark: '#081f45',
@@ -117,7 +133,10 @@ function doPost(e) {
     var submissionId = '';
     var fields = null;
     var classes = [];
+    var waitlist = [];
+    var waitlistRecorded = [];
     var writtenCount = 0;
+    var waitlistWrittenCount = 0;
 
     try {
       var parsed = JSON.parse(rawBody);
@@ -127,7 +146,8 @@ function doPost(e) {
 
       fields = extractFields_(submission);
       classes = extractClasses_(submission);
-      if (classes.length === 0) classes = ['(none selected)'];
+      waitlist = extractWaitlist_(submission);
+      if (classes.length === 0 && waitlist.length === 0) classes = ['(none selected)'];
 
       for (var i = 0; i < classes.length; i++) {
         var compositeId = submissionId ? (submissionId + '::' + classes[i]) : '';
@@ -145,6 +165,29 @@ function doPost(e) {
         ]);
         writtenCount++;
       }
+
+      // Waiting-list classes go to their own tab, never to Sheet1.
+      if (waitlist.length > 0) {
+        var waitSheet = getWaitlistSheet_();
+        ensureHeaders_(waitSheet, WAITLIST_HEADERS);
+        for (var w = 0; w < waitlist.length; w++) {
+          var waitId = submissionId ? (submissionId + '::' + waitlist[w]) : '';
+          if (waitId && isDuplicate_(waitSheet, waitId)) continue;
+
+          waitSheet.appendRow([
+            fields.timestamp,
+            fields.firstName,
+            fields.lastName,
+            fields.phone,
+            fields.email,
+            waitlist[w],
+            rawBody,
+            waitId
+          ]);
+          waitlistRecorded.push(waitlist[w]);
+          waitlistWrittenCount++;
+        }
+      }
     } catch (err) {
       sheet.appendRow([new Date(), '', '', '', '', 'PARSE ERROR: ' + err.message, rawBody, '']);
     }
@@ -153,18 +196,23 @@ function doPost(e) {
     // retry of an already-recorded submission writes nothing new
     // (writtenCount stays 0), so it must not re-notify anyone or waste
     // time regenerating tabs that haven't actually changed.
-    if (fields && writtenCount > 0) {
-      try {
-        rebuildReportTabs_(sheet);
-      } catch (err) {
-        console.error('rebuildReportTabs_ failed: ' + err.message);
+    // Waiting-list rows do not change Sheet1, so they never trigger the
+    // report-tab rebuild; they do trigger the two emails, which list only
+    // the waiting-list classes that were actually recorded.
+    if (fields && (writtenCount > 0 || waitlistWrittenCount > 0)) {
+      if (writtenCount > 0) {
+        try {
+          rebuildReportTabs_(sheet);
+        } catch (err) {
+          console.error('rebuildReportTabs_ failed: ' + err.message);
+        }
       }
-      sendNotificationEmail_(fields, classes);
-      sendAcknowledgementEmail_(fields, classes);
+      sendNotificationEmail_(fields, classes, waitlistRecorded);
+      sendAcknowledgementEmail_(fields, classes, waitlistRecorded);
     }
 
     return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok', id: submissionId, classesWritten: writtenCount }))
+      .createTextOutput(JSON.stringify({ status: 'ok', id: submissionId, classesWritten: writtenCount, waitlistWritten: waitlistWrittenCount }))
       .setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
@@ -187,15 +235,20 @@ function doGet(e) {
  * rows have already been written, so a failure here never blocks the Sheet
  * record from being saved.
  */
-function sendNotificationEmail_(fields, classes) {
+function sendNotificationEmail_(fields, classes, waitlist) {
   try {
-    var subject = 'New BWU Class Registration: ' + (fields.firstName + ' ' + fields.lastName).trim();
+    waitlist = waitlist || [];
+    var who = (fields.firstName + ' ' + fields.lastName).trim();
+    var subject = classes.length > 0
+      ? 'New BWU Class Registration: ' + who
+      : 'New BWU Waiting List Entry: ' + who;
     var body =
       'A new class registration came in through the Registration page:\n\n' +
       'Name: ' + fields.firstName + ' ' + fields.lastName + '\n' +
       'Email: ' + fields.email + '\n' +
       'Phone: ' + fields.phone + '\n' +
-      'Classes registered for:\n  - ' + classes.join('\n  - ') + '\n\n' +
+      (classes.length > 0 ? 'Classes registered for:\n  - ' + classes.join('\n  - ') + '\n\n' : '') +
+      (waitlist.length > 0 ? 'Joined the WAITING LIST for (full classes, NOT enrolled):\n  - ' + waitlist.join('\n  - ') + '\n\n' : '') +
       'Full list: https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
 
     MailApp.sendEmail({
@@ -215,18 +268,31 @@ function sendNotificationEmail_(fields, classes) {
  * the admin notification. Silently does nothing if no email address was
  * captured.
  */
-function sendAcknowledgementEmail_(fields, classes) {
+function sendAcknowledgementEmail_(fields, classes, waitlist) {
   if (!fields.email) return;
 
   try {
     var greetingName = fields.firstName || 'there';
-    var subject = 'You\'re registered, ' + (fields.firstName || 'neighbor') + '!';
+    waitlist = waitlist || [];
+    var hasClasses = classes.length > 0;
+    var hasWaitlist = waitlist.length > 0;
+    var subject = hasClasses
+      ? 'You\'re registered, ' + (fields.firstName || 'neighbor') + '!'
+      : 'You\'re on the waiting list, ' + (fields.firstName || 'neighbor') + '!';
     var body =
       'Hi ' + greetingName + ',\n\n' +
-      'Thank you for registering with Bridgewater YOUniversity! We\'ve received your registration for:\n\n' +
-      '  - ' + classes.join('\n  - ') + '\n\n' +
+      (hasClasses
+        ? 'Thank you for registering with Bridgewater YOUniversity! We\'ve received your registration for:\n\n' +
+          '  - ' + classes.join('\n  - ') + '\n\n'
+        : 'Thank you for your interest in Bridgewater YOUniversity!\n\n') +
+      (hasWaitlist
+        ? (hasClasses ? 'You have also been added to the WAITING LIST' : 'You have been added to the WAITING LIST') +
+          ' for the following full class(es). Please note that you are NOT yet enrolled in:\n\n' +
+          '  - ' + waitlist.join('\n  - ') + '\n\n' +
+          'We will be in touch if a seat becomes available.\n\n'
+        : '') +
       'If anything looks incorrect, just reply to this email and let us know.\n\n' +
-      'Thanks, and we look forward to seeing you in class!\n\n' +
+      (hasClasses ? 'Thanks, and we look forward to seeing you in class!\n\n' : 'Thank you for your patience.\n\n') +
       '— Bridgewater YOUniversity';
 
     MailApp.sendEmail({
@@ -291,25 +357,40 @@ function extractFields_(submission) {
  * classes are added or removed.
  */
 function extractClasses_(submission) {
+  return extractTitleList_(submission, 'classes');
+}
+
+/**
+ * Same idea as extractClasses_, for the static hidden field named
+ * "waitlist": the titles of full classes the resident asked to be
+ * waitlisted for, as a JSON array. Returns [] when the field is missing,
+ * blank, malformed, or not an array -- a bad value can never produce rows.
+ */
+function extractWaitlist_(submission) {
+  return extractTitleList_(submission, 'waitlist');
+}
+
+/** Parses one JSON-array hidden field of class titles; any problem yields []. */
+function extractTitleList_(submission, fieldName) {
   var data = submission.data || {};
-  var raw = data.classes;
+  var raw = data[fieldName];
   if (raw === undefined || raw === null || String(raw).trim() === '') return [];
 
-  var classes = [];
+  var titles = [];
   try {
     var parsed = JSON.parse(raw);
     if (Object.prototype.toString.call(parsed) === '[object Array]') {
       for (var i = 0; i < parsed.length; i++) {
         var val = parsed[i];
         if (val !== undefined && val !== null && String(val).trim() !== '') {
-          classes.push(String(val).trim());
+          titles.push(String(val).trim());
         }
       }
     }
   } catch (err) {
-    console.error('extractClasses_ failed to parse "classes" field: ' + err.message);
+    console.error('extractTitleList_ failed to parse "' + fieldName + '" field: ' + err.message);
   }
-  return classes;
+  return titles;
 }
 
 /** Returns the first value in the array that is a non-empty string. */
@@ -342,21 +423,32 @@ function getSheet_() {
   return sheet;
 }
 
+/** The "Waiting List" tab; created if it does not exist yet. */
+function getWaitlistSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(WAITLIST_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(WAITLIST_SHEET_NAME);
+  }
+  return sheet;
+}
+
 /**
  * Writes the header row (bolded) if it doesn't already exactly match
  * HEADERS -- safely sets up a brand-new sheet without touching any data
  * rows below it if it's ever run again later.
  */
-function ensureHeaders_(sheet) {
-  var existing = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
+function ensureHeaders_(sheet, headers) {
+  headers = headers || HEADERS;
+  var existing = sheet.getRange(1, 1, 1, headers.length).getValues()[0];
   var matches = true;
-  for (var i = 0; i < HEADERS.length; i++) {
-    if (existing[i] !== HEADERS[i]) { matches = false; break; }
+  for (var i = 0; i < headers.length; i++) {
+    if (existing[i] !== headers[i]) { matches = false; break; }
   }
   if (matches) return;
 
-  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
-  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
   sheet.setFrozenRows(1);
 }
 
@@ -369,6 +461,55 @@ function ensureHeaders_(sheet) {
 function setupHeadersOnly() {
   var sheet = getSheet_();
   ensureHeaders_(sheet);
+}
+
+/**
+ * Run this once by hand (select setupWaitlistTabOnly, click Run) to create
+ * the "Waiting List" tab with its header row before the first real
+ * waiting-list entry arrives. Safe to run more than once; it never touches
+ * Sheet1.
+ */
+function setupWaitlistTabOnly() {
+  ensureHeaders_(getWaitlistSheet_(), WAITLIST_HEADERS);
+}
+
+/**
+ * Safe test: reads nothing from the Sheet, writes nothing, sends no email.
+ * Checks that a sample submission is split into regular classes and
+ * waiting-list classes correctly. Do NOT test by running doPost from the
+ * editor: with no real submission it would add a PARSE ERROR row to Sheet1.
+ */
+function testWaitlistParsing() {
+  var sample = { data: {
+    classes: JSON.stringify(['Learn to Knit']),
+    waitlist: JSON.stringify(['Math Made Easy', ' Balance 2 '])
+  } };
+  var c = extractClasses_(sample);
+  var w = extractWaitlist_(sample);
+  var ok = c.length === 1 && c[0] === 'Learn to Knit' &&
+           w.length === 2 && w[0] === 'Math Made Easy' && w[1] === 'Balance 2';
+  Logger.log(ok ? 'PASS - classes and waitlist were split correctly'
+                : 'FAIL - got ' + JSON.stringify({ classes: c, waitlist: w }));
+}
+
+// Negative test: a missing, blank, malformed or non-array "waitlist" value
+// must produce NO waiting-list titles. Expected log: PASS.
+function testWaitlistParsingBad() {
+  var cases = [
+    {},
+    { data: {} },
+    { data: { waitlist: '' } },
+    { data: { waitlist: 'not json' } },
+    { data: { waitlist: '{"a":1}' } },
+    { data: { waitlist: '[]' } }
+  ];
+  var bad = [];
+  for (var i = 0; i < cases.length; i++) {
+    var w = extractWaitlist_(cases[i]);
+    if (w.length !== 0) bad.push(i);
+  }
+  Logger.log(bad.length === 0 ? 'PASS - every bad waitlist value was refused'
+                              : 'FAIL - these cases produced titles: ' + bad.join(','));
 }
 
 /**

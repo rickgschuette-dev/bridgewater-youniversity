@@ -585,20 +585,10 @@ footer a {
   margin-top: 4px;
 }
 
-/* A full class: its checkbox is disabled and the rest of the box is dimmed. */
+/* A full class: the box stays clickable. Ticking it joins the waiting list, and the
+   red "Class Full. Join Waiting List" line is what marks the class as full. */
 .class-option-full {
-  cursor: not-allowed;
-}
-
-.class-option-full .class-title,
-.class-option-full .class-detail,
-.class-option-full .class-schedule {
-  opacity: 0.6;
-}
-
-.class-option-full input[type="checkbox"] {
-  cursor: not-allowed;
-  opacity: 0.5;
+  cursor: pointer;
 }
 
 /* Room name at the end of the schedule line: never split across lines. */
