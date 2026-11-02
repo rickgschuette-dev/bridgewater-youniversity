@@ -620,7 +620,7 @@ def build_registration_body():
             return String(text).toLowerCase().replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
           }
 
-          // Shows "Class Full. Join Waiting List" at the bottom of a class box
+          // Shows "Class Full. Click to Join the Wait List" at the bottom of a class box
           // only when the registrations counted have reached the maximum in
           // the sheet. The box stays tickable, but ticking it now means "put
           // me on the waiting list" (data-waitlist="1"), not "enroll me".
@@ -647,7 +647,7 @@ def build_registration_body():
                   var label = el.closest("label");
                   var box = label ? label.querySelector("input.class-checkbox") : null;
                   if (left <= 0) {
-                    el.textContent = "Class Full. Join Waiting List";
+                    el.textContent = "Class Full. Click to Join the Wait List";
                     el.className = "class-seats class-seats-full";
                     if (box) { box.checked = false; box.setAttribute("data-waitlist", "1"); }
                     if (label) label.classList.add("class-option-full");
