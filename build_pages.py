@@ -647,7 +647,7 @@ def build_registration_body():
                   var label = el.closest("label");
                   var box = label ? label.querySelector("input.class-checkbox") : null;
                   if (left <= 0) {
-                    el.textContent = "Class Full. Click to Join the Wait List";
+                    el.textContent = "Class Full."; el.appendChild(document.createElement("br")); el.appendChild(document.createTextNode("Click to Join the Wait List"));
                     el.className = "class-seats class-seats-full";
                     if (box) { box.checked = false; box.setAttribute("data-waitlist", "1"); }
                     if (label) label.classList.add("class-option-full");
