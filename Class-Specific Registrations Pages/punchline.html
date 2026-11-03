@@ -93,6 +93,7 @@
       <div>
         <button type="submit" id="submit-button">Submit Registration</button>
       </div>
+      <p class="load-error" id="submit-error">We couldn&rsquo;t send your registration just now. Please try again, or contact Rick if this keeps happening.</p>
     </form>
 
   </div>
@@ -114,6 +115,8 @@
   // It must match the class's "Class Title" in the BWU Confirmed Classes sheet
   // (capitals and punctuation are ignored when matching).
   var CLASS_TITLE = "What's the Punchline: Low- and High-Class Poetry";
+  // The thank-you page this class sends registrants to after they submit.
+  var THANKS_URL = "/punchline-thank-you";
   // -----------------------------------------------------------------------------
 
   // Both addresses below are copied from registration.html (the main registration page).
@@ -210,10 +213,31 @@
 
   // Netlify Forms keeps only fields present in the static HTML, so the class
   // is copied into the two hidden fields (JSON lists, as on the main page)
-  // just before the form submits. A full class goes in "waitlist", not "classes".
-  form.addEventListener("submit", function () {
+  // just before the form is sent. A full class goes in "waitlist", not "classes".
+  // The form is sent in the background to the same Netlify form
+  // (student-registration) and then the visitor is taken to THIS class's own
+  // thank-you page, so every class page shows its own thank-you message.
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
     document.getElementById("classes-field").value = JSON.stringify(isFull ? [] : [classValue]);
     document.getElementById("waitlist-field").value = JSON.stringify(isFull ? [classValue] : []);
+    var errorEl = document.getElementById("submit-error");
+    errorEl.className = "load-error";
+    buttonEl.disabled = true;
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        window.location.href = THANKS_URL;
+      })
+      .catch(function (err) {
+        console.error("Registration not sent: " + err.message);
+        errorEl.className = "load-error show";
+        buttonEl.disabled = false;
+      });
   });
 
   // Minimal CSV parser (copied from the main registration page).

@@ -17,7 +17,8 @@ One registration page and one thank-you page per promoted class. Each registrati
    - The class name in the header (`header-title`) and in the card heading (`card-title`).
    - The `<title>` and the three `og:` lines in the head (title, description, url).
    - The description paragraph.
-   - The form `action` (the new thank-you address).
+   - `THANKS_URL` near the top of the script (the new class's thank-you address, for example `/learn-to-knit-thank-you`). The page sends the registration in the background and then goes to this address, so each class shows its own thank-you page.
+   - The form `action` can be left as it is.
 3. In the thank-you page, change the class name in the header and in the message.
 4. In `netlify.toml` (top of the site folder), add two redirect rules for the new pair, copying the Art History rules.
 5. Keep the `<meta name="robots" content="noindex">` line in both pages (it asks search engines not to list them; it does not affect Facebook link previews).
