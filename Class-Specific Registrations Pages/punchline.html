@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's the Punchline: Low- and High-Class Poetry | Bridgewater YOU</title>
+<meta name="description" content="Don't just read poetry - have fun with it! Enjoy looking at the wit and wisdom of some of the worlds' great short poems.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What's the Punchline: Low- and High-Class Poetry | Bridgewater YOU">
+<meta property="og:description" content="Don't just read poetry - have fun with it! Enjoy looking at the wit and wisdom of some of the worlds' great short poems.">
+<meta property="og:url" content="https://bridgewateryou.net/punchline">
+<meta property="og:image" content="https://bridgewateryou.net/assets/class-pages-logo.png">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B2A5C">
+<style>
+  body { margin: 0; background: #FBF3E5; font-family: Georgia, 'Times New Roman', serif; color: #0B2A5C; }
+  a { color: #0B2A5C; }
+  a:hover { color: #7A5400; }
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: #0B2A5C; border-bottom: 5px solid #C78F14; padding: 18px 16px; }
+  .header-inner { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .header-inner img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; background: #fff; }
+  .header-title { color: #FBF3E5; font-size: 34px; font-style: italic; text-align: center; line-height: 1.25; margin: 0; }
+  main { flex-grow: 1; padding: 40px 16px 48px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  h1 { margin: 0 0 8px; font-size: 38px; line-height: 1.15; }
+  .intro { margin: 0 0 32px; font-size: 19px; line-height: 1.5; max-width: 760px; }
+  .columns { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .card { flex: 1 1 380px; min-width: 0; background: #fff; border: 2px solid #0B2A5C; border-top: 8px solid #C78F14; border-radius: 8px; padding: 28px; box-sizing: border-box; }
+  .card-label { font-family: system-ui, sans-serif; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
+  .card h2 { margin: 0 0 6px; font-size: 32px; line-height: 1.2; }
+  .class-detail { font-size: 18px; margin-bottom: 4px; }
+  .class-schedule { font-size: 18px; font-weight: 700; margin-bottom: 18px; white-space: pre-line; }
+  .class-room { white-space: nowrap; }
+  .class-desc { margin: 0 0 18px; font-size: 17px; line-height: 1.55; font-family: system-ui, sans-serif; }
+  .class-full { display: none; font-family: system-ui, sans-serif; font-size: 17px; font-weight: 700; color: #8A1C1C; line-height: 1.4; margin: 0; }
+  .class-full.show { display: block; }
+  .load-error { display: none; font-family: system-ui, sans-serif; font-size: 15px; color: #8A1C1C; margin: 0 0 12px; }
+  .load-error.show { display: block; }
+  form { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .row { display: flex; flex-wrap: wrap; gap: 20px; }
+  .field { flex: 1 1 180px; display: flex; flex-direction: column; gap: 6px; }
+  label { font-family: system-ui, sans-serif; font-size: 16px; font-weight: 600; }
+  input[type=text], input[type=email], input[type=tel] { font: inherit; font-size: 17px; padding: 12px 14px; border: 1.5px solid #0B2A5C; border-radius: 6px; background: #fff; color: #0B2A5C; width: 100%; box-sizing: border-box; min-height: 48px; }
+  .hidden-field { display: none; }
+  button { font-family: system-ui, sans-serif; font-size: 19px; font-weight: 700; background: #0B2A5C; color: #FBF3E5; border: 0; border-bottom: 4px solid #C78F14; border-radius: 6px; padding: 14px 32px; min-height: 52px; cursor: pointer; }
+  footer { background: #0B2A5C; color: #FBF3E5; padding: 20px 16px; font-family: system-ui, sans-serif; font-size: 15px; }
+  .footer-inner { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+  footer a { color: #FBF3E5; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="header-inner">
+    <a href="/"><img src="/assets/class-pages-logo.png" alt="Bridgewater YOU"></a>
+    <p class="header-title" id="header-title">What's the Punchline: Low- and High-Class Poetry</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <h1>Winter &lsquo;27 Class Registration</h1>
+  <p class="intro">Please complete the form below to reserve your place in this class.</p>
+
+  <div class="columns">
+
+    <section class="card" aria-label="Class details">
+      <div class="card-label">Your class</div>
+      <h2 id="card-title">What's the Punchline: Low- and High-Class Poetry</h2>
+      <div class="class-detail" id="class-detail"></div>
+      <div class="class-schedule" id="class-schedule">Loading class details&hellip;</div>
+      <p class="load-error" id="load-error">We couldn&rsquo;t load the day, time and room just now. Please refresh this page.</p>
+      <p class="class-desc">Don't just read poetry - have fun with it! Enjoy looking at the wit and wisdom of some of the worlds' great short poems.</p>
+      <p class="class-full" id="class-full">Class Full.<br>Submit this form to Join the Wait List.</p>
+    </section>
+
+    <form name="student-registration" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/punchline-thank-you" id="registration-form">
+      <input type="hidden" name="form-name" value="student-registration">
+      <p class="hidden-field"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
+      <input type="hidden" name="classes" id="classes-field" value="">
+      <input type="hidden" name="waitlist" id="waitlist-field" value="">
+
+      <div class="row">
+        <div class="field"><label for="reg-first-name">First Name</label><input type="text" id="reg-first-name" name="first-name" required></div>
+        <div class="field"><label for="reg-last-name">Last Name</label><input type="text" id="reg-last-name" name="last-name" required></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="reg-phone">Phone Number</label><input type="tel" id="reg-phone" name="phone" required></div>
+        <div class="field"><label for="reg-email">Email</label><input type="email" id="reg-email" name="email" required></div>
+      </div>
+      <div>
+        <button type="submit" id="submit-button">Submit Registration</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 Bridgewater YOU</span>
+    <a href="/">Home</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  // ---- The only value to change when this page is copied for another class ----
+  // It must match the class's "Class Title" in the BWU Confirmed Classes sheet
+  // (capitals and punctuation are ignored when matching).
+  var CLASS_TITLE = "What's the Punchline: Low- and High-Class Poetry";
+  // -----------------------------------------------------------------------------
+
+  // Both addresses below are copied from registration.html (the main registration page).
+  var CLASSES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV3GKy9tjkjrG9nH7fhyIL7Ydfu3TDVM5hhT8ppEncFE_HKYvmGbBrGnQDESKNuHzArjFiUC_LZeRl/pub?output=csv";
+  var SEATS_FEED_URL = "https://script.google.com/macros/s/AKfycbwQShVAid4YAyItJd7sQNJyuw4bU5R7WIQI_hZk7_wR-xW_iyfi-snlqicxLFKOUc3_/exec";
+
+  var form = document.forms["student-registration"];
+  if (!form) return;
+
+  var classValue = CLASS_TITLE;   // replaced by the sheet's exact title once the sheet loads
+  var isFull = false;
+  var detailEl = document.getElementById("class-detail");
+  var scheduleEl = document.getElementById("class-schedule");
+  var loadErrorEl = document.getElementById("load-error");
+  var fullEl = document.getElementById("class-full");
+  var buttonEl = document.getElementById("submit-button");
+
+  fetch(CLASSES_CSV_URL)
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    })
+    .then(function (text) { showClass(parseCSV(text)); })
+    .catch(function (err) {
+      console.error("Failed to load class details: " + err.message);
+      scheduleEl.textContent = "";
+      loadErrorEl.className = "load-error show";
+    });
+
+  function showClass(rows) {
+    var header = (rows[0] || []).map(function (h) { return h.trim().toLowerCase(); });
+    var titleIdx = header.indexOf("class title");
+    var formatIdx = header.indexOf("format");
+    var instructorIdx = header.indexOf("instructor");
+    var scheduleIdx = header.indexOf("day, time & room");
+    var maxIdx = -1;
+    header.forEach(function (h, k) { if (maxIdx === -1 && /^max/.test(h)) maxIdx = k; });
+
+    var found = null;
+    if (titleIdx !== -1) {
+      for (var i = 1; i < rows.length; i++) {
+        if (rows[i][titleIdx] && normTitle(rows[i][titleIdx]) === normTitle(CLASS_TITLE)) { found = rows[i]; break; }
+      }
+    }
+    if (!found) {
+      scheduleEl.textContent = "";
+      loadErrorEl.className = "load-error show";
+      return;
+    }
+
+    classValue = found[titleIdx].trim();
+    var format = formatIdx > -1 ? (found[formatIdx] || "").trim() : "";
+    var instructor = instructorIdx > -1 ? (found[instructorIdx] || "").trim() : "";
+    var schedule = scheduleIdx > -1 ? (found[scheduleIdx] || "").trim() : "";
+    var maxRaw = maxIdx > -1 ? (found[maxIdx] || "").trim() : "";
+    var maxSeats = (/^\d+$/.test(maxRaw) && parseInt(maxRaw, 10) > 0) ? parseInt(maxRaw, 10) : null;
+
+    var detailParts = [];
+    if (format) detailParts.push(format);
+    if (instructor) detailParts.push(/\s(?:and|&)\s|[,\/;]/i.test(instructor) ? instructor : instructor.replace(/\s+/g, " "));
+    detailEl.textContent = detailParts.length ? "(" + detailParts.join(" — ") + ")" : "";
+    scheduleEl.innerHTML = schedule ? scheduleToHTML(schedule) : "";
+
+    if (maxSeats !== null) checkFull(maxSeats);
+  }
+
+  // Same rule as the main page: the class is full only once the registrations
+  // counted have reached the maximum. If the count cannot be read, the page
+  // behaves as a normal registration.
+  function checkFull(maxSeats) {
+    if (!window.fetch) return;
+    var controller = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 8000);
+    fetch(SEATS_FEED_URL, controller ? { signal: controller.signal } : {})
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        clearTimeout(timer);
+        if (!data || data.ok !== true || !data.counts) throw new Error("feed not ok");
+        var taken = data.counts[normTitle(classValue)] || 0;
+        if (maxSeats - taken <= 0) {
+          isFull = true;
+          fullEl.className = "class-full show";
+          buttonEl.textContent = "Join the Wait List";
+        }
+      })
+      .catch(function (err) {
+        clearTimeout(timer);
+        console.error("Seat counts unavailable: " + err.message);
+      });
+  }
+
+  // Netlify Forms keeps only fields present in the static HTML, so the class
+  // is copied into the two hidden fields (JSON lists, as on the main page)
+  // just before the form submits. A full class goes in "waitlist", not "classes".
+  form.addEventListener("submit", function () {
+    document.getElementById("classes-field").value = JSON.stringify(isFull ? [] : [classValue]);
+    document.getElementById("waitlist-field").value = JSON.stringify(isFull ? [classValue] : []);
+  });
+
+  // Minimal CSV parser (copied from the main registration page).
+  function parseCSV(text) {
+    text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    var rows = [];
+    var row = [];
+    var field = "";
+    var inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else {
+        field += c;
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(function (r) { return r.length > 1 || r[0] !== ""; });
+  }
+
+  // Same matching rule as the seat-count feed: capitals and punctuation are ignored.
+  function normTitle(text) {
+    return String(text).toLowerCase().replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  function escapeHTML(text) {
+    var div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Lays out the "Day, Time & Room" text exactly as the main registration page does
+  // (copied from registration.html): one clock time keeps days, dates, time and room
+  // on one line when they fit; a time range or several times drop to the next line
+  // together with the room; "Courts" always reads "Cts".
+  function scheduleToHTML(text) {
+    text = text.replace(/\b(?:courts|cts)\b/gi, "Cts");
+    var T = "\\d{1,2}:\\d{2}(?:\\s*(?:a\\.?m\\.?|p\\.?m\\.?|noon))?|\\d{1,2}\\s*(?:a\\.?m\\.?|p\\.?m\\.?|noon)|\\bnoon\\b";
+    var timeRe = new RegExp(T, "gi");
+    var rangeRe = new RegExp("(?:" + T + ")(?:\\s*[-\\u2013\\u2014]\\s*(?:" + T + "))?", "gi");
+    function keepTimes(str) {
+      return str.replace(rangeRe, function (x) { return x.replace(/[ \t]+/g, " "); });
+    }
+    function trimEnd(str) { return str.replace(/[\s,]+$/, ""); }
+
+    var m = text.match(/^([\s\S]*(?:\d\s*(?:a\.?m\.?|p\.?m\.?|noon)|\bnoon)\.?,?)(\s+)(\S[\s\S]*)$/i);
+    if (!m) return escapeHTML(keepTimes(text));
+    var head = m[1];
+    var room = '<span class="class-room">' + escapeHTML(m[3].replace(/\s+$/, "")) + '</span>';
+    var count = 0;
+    var first = -1;
+    var t;
+    while ((t = timeRe.exec(head)) !== null) {
+      if (first === -1) first = t.index;
+      count++;
+    }
+    if (count === 0) return escapeHTML(text);
+    var days = head.slice(0, first);
+    var times = head.slice(first);
+    if (count === 1) {
+      var dayText = days.replace(/\s+$/, "");
+      return escapeHTML(keepTimes(dayText + (dayText ? " " : "") + trimEnd(times))) + " " + room;
+    }
+    var dayLine = trimEnd(days);
+    return (dayLine ? escapeHTML(dayLine) + "\n" : "") + escapeHTML(keepTimes(trimEnd(times) + ", ")) + room;
+  }
+})();
+</script>
+</body>
+</html>

@@ -7,6 +7,7 @@ One registration page and one thank-you page per promoted class. Each registrati
 | Class | Registration page | Thank-you page |
 |---|---|---|
 | Fundamentals of Art History | /art-history | /art-history-thank-you |
+| What's the Punchline: Low- and High-Class Poetry | /punchline | /punchline-thank-you |
 
 ## To add another class (copy and change)
 
@@ -19,7 +20,8 @@ One registration page and one thank-you page per promoted class. Each registrati
    - The form `action` (the new thank-you address).
 3. In the thank-you page, change the class name in the header and in the message.
 4. In `netlify.toml` (top of the site folder), add two redirect rules for the new pair, copying the Art History rules.
-5. Keep the form name `student-registration` and all field names unchanged.
-6. Test with one registration, then delete the test row from the sheet.
+5. Keep the `<meta name="robots" content="noindex">` line in both pages (it asks search engines not to list them; it does not affect Facebook link previews).
+6. Keep the form name `student-registration` and all field names unchanged.
+7. Test with one registration, then delete the test row from the sheet.
 
 Day, time, room, format, instructor and the "Class Full" check come from the Confirmed Classes sheet and the seat-count feed automatically.

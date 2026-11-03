@@ -44,3 +44,14 @@
   from = "/art-history-thank-you"
   to = "/Class-Specific%20Registrations%20Pages/art-history-thank-you.html"
   status = 200
+
+# What's the Punchline: Low- and High-Class Poetry
+[[redirects]]
+  from = "/punchline"
+  to = "/Class-Specific%20Registrations%20Pages/punchline.html"
+  status = 200
+
+[[redirects]]
+  from = "/punchline-thank-you"
+  to = "/Class-Specific%20Registrations%20Pages/punchline-thank-you.html"
+  status = 200
