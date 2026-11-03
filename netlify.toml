@@ -55,3 +55,14 @@
   from = "/punchline-thank-you"
   to = "/Class-Specific%20Registrations%20Pages/punchline-thank-you.html"
   status = 200
+
+# Ecology, Geology and Early Explorers of the Grand Canyon
+[[redirects]]
+  from = "/grand-canyon"
+  to = "/Class-Specific%20Registrations%20Pages/grand-canyon.html"
+  status = 200
+
+[[redirects]]
+  from = "/grand-canyon-thank-you"
+  to = "/Class-Specific%20Registrations%20Pages/grand-canyon-thank-you.html"
+  status = 200

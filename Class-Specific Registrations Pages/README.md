@@ -8,6 +8,7 @@ One registration page and one thank-you page per promoted class. Each registrati
 |---|---|---|
 | Fundamentals of Art History | /art-history | /art-history-thank-you |
 | What's the Punchline: Low- and High-Class Poetry | /punchline | /punchline-thank-you |
+| Ecology, Geology and Early Explorers of the Grand Canyon | /grand-canyon | /grand-canyon-thank-you |
 
 ## To add another class (copy and change)
 
