@@ -28,3 +28,19 @@
   from = "/seminar-discussion/*"
   to = "/seminar-discussion-leader.html"
   status = 200
+
+# Class-Specific Registration Pages: each promoted class has its own one-class registration page and
+# thank-you page, kept in the folder "Class-Specific Registrations Pages". These rules give each pair
+# a short, clean address (the folder name has spaces, written %20 here). Add two rules per new class.
+# See the README.md in that folder for the copy-and-change steps.
+
+# Fundamentals of Art History
+[[redirects]]
+  from = "/art-history"
+  to = "/Class-Specific%20Registrations%20Pages/art-history.html"
+  status = 200
+
+[[redirects]]
+  from = "/art-history-thank-you"
+  to = "/Class-Specific%20Registrations%20Pages/art-history-thank-you.html"
+  status = 200
