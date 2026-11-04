@@ -260,6 +260,29 @@
             if (classesField) classesField.value = JSON.stringify(selectedTitles);
             var waitlistField = document.getElementById("waitlist-field");
             if (waitlistField) waitlistField.value = JSON.stringify(waitlistTitles);
+
+            // Send the registration in the background, then go to this
+            // page's own thank-you page. Several class-specific pages share
+            // this form's name (student-registration), and Netlify's own
+            // post-submit redirect can land on another page's thank-you
+            // page, so the redirect is set here instead.
+            e.preventDefault();
+            var submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+            fetch("/", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams(new FormData(form)).toString()
+            })
+              .then(function (res) {
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                window.location.href = "/registration-thank-you";
+              })
+              .catch(function (err) {
+                console.error("Registration not sent: " + err.message);
+                if (submitBtn) submitBtn.disabled = false;
+                alert("Sorry, your registration could not be sent. Please check your connection and try again.");
+              });
           });
 
           // Minimal CSV parser: handles quoted fields, embedded commas,
