@@ -843,7 +843,6 @@ def _schedule_sessions():
     S.append((_weekly(3, "Jan 14", "Jan 21"), (16, 0), "4:00 p.m.", "Ping Pong 101", "Aerobics Room", ""))
     S.append((_weekly(3, "Jan 14", "Feb 4"), (17, 0), "5:00 &ndash; 8:00 p.m.", "Beginning Watercolor", "Craft Room", ""))
     S.append((_weekly(3, "Feb 11", "Mar 4"), (17, 0), "5:00 &ndash; 8:00 p.m.", "Intermediate Watercolor", "Craft Room", ""))
-    S.append((_once(3, "Feb 11"), (19, 0), "7:00 p.m.", "Protecting Yourself From Financial Scams that Target Seniors", "Cafe", ""))
     S.append((_once(3, "Feb 18"), (19, 0), "7:00 p.m.", "FAIR (Financial Awareness in Retirement)", "Cafe", ""))
     # ---- Friday ----
     S.append((_weekly(4, "Jan 22", "Feb 19"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
@@ -1015,7 +1014,6 @@ CATALOGUE = [
     ("Finances and Computers", [
         "Lee is thrilled to offer an Air/Space Force program on scams, online security for the &lsquo;older&rsquo; adult! Lee is a retired Air Force techie leading **CyberGenerations: Keeping Yourself Safe Online**.",
         "For those of you without local kids to program your phones, we have Rick who spent years training others in multiple platforms. Join Rick as he walks us through **Learn Your Smartphone**.",
-        "John, who is a financial planner of 30 years duration, is offering **Financial Scams that Target Seniors**. This one-hour class will open your eyes!",
         "John is leading a class on **Financial Awareness in Retirement (FAIR)**. He has 30 years of experience in the topic and offering us his expertise for free!",
     ]),
     ("Hobbies and Interest Classes", [
