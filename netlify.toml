@@ -66,3 +66,14 @@
   from = "/grand-canyon-thank-you"
   to = "/Class-Specific%20Registrations%20Pages/grand-canyon-thank-you.html"
   status = 200
+
+# Easy Crockpot Cooking
+[[redirects]]
+  from = "/easy-crockpot-cooking"
+  to = "/Class-Specific%20Registrations%20Pages/easy-crockpot-cooking.html"
+  status = 200
+
+[[redirects]]
+  from = "/easy-crockpot-cooking-thank-you"
+  to = "/Class-Specific%20Registrations%20Pages/easy-crockpot-cooking-thank-you.html"
+  status = 200
