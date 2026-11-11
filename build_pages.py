@@ -796,7 +796,7 @@ def _schedule_sessions():
     # every class listed there appears here, and nothing else does.
     S = []
     # ---- Monday ----
-    S.append((_weekly(0, "Jan 18", "Feb 1"), (12, 0), "12:00 noon", "Crockpot Cooking For Men", "Kitchen", ""))
+    S.append((_weekly(0, "Jan 18", "Feb 1"), (12, 0), "12:00 noon", "Easy Crockpot Cooking", "Kitchen", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (13, 0), "1:00 p.m.", "Fundamentals of AI", "Cafe", ""))
     S.append((_weekly(0, "Jan 11", "Feb 15"), (14, 0), "2:00 p.m.", "Beginning Creative Poetry", "Library", ""))
     # Seminars that repeat on Thursday evening (Monday date, Thursday date).
@@ -1025,7 +1025,7 @@ CATALOGUE = [
         "If you want to be known as the greatest grandparents in the world, join Stephanie for **Secrets to Taking the Grandkids to Disney**. There are obsessive fans of Disney and then there is Stephanie. I am sure you have seen her Disney Christmas decorations&hellip; Let her tell you tricks to visiting Disney parks without losing your mind.",
         "Grace, a fantastic home cook, is offering **Got Flour? Let&rsquo;s make Bread** to any and all. We&rsquo;ll be in the kitchen and in the evening so as to maximize the number of participants for this delicious class!",
         "We are thrilled to offer Jackie&rsquo;s **Basic Dog Obedience** training. Jackie has trained service dogs for over 30+ years and still teaches locally. But, if you are one of the first 8 to sign up, you can get her expertise for free!",
-        "**Crockpot Cooking For Men** &mdash; On Mondays, repeating Betsy's popular class from the summer session with new recipes geared toward a masculine appetite for good food and good fun.",
+        "**Easy Crockpot Cooking** &mdash; On Mondays, repeating Betsy's popular class from the summer session with new recipes geared toward a masculine appetite for good food and good fun.",
         "We live in one of the most environmentally rich areas of the country. Rick spends much time working with the landscaping committee and studying the birds of Florida. Join him as he teaches us **Birds in Our Backyards**.",
     ]),
     ("Science Classes", [
