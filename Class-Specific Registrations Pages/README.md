@@ -10,6 +10,7 @@ One registration page and one thank-you page per promoted class. Each registrati
 | What's the Punchline: Low- and High-Class Poetry | /punchline | /punchline-thank-you |
 | Ecology, Geology and Early Explorers of the Grand Canyon | /grand-canyon | /grand-canyon-thank-you |
 | Easy Crockpot Cooking | /easy-crockpot-cooking | /easy-crockpot-cooking-thank-you |
+| Beginning Creative Poetry | /beginning-creative-poetry | /beginning-creative-poetry-thank-you |
 
 ## To add another class (copy and change)
 

@@ -77,3 +77,13 @@
   from = "/easy-crockpot-cooking-thank-you"
   to = "/Class-Specific%20Registrations%20Pages/easy-crockpot-cooking-thank-you.html"
   status = 200
+
+[[redirects]]
+  from = "/beginning-creative-poetry"
+  to = "/Class-Specific%20Registrations%20Pages/beginning-creative-poetry.html"
+  status = 200
+
+[[redirects]]
+  from = "/beginning-creative-poetry-thank-you"
+  to = "/Class-Specific%20Registrations%20Pages/beginning-creative-poetry-thank-you.html"
+  status = 200

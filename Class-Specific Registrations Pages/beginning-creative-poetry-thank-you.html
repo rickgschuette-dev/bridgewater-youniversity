@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You | Bridgewater YOU</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1B4584">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FBF6E9; font-family: 'Lato', system-ui, sans-serif; color: #1E2A3E; }
+  .page { min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: #1B4584; border-bottom: 8px solid #E3B341; padding: 22px 16px; }
+  .header-inner { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 36px; }
+  .header-inner img { width: 104px; height: 104px; border-radius: 50%; object-fit: contain; background: #fff; flex: none; }
+  .header-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 800; color: #E3B341; font-size: clamp(38px, 7vw, 76px); line-height: 1.05; margin: 0; }
+  @media (max-width: 600px) {
+    header { padding: 16px 12px; }
+    .header-inner { flex-wrap: nowrap; gap: 14px; }
+    .header-inner img { width: 84px; height: 84px; }
+    .header-title { font-size: 28px; }
+  }
+  main { flex-grow: 1; padding: 44px 16px 56px; }
+  .wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; color: #1B4584; font-size: clamp(26px, 5vw, 52px); line-height: 1.15; margin: 0; }
+  .nowrap { white-space: nowrap; }
+  .rule { width: 140px; height: 6px; background: #E3B341; }
+  .msg { margin: 0; font-size: clamp(19px, 2.6vw, 34px); line-height: 1.4; max-width: 1060px; }
+  .button { align-self: flex-start; display: inline-flex; align-items: center; box-sizing: border-box; min-height: 64px; padding: 0 48px; background: #1B4584; color: #fff; font-weight: 700; font-size: 26px; text-decoration: none; border-radius: 8px; }
+  .button:hover { background: #14305E; }
+  footer { background: #1B4584; color: #fff; padding: 20px 16px; font-size: 15px; }
+  .footer-inner { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+  footer a { color: #fff; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="header-inner">
+    <a href="/"><img src="/assets/class-pages-logo.png" alt="Bridgewater YOU"></a>
+    <p class="header-title">Thank you.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>You are registered for <span class="nowrap">Beginning Creative Poetry.</span></h1>
+    <div class="rule"></div>
+    <p class="msg">To see our full list of seminar and class offerings, visit our main site.</p>
+    <a class="button" href="/registration">Visit Our Main Site</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 Bridgewater YOU</span>
+    <a href="/">Home</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
