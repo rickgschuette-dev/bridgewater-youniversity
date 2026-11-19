@@ -7,7 +7,29 @@
   var message = document.getElementById("rick-login-message");
   var rosterList = document.getElementById("rick-roster-list");
   var refresh = document.getElementById("rick-refresh");
-  var API = "/api/rick-portal";
+  var discussion = document.getElementById("cd-app");
+  var courseSlug = decodeURIComponent(location.pathname).replace(/\/+$/, "").split("/").pop();
+  var courses = {
+    "fundamentals-of-art-history": { title: "Fundamentals of Art History", classTitle: "Fundamentals of Western Art History" },
+    "comparative-religions": { title: "Comparative Religions", classTitle: "Comparative Religions" },
+    "fundamentals-of-ai": { title: "Fundamentals of AI", classTitle: "Fundamentals of AI" },
+    "learn-your-smartphone": { title: "Learn Your Smartphone", classTitle: "Learn Your Smartphone" }
+  };
+  var course = courses[courseSlug];
+  var API = "/api/rick-portal?class=" + encodeURIComponent(courseSlug);
+
+  if (!course) {
+    document.getElementById("rick-login-title").textContent = "Class portal not found";
+    document.getElementById("rick-course-subtitle").textContent = "Please return to Rick Schuette’s class list and choose a class.";
+    message.textContent = "This class portal is not available.";
+    password.disabled = true;
+    form.querySelector("button").disabled = true;
+    return;
+  }
+
+  document.getElementById("rick-course-subtitle").textContent = course.title + " — for enrolled students and teachers";
+  document.getElementById("rick-private-title").textContent = course.title;
+  document.title = course.title + " | Rick Schuette | Bridgewater YOU";
 
   function element(tag, attributes, children) {
     var node = document.createElement(tag), key;
@@ -21,6 +43,7 @@
 
   function loadDiscussion() {
     if (document.querySelector('script[data-rick-discussion]')) return;
+    discussion.setAttribute("data-class-title", course.classTitle);
     var script = document.createElement("script");
     script.src = "/assets/class-discussion.js";
     script.dataset.rickDiscussion = "true";
@@ -88,7 +111,7 @@
     var button = form.querySelector("button");
     button.disabled = true;
     message.textContent = "Checking password…";
-    fetch(API + "?action=login", {
+    fetch(API + "&action=login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ password: password.value })
@@ -107,8 +130,8 @@
 
   refresh.addEventListener("click", loadRosters);
   document.getElementById("rick-logout").addEventListener("click", function () {
-    fetch(API + "?action=logout", { method: "POST" }).finally(function () {
-      location.reload();
+    fetch(API + "&action=logout", { method: "POST" }).finally(function () {
+      location.href = "/rick-schuette";
     });
   });
   checkSession();

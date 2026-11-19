@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rick Schuette's Class Portal | Bridgewater YOU</title>
 <link rel="stylesheet" href="/assets/style.css">
-<link rel="stylesheet" href="/assets/class-discussion.css">
 <link rel="stylesheet" href="/assets/rick-portal.css">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -24,32 +23,18 @@
   </ul>
 </nav>
 <main>
-  <section id="rick-login" class="rick-login" aria-labelledby="rick-login-title">
-    <h1 id="rick-login-title">Rick Schuette&rsquo;s Class Portal</h1>
-    <p class="subtitle">For enrolled students and teachers</p>
-    <form id="rick-login-form">
-      <label for="rick-password">Portal password</label>
-      <input id="rick-password" name="password" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required>
-      <button type="submit">Enter portal</button>
-      <p id="rick-login-message" class="rick-message" role="status" aria-live="polite"></p>
-    </form>
+  <section class="rick-course-picker" aria-labelledby="rick-course-title">
+    <h1 id="rick-course-title">Rick Schuette&rsquo;s Classes</h1>
+    <p class="subtitle">Choose a class to open its student and teacher portal.</p>
+    <ul class="rick-course-list">
+      <li><a class="rick-course-card" href="/rick-schuette/fundamentals-of-art-history"><b>Fundamentals of Art History</b><span>Class portal, discussion, and registrants</span></a></li>
+      <li><a class="rick-course-card" href="/rick-schuette/comparative-religions"><b>Comparative Religions</b><span>Class portal, discussion, and registrants</span></a></li>
+      <li><a class="rick-course-card" href="/rick-schuette/fundamentals-of-ai"><b>Fundamentals of AI</b><span>Class portal, discussion, and registrants</span></a></li>
+      <li><a class="rick-course-card" href="/rick-schuette/learn-your-smartphone"><b>Learn Your Smartphone</b><span>Class portal, discussion, and registrants</span></a></li>
+    </ul>
   </section>
-  <div id="rick-private" hidden>
-    <div class="rick-portal-head">
-      <h1>Rick Schuette&rsquo;s Class Portal</h1>
-      <button id="rick-logout" class="rick-logout" type="button">Sign out</button>
-    </div>
-    <p class="subtitle">Class updates, discussion, and enrolled classmates</p>
-    <div id="cd-app" data-page="teacher" data-teacher-slug="rick-schuette"><p class="cd-status" role="status">Loading class portal&hellip;</p></div>
-    <section class="rick-rosters" aria-labelledby="rick-roster-title">
-      <div class="rick-roster-heading"><h2 id="rick-roster-title">Class registrants</h2><button id="rick-refresh" class="cd-link" type="button">Refresh rosters</button></div>
-      <p class="rick-roster-note">Names are visible only to people using this portal. Phone numbers and email addresses are not shown.</p>
-      <div id="rick-roster-list"><p class="cd-status" role="status">Loading class rosters&hellip;</p></div>
-    </section>
-  </div>
 </main>
 <footer><p>&copy; 2026 Bridgewater YOU &mdash; <a href="/index.html">Home</a></p></footer>
-<script src="/assets/rick-portal.js"></script>
 </body>
 </html>
 

@@ -333,6 +333,7 @@
 
   function renderTeacher(root) {
     var slug = slugFromPath(root);
+    var requestedClass = root.getAttribute('data-class-title') || '';
     if (!slug) { location.replace(HOME); return; }
     root.textContent = '';
     root.appendChild(status('Loading…'));
@@ -354,13 +355,28 @@
         ]));
         return;
       }
+      var shownClasses = requestedClass ? t.classes.filter(function (c) { return norm(c.Class) === norm(requestedClass); }) : t.classes;
+      if (!shownClasses.length) {
+        document.title = 'Page not found | Bridgewater YOU';
+        root.appendChild(el('h1', { text: 'We could not find that class' }));
+        root.appendChild(el('p', null, [
+          document.createTextNode('Please return to '),
+          el('a', { href: root.getAttribute('data-back-url') || HOME, text: 'the class list' }),
+          document.createTextNode('.')
+        ]));
+        return;
+      }
       document.title = t.name + ' | ' + SECTION + ' | Bridgewater YOU';
-      root.appendChild(el('a', { 'class': 'cd-back', href: HOME, text: '← Back to all ' + WHO_LIST + ' page' }));
+      root.appendChild(el('a', {
+        'class': 'cd-back',
+        href: root.getAttribute('data-back-url') || HOME,
+        text: root.getAttribute('data-back-text') || '← Back to all ' + WHO_LIST + ' page'
+      }));
       root.appendChild(el('h1', { text: t.name }));
-      root.appendChild(el('div', { 'class': 'subtitle', text: t.classes.length === 1 ? '1 ' + WHAT + ' this semester' : t.classes.length + ' ' + WHATS + ' this semester' }));
+      root.appendChild(el('div', { 'class': 'subtitle', text: shownClasses.length === 1 ? '1 ' + WHAT + ' this semester' : shownClasses.length + ' ' + WHATS + ' this semester' }));
 
       var boxes = [], dboxes = [];
-      t.classes.forEach(function (c) {
+      shownClasses.forEach(function (c) {
         var meta = el('p', { 'class': 'cd-meta' });
         if (c.Category) meta.appendChild(el('span', { 'class': 'cd-chip', text: c.Category }));
         meta.appendChild(document.createTextNode([c.Format, c.Schedule].filter(Boolean).join(' · ')));

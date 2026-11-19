@@ -11,16 +11,16 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 const ROSTER_CSV_URL = "https://docs.google.com/spreadsheets/d/1kIgiwfR0OZMovRl5sLm5x5ndI_7g0sARnx2IBzm7aJI/export?format=csv&gid=1845712122";
-const COOKIE_NAME = "bwu_rick_portal";
+const COOKIE_PREFIX = "bwu_rick_";
 const SESSION_SECONDS = 60 * 60 * 12;
 
 const CLASSES = [
   // Older discussion records used "Western" in the title. Keep it as a
   // read-only alias so those records continue to match the official title.
-  { title: "Fundamentals of Art History", rosterTitles: ["Fundamentals of Art History", "Fundamentals of Western Art History"] },
-  { title: "Comparative Religions", rosterTitles: ["Comparative Religions"] },
-  { title: "Fundamentals of AI", rosterTitles: ["Fundamentals of AI"] },
-  { title: "Learn Your Smartphone", rosterTitles: ["Learn Your Smartphone"] }
+  { slug: "fundamentals-of-art-history", title: "Fundamentals of Art History", rosterTitles: ["Fundamentals of Art History", "Fundamentals of Western Art History"] },
+  { slug: "comparative-religions", title: "Comparative Religions", rosterTitles: ["Comparative Religions"] },
+  { slug: "fundamentals-of-ai", title: "Fundamentals of AI", rosterTitles: ["Fundamentals of AI"] },
+  { slug: "learn-your-smartphone", title: "Learn Your Smartphone", rosterTitles: ["Learn Your Smartphone"] }
 ];
 
 function env(name) {
@@ -60,11 +60,11 @@ function parseCsv(text) {
   return rows;
 }
 
-function readRosters(csv) {
+function readRosters(csv, courses) {
   const requested = new Map();
-  CLASSES.forEach((course) => course.rosterTitles.forEach((title) => requested.set(normalize(title), course.title)));
+  courses.forEach((course) => course.rosterTitles.forEach((title) => requested.set(normalize(title), course.title)));
 
-  const rosters = new Map(CLASSES.map((course) => [course.title, []]));
+  const rosters = new Map(courses.map((course) => [course.title, []]));
   let activeTitle = "";
   for (const row of parseCsv(csv)) {
     const first = String(row[0] || "").trim();
@@ -79,7 +79,7 @@ function readRosters(csv) {
     if (name) rosters.get(activeTitle).push(name);
   }
 
-  return CLASSES.map((course) => ({
+  return courses.map((course) => ({
     title: course.title,
     registrants: rosters.get(course.title)
   }));
@@ -89,9 +89,14 @@ function sign(value, secret) {
   return createHmac("sha256", secret).update(value).digest("base64url");
 }
 
-function validSession(req, secret) {
+function cookieName(course) {
+  return COOKIE_PREFIX + course.slug;
+}
+
+function validSession(req, secret, course) {
   const cookie = req.headers.get("cookie") || "";
-  const token = cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(COOKIE_NAME + "="))?.slice(COOKIE_NAME.length + 1);
+  const name = cookieName(course);
+  const token = cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(name + "="))?.slice(name.length + 1);
   if (!token) return false;
   const [expiresAt, suppliedSignature] = token.split(".");
   if (!expiresAt || !suppliedSignature || !/^\d+$/.test(expiresAt) || Number(expiresAt) < Date.now()) return false;
@@ -101,16 +106,16 @@ function validSession(req, secret) {
   return received.length === expected.length && timingSafeEqual(received, expected);
 }
 
-function sessionCookie(secret) {
+function sessionCookie(secret, course) {
   const expiresAt = String(Date.now() + SESSION_SECONDS * 1000);
-  return `${COOKIE_NAME}=${expiresAt}.${sign(expiresAt, secret)}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly; Secure; SameSite=Lax`;
+  return `${cookieName(course)}=${expiresAt}.${sign(expiresAt, secret)}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly; Secure; SameSite=Lax`;
 }
 
-function clearCookie() {
-  return `${COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`;
+function clearCookie(course) {
+  return `${cookieName(course)}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`;
 }
 
-async function login(req, password, secret) {
+async function login(req, password, secret, course) {
   let body;
   try { body = await req.json(); } catch { return json({ error: "Please enter the portal password." }, 400); }
   const supplied = String(body?.password || "");
@@ -118,13 +123,13 @@ async function login(req, password, secret) {
   const received = Buffer.from(supplied);
   const matches = received.length === expected.length && timingSafeEqual(received, expected);
   if (!matches) return json({ error: "That password is not correct. Please try again." }, 401);
-  return json({ ok: true }, 200, { "set-cookie": sessionCookie(secret) });
+  return json({ ok: true, course: course.title }, 200, { "set-cookie": sessionCookie(secret, course) });
 }
 
-async function rosterData() {
+async function rosterData(course) {
   const response = await fetch(ROSTER_CSV_URL, { headers: { accept: "text/csv" } });
   if (!response.ok) throw new Error(`Roster request failed with ${response.status}`);
-  return { classes: readRosters(await response.text()), updatedAt: new Date().toISOString() };
+  return { className: course.title, classes: readRosters(await response.text(), [course]), updatedAt: new Date().toISOString() };
 }
 
 export default async (req) => {
@@ -132,16 +137,20 @@ export default async (req) => {
   const secret = env("RICK_PORTAL_SESSION_SECRET");
   if (!password || !secret) return json({ error: "The class portal is not configured yet. Please contact Bridgewater YOU." }, 503);
 
+  const courseSlug = new URL(req.url).searchParams.get("class") || "";
+  const course = CLASSES.find((item) => item.slug === courseSlug);
+  if (!course) return json({ error: "That class portal could not be found." }, 404);
+
   if (req.method === "POST") {
     const action = new URL(req.url).searchParams.get("action") || "login";
-    if (action === "logout") return json({ ok: true }, 200, { "set-cookie": clearCookie() });
-    return action === "login" ? login(req, password, secret) : json({ error: "Unknown request." }, 400);
+    if (action === "logout") return json({ ok: true }, 200, { "set-cookie": clearCookie(course) });
+    return action === "login" ? login(req, password, secret, course) : json({ error: "Unknown request." }, 400);
   }
 
   if (req.method !== "GET") return json({ error: "Method not allowed." }, 405);
-  if (!validSession(req, secret)) return json({ error: "Please enter the portal password." }, 401);
+  if (!validSession(req, secret, course)) return json({ error: "Please enter the portal password." }, 401);
   try {
-    return json(await rosterData());
+    return json(await rosterData(course));
   } catch (error) {
     console.error("rick-portal roster error:", error?.message || error);
     return json({ error: "The class roster could not be loaded. Please try again shortly." }, 502);
