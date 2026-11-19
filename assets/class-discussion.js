@@ -77,6 +77,13 @@
   }
   function norm(s) { return String(s).replace(/\s+/g, ' ').trim().toLowerCase(); }
 
+  // The public class-index feed previously carried this older wording. Keep
+  // its original value for matching forms and older posts, but always show the
+  // official class title to students and teachers.
+  function displayClassTitle(title) {
+    return norm(title) === 'fundamentals of western art history' ? 'Fundamentals of Art History' : title;
+  }
+
   function el(tag, attrs, kids) {
     var n = document.createElement(tag), k;
     if (attrs) for (k in attrs) {
@@ -129,7 +136,7 @@
       var ul = el('ul', { 'class': 'cd-grid' });
       teachers.forEach(function (t) {
         var kids = [el('b', { text: t.name })];
-        t.classes.forEach(function (c) { kids.push(el('small', { text: c.Class })); });
+        t.classes.forEach(function (c) { kids.push(el('small', { text: displayClassTitle(c.Class) })); });
         ul.appendChild(el('li', null, [el('a', { 'class': 'cd-card', href: HOME + '/' + t.slug }, kids)]));
       });
       root.appendChild(ul);
@@ -356,10 +363,10 @@
         var url = formURL(c['Update form link']);
         var det = url ? formBox(WHO + ': post an update',
           'Enter the ' + WHO.toLowerCase() + ' passcode, then your update. Click directly on the line beneath each question to type. Please do not include student names, phone numbers or email addresses.',
-          url, 'Post an update for ' + c.Class, '', '') : null;
+          url, 'Post an update for ' + displayClassTitle(c.Class), '', '') : null;
 
         var dUrl = formURL(c['Discussion form link']);
-        var dDet = dUrl ? formBox((SEM ? 'Attendees' : 'Students') + ': join the discussion', '', dUrl, 'Join the discussion for ' + c.Class, 'cd-disc',
+        var dDet = dUrl ? formBox((SEM ? 'Attendees' : 'Students') + ': join the discussion', '', dUrl, 'Join the discussion for ' + displayClassTitle(c.Class), 'cd-disc',
           ' New messages can take a few minutes to appear below.') : null;
         if (dDet) dDet.className = 'cd-box cd-join';
 
@@ -370,8 +377,8 @@
         var slug = classSlug(c.Class);
         var files = filesSection(slug);
         var fBox = fileBox(slug, c.Class, files.reload);
-        var sec = el('section', { 'class': 'cd-class', 'aria-label': c.Class }, [
-          el('h2', { text: c.Class }), meta, det, fBox,
+        var sec = el('section', { 'class': 'cd-class', 'aria-label': displayClassTitle(c.Class) }, [
+          el('h2', { text: displayClassTitle(c.Class) }), meta, det, fBox,
           el('div', { 'class': 'cd-head' }, [el('h3', { text: 'Updates' }), refresh]),
           box,
           files.node,

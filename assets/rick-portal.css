@@ -1,0 +1,80 @@
+.rick-login {
+  max-width: 31rem;
+  margin: 2.5rem auto;
+  padding: 2rem;
+  border: 1px solid #d8dfe8;
+  border-radius: 0.55rem;
+  background: #fff;
+  box-shadow: 0 0.25rem 1rem rgba(11, 42, 92, 0.08);
+}
+
+.rick-login form {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.rick-login input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem;
+  border: 1px solid #7b8794;
+  border-radius: 0.3rem;
+  font: inherit;
+}
+
+.rick-login button,
+.rick-logout {
+  width: fit-content;
+  padding: 0.65rem 1rem;
+  border: 0;
+  border-radius: 0.3rem;
+  background: #0b2a5c;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.rick-login button:disabled,
+.rick-logout:disabled { opacity: 0.65; cursor: wait; }
+.rick-message { min-height: 1.3rem; margin: 0.15rem 0 0; color: #9b1c1c; }
+
+.rick-portal-head,
+.rick-roster-heading {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rick-portal-head h1,
+.rick-roster-heading h2 { margin-bottom: 0; }
+.rick-logout { background: #495057; }
+.rick-rosters { margin-top: 2.5rem; }
+.rick-roster-note { color: #4a5568; }
+
+#rick-roster-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+
+.rick-roster-card {
+  padding: 1rem;
+  border: 1px solid #d8dfe8;
+  border-radius: 0.45rem;
+  background: #fff;
+}
+
+.rick-roster-card h3 { margin: 0; color: #0b2a5c; font-size: 1.05rem; }
+.rick-count { margin: 0.35rem 0 0.7rem; color: #556070; font-size: 0.92rem; }
+.rick-names { margin: 0; padding-left: 1.35rem; }
+.rick-names li + li { margin-top: 0.2rem; }
+.rick-empty { color: #556070; font-style: italic; }
+
+@media (max-width: 35rem) {
+  .rick-login { margin: 1rem 0; padding: 1.25rem; }
+  .rick-portal-head,
+  .rick-roster-heading { align-items: flex-start; flex-direction: column; }
+}
+

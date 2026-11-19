@@ -1,3 +1,5 @@
+"$schema" = "https://open-api.netlify.com/netlify.schema.json"
+
 # Netlify build & functions configuration for Bridgewater YOU.
 #
 # [functions] tells Netlify where the serverless "relay" functions live.
@@ -13,6 +15,12 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Keep the alternate Rick class-discussion address behind the protected portal.
+[[redirects]]
+  from = "/class-discussion/rick-schuette"
+  to = "/rick-schuette"
+  status = 302
 
 # Class Discussion: any address like /class-discussion/betsy-marvin shows the teacher page template.
 # The page itself reads the teacher's name from the address. Real files always win over this rule, so
