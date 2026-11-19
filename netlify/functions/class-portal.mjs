@@ -33,6 +33,10 @@ function displayClassTitle(title) {
   return normalize(title) === "fundamentals of western art history" ? "Fundamentals of Art History" : title;
 }
 
+function isRetiredClass(teacher, className) {
+  return slugify(teacher) === "betsy-marvin" && normalize(className) === "what's the punchline: low- and high-class poetry";
+}
+
 function parseCsv(text) {
   const rows = [];
   let row = [], field = "", quoted = false;
@@ -64,7 +68,7 @@ async function teacherInfo(teacherSlug) {
   const response = await fetch(INDEX_CSV_URL, { headers: { accept: "text/csv" } });
   if (!response.ok) throw new Error(`Teacher index request failed with ${response.status}`);
   const rows = csvObjects(await response.text());
-  const matches = rows.filter((row) => slugify(row.Teacher) === teacherSlug && row.Teacher && row.Class);
+  const matches = rows.filter((row) => slugify(row.Teacher) === teacherSlug && row.Teacher && row.Class && !isRetiredClass(row.Teacher, row.Class));
   if (!matches.length) return null;
 
   const name = matches[0].Teacher;

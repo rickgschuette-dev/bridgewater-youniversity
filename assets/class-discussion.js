@@ -77,6 +77,12 @@
   }
   function norm(s) { return String(s).replace(/\s+/g, ' ').trim().toLowerCase(); }
 
+  // This class is no longer offered. Keep the source row intact while
+  // removing it from every public class-discussion view and portal link.
+  function isRetiredClass(teacher, className) {
+    return slugify(teacher) === 'betsy-marvin' && norm(className) === "what's the punchline: low- and high-class poetry";
+  }
+
   // The public class-index feed previously carried this older wording. Keep
   // its original value for matching forms and older posts, but always show the
   // official class title to students and teachers.
@@ -115,7 +121,7 @@
   function groupTeachers(index) {
     var by = {}, order = [];
     index.forEach(function (r) {
-      if (!r.Teacher || !r.Class) return;
+      if (!r.Teacher || !r.Class || isRetiredClass(r.Teacher, r.Class)) return;
       var slug = slugify(r.Teacher);
       if (!by[slug]) { by[slug] = { name: r.Teacher, slug: slug, classes: [] }; order.push(slug); }
       by[slug].classes.push(r);
