@@ -147,7 +147,12 @@
   }
 
   // ---------- teacher page ----------
-  function slugFromPath() {
+  function slugFromPath(root) {
+    // A protected class portal can host the teacher view at its own URL.
+    // In that case the page supplies the teacher slug explicitly instead of
+    // relying on the normal /class-discussion/<teacher> address format.
+    var suppliedSlug = root && root.getAttribute('data-teacher-slug');
+    if (suppliedSlug) return slugify(suppliedSlug);
     var p = decodeURIComponent(location.pathname).replace(/^\/+|\/+$/g, '').replace(/\.html$/i, '');
     var parts = p.split('/');
     return parts.length > 1 ? slugify(parts[parts.length - 1]) : '';
@@ -327,7 +332,7 @@
   }
 
   function renderTeacher(root) {
-    var slug = slugFromPath();
+    var slug = slugFromPath(root);
     if (!slug) { location.replace(HOME); return; }
     root.textContent = '';
     root.appendChild(status('Loading…'));
