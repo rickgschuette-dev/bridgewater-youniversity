@@ -1,0 +1,39 @@
+.class-login {
+  max-width: 31rem;
+  margin: 2.5rem auto;
+  padding: 2rem;
+  border: 1px solid #d8dfe8;
+  border-radius: 0.55rem;
+  background: #fff;
+  box-shadow: 0 0.25rem 1rem rgba(11, 42, 92, 0.08);
+}
+
+.class-login form { display: grid; gap: 0.65rem; margin-top: 1.5rem; }
+.class-login input { width: 100%; box-sizing: border-box; padding: 0.7rem; border: 1px solid #7b8794; border-radius: 0.3rem; font: inherit; }
+.class-login button, .class-logout { width: fit-content; padding: 0.65rem 1rem; border: 0; border-radius: 0.3rem; background: #0b2a5c; color: #fff; font: inherit; cursor: pointer; }
+.class-login button:disabled, .class-logout:disabled { opacity: 0.65; cursor: wait; }
+.class-message { min-height: 1.3rem; margin: 0.15rem 0 0; color: #9b1c1c; }
+
+.class-picker { max-width: 48rem; margin: 2.5rem auto; }
+.class-picker-list { display: grid; gap: 0.85rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.class-picker-card { display: grid; gap: 0.3rem; padding: 1rem 1.25rem; border: 1px solid #d8dfe8; border-radius: 0.45rem; background: #fff; color: #0b2a5c; text-decoration: none; box-shadow: 0 0.18rem 0.7rem rgba(11, 42, 92, 0.05); }
+.class-picker-card:hover, .class-picker-card:focus { border-color: #0b2a5c; background: #f6f9ff; }
+.class-picker-card span { color: #556070; font-size: 0.92rem; }
+
+.class-portal-head, .class-roster-heading { display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
+.class-portal-head h1, .class-roster-heading h2 { margin-bottom: 0; }
+.class-logout { background: #495057; }
+.class-rosters { margin-top: 2.5rem; }
+.class-roster-note { color: #4a5568; }
+#class-roster-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.class-roster-card { padding: 1rem; border: 1px solid #d8dfe8; border-radius: 0.45rem; background: #fff; }
+.class-roster-card h3 { margin: 0; color: #0b2a5c; font-size: 1.05rem; }
+.class-count { margin: 0.35rem 0 0.7rem; color: #556070; font-size: 0.92rem; }
+.class-names { margin: 0; padding-left: 1.35rem; }
+.class-names li + li { margin-top: 0.2rem; }
+.class-empty { color: #556070; font-style: italic; }
+
+@media (max-width: 35rem) {
+  .class-login { margin: 1rem 0; padding: 1.25rem; }
+  .class-portal-head, .class-roster-heading { align-items: flex-start; flex-direction: column; }
+}

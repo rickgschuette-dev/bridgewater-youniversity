@@ -93,6 +93,10 @@ function cookieName(course) {
   return COOKIE_PREFIX + course.slug;
 }
 
+function sessionSignature(name, expiresAt, secret) {
+  return sign(`${name}:${expiresAt}`, secret);
+}
+
 function validSession(req, secret, course) {
   const cookie = req.headers.get("cookie") || "";
   const name = cookieName(course);
@@ -100,7 +104,7 @@ function validSession(req, secret, course) {
   if (!token) return false;
   const [expiresAt, suppliedSignature] = token.split(".");
   if (!expiresAt || !suppliedSignature || !/^\d+$/.test(expiresAt) || Number(expiresAt) < Date.now()) return false;
-  const expectedSignature = sign(expiresAt, secret);
+  const expectedSignature = sessionSignature(name, expiresAt, secret);
   const received = Buffer.from(suppliedSignature);
   const expected = Buffer.from(expectedSignature);
   return received.length === expected.length && timingSafeEqual(received, expected);
@@ -108,7 +112,8 @@ function validSession(req, secret, course) {
 
 function sessionCookie(secret, course) {
   const expiresAt = String(Date.now() + SESSION_SECONDS * 1000);
-  return `${cookieName(course)}=${expiresAt}.${sign(expiresAt, secret)}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly; Secure; SameSite=Lax`;
+  const name = cookieName(course);
+  return `${name}=${expiresAt}.${sessionSignature(name, expiresAt, secret)}; Path=/; Max-Age=${SESSION_SECONDS}; HttpOnly; Secure; SameSite=Lax`;
 }
 
 function clearCookie(course) {

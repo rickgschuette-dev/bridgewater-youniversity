@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Portal | Bridgewater YOU</title>
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/class-discussion.css">
+<link rel="stylesheet" href="/assets/class-portal.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0B2A5C">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<a href="/index.html"><img class="banner-image" src="/assets/banner-top.jpg" alt="Bridgewater YOU - Connecting Friends, Enriching Lives"></a>
+<nav class="site-nav" aria-label="Main navigation">
+  <ul>
+    <li><a class="nav-link" href="/index.html"><img src="/assets/icons/home.png" alt="" aria-hidden="true"><span>Home</span></a></li>
+    <li><a class="nav-link active" href="/winter-semester.html"><img src="/assets/icons/book.png" alt="" aria-hidden="true"><span>Winter Semester &rsquo;27</span></a></li>
+    <li><a class="nav-link" href="/info-updates.html"><img src="/assets/icons/music.png" alt="" aria-hidden="true"><span>Info Updates</span></a></li>
+    <li><a class="nav-link" href="/watch-live.html"><img src="/assets/icons/video.png" alt="" aria-hidden="true"><span>Watch Live</span></a></li>
+    <li><a class="nav-link" href="/forum.html"><img src="/assets/icons/speech.png" alt="" aria-hidden="true"><span>Join Our Admin</span></a></li>
+  </ul>
+</nav>
+<main>
+  <section id="class-picker" class="class-picker" hidden aria-labelledby="class-picker-title">
+    <h1 id="class-picker-title">Classes</h1>
+    <p class="subtitle">Choose a class to open its student and teacher portal.</p>
+    <ul id="class-picker-list" class="class-picker-list"></ul>
+  </section>
+  <section id="class-login" class="class-login" hidden aria-labelledby="class-login-title">
+    <h1 id="class-login-title">Class Portal</h1>
+    <p id="class-login-subtitle" class="subtitle">For enrolled students and teachers</p>
+    <form id="class-login-form">
+      <label for="class-password">Class password</label>
+      <input id="class-password" name="password" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+      <button type="submit">Enter portal</button>
+      <p id="class-login-message" class="class-message" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+  <section id="class-error" class="class-login" hidden aria-live="polite"></section>
+  <div id="class-private" hidden>
+    <div class="class-portal-head">
+      <h1 id="class-private-title">Class Portal</h1>
+      <button id="class-logout" class="class-logout" type="button">Sign out</button>
+    </div>
+    <p class="subtitle">Class updates, discussion, and enrolled classmates</p>
+    <div id="cd-app" data-page="teacher"><p class="cd-status" role="status">Loading class portal&hellip;</p></div>
+    <section class="class-rosters" aria-labelledby="class-roster-title">
+      <div class="class-roster-heading"><h2 id="class-roster-title">Class registrants</h2><button id="class-refresh" class="cd-link" type="button">Refresh rosters</button></div>
+      <p class="class-roster-note">Names are visible only to people using this portal. Phone numbers and email addresses are not shown.</p>
+      <div id="class-roster-list"><p class="cd-status" role="status">Loading class roster&hellip;</p></div>
+    </section>
+  </div>
+</main>
+<footer><p>&copy; 2026 Bridgewater YOU &mdash; <a href="/index.html">Home</a></p></footer>
+<script src="/assets/class-portal.js"></script>
+</body>
+</html>

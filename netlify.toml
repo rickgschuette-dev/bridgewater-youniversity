@@ -28,12 +28,12 @@
   to = "/rick-class-portal.html"
   status = 200
 
-# Class Discussion: any address like /class-discussion/betsy-marvin shows the teacher page template.
-# The page itself reads the teacher's name from the address. Real files always win over this rule, so
-# no other page is affected, and /class-discussion on its own is the landing page (class-discussion.html).
+# Class Discussion: each instructor now opens a class picker, and each class
+# opens its own password-protected portal. Real files still win over this rule,
+# so /class-discussion on its own remains the Class Discussion landing page.
 [[redirects]]
   from = "/class-discussion/*"
-  to = "/class-discussion-teacher.html"
+  to = "/class-portal.html"
   status = 200
 
 # Seminar Discussion: any address like /seminar-discussion/john-doe shows the seminar leader page template.
