@@ -821,7 +821,7 @@ def _schedule_sessions():
     S.append((_once(1, "Feb 16"), (11, 0), "11:00 a.m.", "Introduction to Environmental Disasters", "Cafe", ""))
     S.append((_weekly(1, "Jan 12", "Jan 26"), (16, 0), "4:00 p.m.", "Ping Pong 101", "Aerobics Room", ""))
     S.append((_weekly(1, "Jan 19", "Feb 2"), (17, 30), "5:30 p.m.", "Holistic Medicine", "Cafe", ""))
-    S.append((_weekly(1, "Feb 9", "Mar 2"), (18, 0), "6:00 p.m.", "Home DIY", "TBD", ""))
+    S.append((_weekly(1, "Feb 9", "Mar 2"), (18, 0), "6:00 p.m.", "Home DIY", "Cafe", ""))
     S.append((_once(1, "Feb 2"), (19, 0), "7:00 p.m.", "Live Visual Astronomy", "Veranda", ""))
     S.append((_weekly(1, "Feb 9", "Feb 23"), (19, 30), "7:30 p.m.", "Surviving an Active Shooter", "Cafe", ""))
     # ---- Wednesday ----
@@ -829,7 +829,6 @@ def _schedule_sessions():
     S.append((_weekly(2, "Feb 3", "Feb 24"), (10, 0), "10:00 a.m.", "Ecology, Geology and Early Explorers of the Grand Canyon", "Ballroom A", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (11, 0), "11:00 a.m.", "Comparative Religions", "Cafe", ""))
     S.append((_weekly(2, "Jan 27", "Feb 10"), (11, 0), "11:00 a.m.", "Navigating Changes in the Second Half of Life", "Craft Room", ""))
-    S.append((_once(2, "Feb 17"), (11, 0), "11:00 a.m.", "Introduction to Bagpipes", "Ballroom A", ""))
     S.append((_weekly(2, "Feb 10", "Feb 24"), (12, 0), "12:00 &ndash; 1:30 p.m.", "CyberGenerations: Keeping Yourself Safe Online", "Cafe", ""))
     S.append((_weekly(2, "Jan 13", "Feb 17"), (16, 0), "4:00 &ndash; 6:00 p.m.", "Beginning Bocce", "Bocce Cts", ""))
     # Beginning Spanish: Registration lists "3- or 6-week series", Jan 13 - Jan 27 or Feb 17.
@@ -843,7 +842,6 @@ def _schedule_sessions():
     S.append((_weekly(3, "Jan 14", "Feb 4"), (17, 0), "5:00 &ndash; 8:00 p.m.", "Beginning Watercolor", "Craft Room", ""))
     S.append((_weekly(3, "Feb 11", "Mar 4"), (17, 0), "5:00 &ndash; 8:00 p.m.", "Intermediate Watercolor", "Craft Room", ""))
     # ---- Friday ----
-    S.append((_weekly(4, "Jan 22", "Feb 19"), (10, 0), "10:00 a.m.", "Math Made Easy", "Craft Room", ""))
     S.append((_weekly(4, "Jan 22", "Feb 5"), (14, 0), "2:00 &ndash; 3:30 p.m.", "Card Games You Can Learn In 5 Minutes", "Craft Room", ""))
     # ---- Saturday ----
     S.append((_once(5, "Jan 23"), (9, 0), "9:00 a.m.", "Birds in Our Backyards", "Cafe", ""))
@@ -1033,7 +1031,6 @@ CATALOGUE = [
         "**Space in FL** is a look at the current space programs and newcomers&hellip; in 2027 and the near future. Join Gary, our resident space &lsquo;junkie&rsquo;, for a fascinating update of what we are seeing now.",
         "Carl, who has spent years as an astronomer, wants you to know your astronomy and is using his vast knowledge of the topic in **Introduction to Astronomy**. This class will include a nighttime viewing from the veranda.",
         "It&rsquo;s in the news, in our daily feeds and on every TV channel. Rick has trained (and certified!) on multiple AI platforms and now wants to teach you about **Foundation and Fundamentals of Artificial Intelligence**.",
-        "Eric has spent 30 years teaching math to teenagers (<em>and survived!</em>) and now he wants to share his knowledge with us. Come to **Math made Easy** and ask him what you want to know!",
     ]),
     ("Sports Classes", [
         "Jim&rsquo;s simple 1-step target methodology has been taught in Senior Centers all across the US. **Ping Pong 101** will have you teaching your own grandchildren in no time. This is brain training with a safe physical workout in a non-intimidating environment.",
