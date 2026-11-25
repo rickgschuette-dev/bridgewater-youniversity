@@ -50,6 +50,8 @@ var BW_CONTACTS_TAB_NAME = 'BW Residents';
 var WAITLIST_SHEET_NAME = 'Waiting List';
 var WAITLIST_HEADERS = ['Timestamp', 'First Name', 'Last Name', 'Phone', 'Email', 'Class Waitlisted For', 'Raw Submission', 'Submission ID'];
 
+var WAITLIST_RED = '#C00000'; // wait-list rows on the Class Rosters tab
+
 var BRAND = {
   navy: '#0B2A5C',
   navyDark: '#081f45',
@@ -141,16 +143,17 @@ function doPost(e) {
     }
 
     // Only email / rebuild reports / sync contacts on genuinely new rows.
-    // Waiting-list rows do not change Sheet1, so they never trigger the
-    // report-tab rebuild or the contacts sync; they do trigger the two
-    // emails, which list only the waiting-list classes actually recorded.
+    // New enrollments AND new waiting-list entries rebuild the report tabs
+    // (Class Rosters shows waiting-list people in red). Waiting-list rows
+    // never trigger the contacts sync; they do trigger the two emails,
+    // which list only the waiting-list classes actually recorded.
     if (fields && (writtenCount > 0 || waitlistWrittenCount > 0)) {
+      try {
+        rebuildReportTabs_(sheet);
+      } catch (err) {
+        console.error('rebuildReportTabs_ failed: ' + err.message);
+      }
       if (writtenCount > 0) {
-        try {
-          rebuildReportTabs_(sheet);
-        } catch (err) {
-          console.error('rebuildReportTabs_ failed: ' + err.message);
-        }
         try {
           syncToRicksBWContacts_(fields);
         } catch (err) {
@@ -618,7 +621,7 @@ function rebuildReportTabs_(sheet) {
 
   writeUniqueResidentsTab_(residentOrder, residents);
   writeClassTallyTab_(classOrder, classes);
-  writeClassRostersTab_(classOrder, classes);
+  writeClassRostersTab_(classOrder, classes, sheet);
 }
 
 function getOrCreateReportTab_(name) {
@@ -742,28 +745,143 @@ function writeClassTallyTab_(classOrder, classes) {
   sheet.setFrozenRows(3);
 }
 
-function writeClassRostersTab_(classOrder, classes) {
+// Class titles are matched ignoring capitals and punctuation, plus the two
+// old titles the seat-count feed also maps.
+function rosterClassKey_(title) {
+  var n = String(title == null ? '' : title)
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (n === 'got dough lets make bread') return 'got flour lets make bread';
+  if (n === 'home dyi') return 'home diy';
+  return n;
+}
+
+// For roster display only: one person = email AND first name, so two people
+// who share an email address are never hidden behind each other.
+function rosterPersonKey_(firstName, lastName, email) {
+  var first = String(firstName || '').trim().toLowerCase();
+  var mail = String(email || '').trim().toLowerCase();
+  return mail ? mail + '|' + first : first + '|' + String(lastName || '').trim().toLowerCase();
+}
+
+// A "+1..." phone can show as "#ERROR!" on the Waiting List tab. Recover it
+// from the saved form data; never write a leading "+" (read as a formula).
+function rosterPhone_(phone, rawSubmission) {
+  var p = String(phone == null ? '' : phone).trim();
+  if (p.charAt(0) === '#') {
+    p = '';
+    try {
+      var parsed = JSON.parse(String(rawSubmission || ''));
+      var sub = (parsed && parsed.payload) ? parsed.payload : parsed;
+      var data = (sub && sub.data) || {};
+      p = String(data.phone || data['phone-number'] || '').trim();
+    } catch (err) { p = ''; }
+  }
+  return p.replace(/^\+/, '');
+}
+
+/**
+ * READ-ONLY look at the "Waiting List" tab. Returns
+ * { classKey: { title, people: [...] } }, earliest sign-up first. Leaves out
+ * anyone already in Sheet1 for the same class, and repeat entries. The
+ * "Waitlist Archive" tab is not read: those people are already enrolled.
+ */
+function readWaitlistForRosters_(regSheet) {
+  var enrolled = {};
+  var reg = regSheet.getDataRange().getValues();
+  for (var i = 1; i < reg.length; i++) {
+    enrolled[rosterClassKey_(reg[i][5]) + '#' + rosterPersonKey_(reg[i][1], reg[i][2], reg[i][4])] = true;
+  }
+
+  var waitSheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(WAITLIST_SHEET_NAME);
+  if (!waitSheet) throw new Error('Tab not found: ' + WAITLIST_SHEET_NAME);
+  var data = waitSheet.getDataRange().getValues();
+
+  var entries = [];
+  for (var r = 1; r < data.length; r++) {
+    var title = String(data[r][5] || '').trim();
+    if (!title) continue;
+    var time = new Date(data[r][0]).getTime();
+    entries.push({ row: data[r], title: title, order: r, time: isNaN(time) ? Number.MAX_VALUE : time });
+  }
+  entries.sort(function (a, b) { return a.time - b.time || a.order - b.order; });
+
+  var out = {};
+  var seen = {};
+  entries.forEach(function (entry) {
+    var d = entry.row;
+    var classKey = rosterClassKey_(entry.title);
+    var id = classKey + '#' + rosterPersonKey_(d[1], d[2], d[4]);
+    if (enrolled[id] || seen[id]) return;
+    seen[id] = true;
+    if (!out[classKey]) out[classKey] = { title: entry.title, people: [] };
+    out[classKey].people.push({
+      firstName: String(d[1] || '').trim(),
+      lastName: String(d[2] || '').trim(),
+      phone: rosterPhone_(d[3], d[6]),
+      email: String(d[4] || '').trim()
+    });
+  });
+  return out;
+}
+
+function writeClassRostersTab_(classOrder, classes, regSheet) {
+  // Read the wait list BEFORE clearing the tab. If it cannot be read, the
+  // enrolled rosters are still written and the title says so.
+  var waiting = {};
+  var waitError = false;
+  try {
+    waiting = readWaitlistForRosters_(regSheet);
+  } catch (err) {
+    waitError = true;
+    console.error('readWaitlistForRosters_ failed: ' + err.message);
+  }
+
   var sheet = getOrCreateReportTab_('Class Rosters');
   sheet.clear();
 
   var numCols = 4;
-  var titlesSorted = classOrder.slice().sort(function (a, b) { return a.localeCompare(b); });
+  var titles = classOrder.slice();
+
+  // Show a class that has a wait list but nobody enrolled.
+  var haveKeys = {};
+  titles.forEach(function (t) { haveKeys[rosterClassKey_(t)] = true; });
+  Object.keys(waiting).forEach(function (k) {
+    if (!haveKeys[k]) titles.push(waiting[k].title);
+  });
+  titles.sort(function (a, b) { return a.localeCompare(b); });
 
   sheet.getRange(1, 1, 1, numCols).merge()
-    .setValue('BRIDGEWATER YOUNIVERSITY — Class Rosters')
+    .setValue('BRIDGEWATER YOUNIVERSITY — Class Rosters' +
+      (waitError ? '  (WAIT LIST COULD NOT BE READ)' : ''))
     .setBackground(BRAND.navy).setFontColor(BRAND.white).setFontWeight('bold').setFontSize(13)
     .setHorizontalAlignment('center');
 
   var row = 3;
-  titlesSorted.forEach(function (title) {
-    var registrants = classes[title].registrants;
+  var shownWaitKeys = {};
+  titles.forEach(function (title) {
+    var registrants = classes[title] ? classes[title].registrants : {};
     var people = Object.keys(registrants).map(function (k) { return registrants[k]; });
     people.sort(function (a, b) {
       return a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName);
     });
 
+    var classKey = rosterClassKey_(title);
+    var waitPeople = [];
+    if (waiting[classKey] && !shownWaitKeys[classKey]) {
+      waitPeople = waiting[classKey].people;
+      shownWaitKeys[classKey] = true;
+    }
+
+    var heading = title + '   |   ' + people.length + ' Registered';
+    if (waitPeople.length) {
+      heading += '   |   ' + waitPeople.length + ' Waiting   |   ' +
+        (people.length + waitPeople.length) + ' If Opened Up';
+    }
     sheet.getRange(row, 1, 1, numCols).merge()
-      .setValue(title + '   |   ' + people.length + ' Registered')
+      .setValue(heading)
       .setBackground(BRAND.gold).setFontColor(BRAND.white).setFontWeight('bold')
       .setHorizontalAlignment('left');
     row++;
@@ -780,6 +898,14 @@ function writeClassRostersTab_(classOrder, classes) {
       row += values.length;
     }
 
+    if (waitPeople.length) {
+      var waitValues = waitPeople.map(function (p) { return [p.firstName, p.lastName, p.phone, p.email]; });
+      sheet.getRange(row, 1, waitValues.length, numCols).setValues(waitValues);
+      applyAlternatingRows_(sheet, row, waitValues.length, numCols);
+      sheet.getRange(row, 1, waitValues.length, numCols).setFontColor(WAITLIST_RED);
+      row += waitValues.length;
+    }
+
     row++;
   });
 
@@ -788,4 +914,19 @@ function writeClassRostersTab_(classOrder, classes) {
   sheet.setColumnWidth(3, 130);
   sheet.setColumnWidth(4, 240);
   sheet.setFrozenRows(1);
+}
+
+/**
+ * Run by hand (select rebuildReportTabsNow, click Run) to refresh the three
+ * report tabs without waiting for a new sign-up. Sends no email and does not
+ * change Sheet1, "Waiting List" or "Waitlist Archive".
+ */
+function rebuildReportTabsNow() {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    rebuildReportTabs_(getSheet_());
+  } finally {
+    lock.releaseLock();
+  }
 }
